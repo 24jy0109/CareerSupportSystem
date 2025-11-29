@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.LoginAction;
+import model.Key;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
@@ -42,12 +43,11 @@ public class LoginController extends HttpServlet {
 		// リクエストパラメータ"command"の値に対応した処理を実行する
 		switch (command) {
 		case "Login":
-			String CLIENT_ID = "569875251862-rm8no2kntdnjco2ns3m4ltfndspq7pi6.apps.googleusercontent.com";
-			String REDIRECT_URI = "http://localhost:8080/CareerSupportSystem/callback";
+			Key key = new Key();
 			// Google OAuth 2.0 認証画面への URL にリダイレクト
 			String url = "https://accounts.google.com/o/oauth2/v2/auth" +
-					"?client_id=" + CLIENT_ID +
-					"&redirect_uri=" + REDIRECT_URI +
+					"?client_id=" + key.getClientId() +
+					"&redirect_uri=" + key.getRedirectUri() +
 					"&response_type=code" +
 					"&scope=email%20profile";
 
