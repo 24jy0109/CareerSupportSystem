@@ -1,8 +1,4 @@
 # Eclipse
-.settings/
-.classpath
-.project
-
 # Build
 build/
 *.class
