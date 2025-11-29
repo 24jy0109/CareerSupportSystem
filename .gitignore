@@ -1,0 +1,14 @@
+# Eclipse
+.settings/
+.classpath
+.project
+
+# Build
+build/
+*.class
+
+# Secret
+src/main/webapp/WEB-INF/classes/config.properties
+
+# Mac
+.DS_Store
