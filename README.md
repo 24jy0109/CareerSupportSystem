@@ -1,7 +1,43 @@
-https://docs.google.com/document/d/1sFTZG5Sq7Nb547MkEjEZMwSbwSf59zR8zm6HhtWIKZ8/edit?tab=t.0
+# 卒業制作プロジェクト設定手順
 
-大体のことはこれ通りに
-「一般的なプロジェクトのインポート」を選んで次へ。(図7)のところだけ既存プロジェクトのインポートにする必要があると思われる
+以下は卒業制作プロジェクトの設定手順です。  
+cloneは [こちらのドキュメント](https://docs.google.com/document/d/1RUgDfU4bfaxWd9tFt_Ed46x1Qzu7DmzuotqLDXWxfAk) に沿って行います。
 
-卒業制作A/GR09A/コード関連/classesを/CareerSupportSystem/src/main/webapp/WEB-INFにコピーする
-（Eclipseでプロジェクト右クリックしてビルド・パスの外部アーカイブの追加から/CareerSupportSystem/src/main/webapp/WEB-INF/lib/mysql~~~を読み込ませる）
+---
+
+## 1. コードのコピー
+
+卒業制作プロジェクト内の以下のフォルダをコピーします。
+
+```
+
+卒業制作A/GR09A/コード関連/classes
+
+```
+
+コピー先:
+
+```
+
+/CareerSupportSystem/src/main/webapp/WEB-INF
+
+```
+
+---
+
+## 2. Eclipseでの設定（必要に応じて）
+
+1. Eclipseでプロジェクトを右クリック。
+2. **[ビルド・パス] → [外部アーカイブの追加]** を選択。
+3. 以下を読み込ませます。
+
+```
+
+/CareerSupportSystem/src/main/webapp/WEB-INF/lib/mysql~~~
+
+```
+
+---
+
+これでプロジェクトの基本設定は完了です。
+```
