@@ -34,15 +34,12 @@ public class CompanyDBAccess extends DBAccess {
 				c.setEvents(new ArrayList<>());
 				c.setGraduates(new ArrayList<>());
 				c.setRequestStudents(new ArrayList<>());
-
 				map.put(id, c);
 			}
 		}
 
-		// ------------------------------------------------------------
 		// イベント一覧を company に追加
-		// ------------------------------------------------------------
-		String sqlEvent = "SELECT event_id, event_progress FROM event";
+		String sqlEvent = "SELECT event_id, company_id, event_progress FROM event";
 		try (PreparedStatement ps = con.prepareStatement(sqlEvent);
 				ResultSet rs = ps.executeQuery()) {
 
@@ -59,10 +56,8 @@ public class CompanyDBAccess extends DBAccess {
 			}
 		}
 
-		// ------------------------------------------------------------
 		// 卒業生一覧を company に追加
-		// ------------------------------------------------------------
-		String sqlGraduate = "SELECT graduate_student_number FROM graduate";
+		String sqlGraduate = "SELECT graduate_student_number, company_id FROM graduate";
 		try (PreparedStatement ps = con.prepareStatement(sqlGraduate);
 				ResultSet rs = ps.executeQuery()) {
 
@@ -79,26 +74,26 @@ public class CompanyDBAccess extends DBAccess {
 			}
 		}
 
-		// ------------------------------------------------------------
 		// request → student JOIN 一覧を company に追加
-		// ------------------------------------------------------------		
 		String sqlRequest = "SELECT company_id " +
 				"FROM request " +
-				"WHERE student_number = " + studentNumber;
+				"WHERE student_number = ?";
 
-		try (PreparedStatement ps = con.prepareStatement(sqlRequest);
-				ResultSet rs = ps.executeQuery()) {
+		try (PreparedStatement ps = con.prepareStatement(sqlRequest)) {
+		    ps.setString(1, studentNumber);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					int companyId = rs.getInt("company_id");
 
-			while (rs.next()) {
-				int companyId = rs.getInt("company_id");
-
-				Company c = map.get(companyId);
-				if (c == null) {
-					continue;
+					Company c = map.get(companyId);
+					if (c == null) {
+						continue;
+					}
+					
+					Student s = new Student();
+					s.setStudentNumber(studentNumber);
+					c.getRequestStudents().add(s);
 				}
-				Student s = new Student();
-				s.setStudentNumber(rs.getString("student_number"));
-				c.getRequestStudents().add(s);
 			}
 		}
 
