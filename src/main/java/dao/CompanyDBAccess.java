@@ -4,101 +4,69 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import model.Company;
-import model.Event;
-import model.Graduate;
-import model.Student;
+import dto.CompanyDTO;
 
 public class CompanyDBAccess extends DBAccess {
-	public ArrayList<Company> searchCompanies(String name, String sort, String studentNumber) throws Exception {
-		//データベース接続
+	public List<CompanyDTO> searchStudentCompanies(String name, String sort, String studentNumber)
+			throws Exception {
 		Connection con = createConnection();
+		List<CompanyDTO> list = new ArrayList<>();
 
-		ArrayList<Company> list = new ArrayList<>();
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT c.company_id, c.company_name, ");
+			sql.append("CASE WHEN COUNT(DISTINCT e.event_id) > 0 THEN '開催' ELSE '' END AS eventProgress, ");
+			sql.append("CASE WHEN COUNT(DISTINCT r.student_number) > 0 THEN '申請済み' ELSE '' END AS isRequest ");
+			sql.append("FROM company c ");
+			sql.append("LEFT JOIN event e ON c.company_id = e.company_id AND e.event_progress = 2 ");
+			sql.append("LEFT JOIN request r ON c.company_id = r.company_id AND r.student_number = ? ");
+			sql.append("WHERE 1=1 ");
 
-		// Company 全件
-		String sqlCompany = "SELECT company_id, company_name FROM company";
-		Map<Integer, Company> map = new HashMap<>();
-
-		try (PreparedStatement ps = con.prepareStatement(sqlCompany);
-				ResultSet rs = ps.executeQuery()) {
-			while (rs.next()) {
-				int id = rs.getInt("company_id");
-
-				Company c = new Company();
-				c.setCompanyId(id);
-				c.setCompanyName(rs.getString("company_name"));
-				c.setEvents(new ArrayList<>());
-				c.setGraduates(new ArrayList<>());
-				c.setRequestStudents(new ArrayList<>());
-				map.put(id, c);
+			if (name != null && !name.isEmpty()) {
+				sql.append("AND c.company_name LIKE ? ");
 			}
-		}
 
-		// イベント一覧を company に追加
-		String sqlEvent = "SELECT event_id, company_id, event_progress FROM event";
-		try (PreparedStatement ps = con.prepareStatement(sqlEvent);
-				ResultSet rs = ps.executeQuery()) {
+			sql.append("GROUP BY c.company_id, c.company_name ");
 
-			while (rs.next()) {
-				int companyId = rs.getInt("company_id");
-				Company c = map.get(companyId);
-				if (c == null) {
-					continue;
-				}
-				Event e = new Event();
-				e.setEventId(rs.getInt("event_id"));
-				e.setEventProgress(rs.getInt("event_progress"));
-				c.getEvents().add(e);
+			// ソート
+			if ("asc".equalsIgnoreCase(sort)) {
+				sql.append("ORDER BY c.company_name ASC");
+			} else if ("desc".equalsIgnoreCase(sort)) {
+				sql.append("ORDER BY c.company_name DESC");
 			}
-		}
 
-		// 卒業生一覧を company に追加
-		String sqlGraduate = "SELECT graduate_student_number, company_id FROM graduate";
-		try (PreparedStatement ps = con.prepareStatement(sqlGraduate);
-				ResultSet rs = ps.executeQuery()) {
-
-			while (rs.next()) {
-				int companyId = rs.getInt("company_id");
-				Company c = map.get(companyId);
-				if (c == null) {
-					continue;
+			try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
+				ps.setString(1, studentNumber);
+				if (name != null && !name.isEmpty()) {
+					ps.setString(2, "%" + name + "%");
 				}
 
-				Graduate g = new Graduate();
-				g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
-				c.getGraduates().add(g);
-			}
-		}
+				try (ResultSet rs = ps.executeQuery()) {
+					while (rs.next()) {
+						int companyId = rs.getInt("company_id");
+						String companyName = rs.getString("company_name");
+						String eventProgress = rs.getString("eventProgress"); // "開催" または ""
+						String isRequest = rs.getString("isRequest"); // "申請済み" または ""
 
-		// request → student JOIN 一覧を company に追加
-		String sqlRequest = "SELECT company_id " +
-				"FROM request " +
-				"WHERE student_number = ?";
+						CompanyDTO dto = new CompanyDTO();
+						dto.setCompanyId(companyId);
+						dto.setCompanyName(companyName);
+						dto.setEventProgress(eventProgress);
+						dto.setIsRequest(isRequest);
 
-		try (PreparedStatement ps = con.prepareStatement(sqlRequest)) {
-		    ps.setString(1, studentNumber);
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					int companyId = rs.getInt("company_id");
-
-					Company c = map.get(companyId);
-					if (c == null) {
-						continue;
+						list.add(dto);
 					}
-					
-					Student s = new Student();
-					s.setStudentNumber(studentNumber);
-					c.getRequestStudents().add(s);
 				}
 			}
+
+		} finally {
+			if (con != null)
+				con.close();
 		}
 
-		// Map → ArrayList に変換
-		list.addAll(map.values());
 		return list;
 	}
+
 }

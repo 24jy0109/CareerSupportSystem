@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.CompanyAction;
-import model.Company;
+import dto.CompanyDTO;
 
 @WebServlet("/company")
 public class CompanyController extends HttpServlet {
@@ -31,7 +32,7 @@ public class CompanyController extends HttpServlet {
 		String command = request.getParameter("command");
 		
 		// 戻り値用のArrayList<Company>
-		ArrayList<Company> companies = new ArrayList<Company>();
+		List<CompanyDTO> companies = new ArrayList<CompanyDTO>();
 		
 		// sessionから値を取得
 		HttpSession session = request.getSession();

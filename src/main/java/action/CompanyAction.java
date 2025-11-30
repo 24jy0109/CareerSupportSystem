@@ -1,18 +1,19 @@
 package action;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dao.CompanyDBAccess;
-import model.Company;
+import dto.CompanyDTO;
 
 public class CompanyAction {
-	public ArrayList<Company> execute(String[] data) throws Exception {
+	public List<CompanyDTO> execute(String[] data) throws Exception {
 		String action = data[0];
-		ArrayList<Company> companies = new ArrayList<Company>();
+		List<CompanyDTO> companies = new ArrayList<CompanyDTO>();
 		switch(action) {
 		case "CompanyList":
 			CompanyDBAccess companyDBA = new CompanyDBAccess();
-			companies = companyDBA.searchCompanies("", "", data[1]);
+			companies = companyDBA.searchStudentCompanies("", "", data[1]);
 			break;
 		}
 		return companies;
