@@ -1,9 +1,10 @@
 package dto;
 
+import model.Company;
+
 public class CompanyDTO {
 
-	private int companyId;
-	private String companyName;
+	private Company company;
     private String eventProgress;
     private String isRequest;
     private int graduateCount;
@@ -11,28 +12,19 @@ public class CompanyDTO {
 	public CompanyDTO() {
 	}
 
-    public CompanyDTO(int companyId, String eventProgress, String companyName, String isRequest, int graduateCount) {
-		this.companyId = companyId;
-		this.companyName = companyName;
+    public CompanyDTO(Company company, String eventProgress, String isRequest, int graduateCount) {
+		this.company = company;
         this.eventProgress = eventProgress;
         this.isRequest = isRequest;
         this.graduateCount = graduateCount;
     }
 
-	public int getCompanyId() {
-		return companyId;
+	public Company getCompany() {
+		return company;
 	}
 
-	public void setCompanyId(int companyId) {
-		this.companyId = companyId;
-	}
-
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 	
     public String getEventProgress() {

@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dto.CompanyDTO;
+import model.Company;
 
 public class CompanyDBAccess extends DBAccess {
-	public List<CompanyDTO> searchStudentCompanies(String name, String sort, String studentNumber)
+	public List<CompanyDTO> searchStudentCompanies(String name, String studentNumber)
 			throws Exception {
 		Connection con = createConnection();
 		List<CompanyDTO> list = new ArrayList<>();
@@ -29,13 +30,9 @@ public class CompanyDBAccess extends DBAccess {
 			}
 
 			sql.append("GROUP BY c.company_id, c.company_name ");
+			// 開催がある会社を上に、さらに会社名で昇順ソート
+			sql.append("ORDER BY CASE WHEN COUNT(DISTINCT e.event_id) > 0 THEN 0 ELSE 1 END, c.company_name ASC ");
 
-			// ソート
-			if ("asc".equalsIgnoreCase(sort)) {
-				sql.append("ORDER BY c.company_name ASC");
-			} else if ("desc".equalsIgnoreCase(sort)) {
-				sql.append("ORDER BY c.company_name DESC");
-			}
 
 			try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
 				ps.setString(1, studentNumber);
@@ -45,14 +42,14 @@ public class CompanyDBAccess extends DBAccess {
 
 				try (ResultSet rs = ps.executeQuery()) {
 					while (rs.next()) {
-						int companyId = rs.getInt("company_id");
-						String companyName = rs.getString("company_name");
+						Company company = new Company();
+						company.setCompanyId(rs.getInt("company_id"));
+						company.setCompanyName(rs.getString("company_name"));
 						String eventProgress = rs.getString("eventProgress"); // "開催" または ""
 						String isRequest = rs.getString("isRequest"); // "申請済み" または ""
 
 						CompanyDTO dto = new CompanyDTO();
-						dto.setCompanyId(companyId);
-						dto.setCompanyName(companyName);
+						dto.setCompany(company);
 						dto.setEventProgress(eventProgress);
 						dto.setIsRequest(isRequest);
 

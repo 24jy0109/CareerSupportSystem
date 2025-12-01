@@ -13,7 +13,7 @@ public class CompanyAction {
 		switch(action) {
 		case "CompanyList":
 			CompanyDBAccess companyDBA = new CompanyDBAccess();
-			companies = companyDBA.searchStudentCompanies("", "", data[1]);
+			companies = companyDBA.searchStudentCompanies("", data[1]);
 			break;
 		}
 		return companies;
