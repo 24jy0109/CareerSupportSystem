@@ -116,8 +116,6 @@ public class CompanyDBAccess extends DBAccess {
 						dto.setRequestCount(requestCount);
 
 						list.add(dto);
-						System.out.println(company.getCompanyName());
-						System.out.println(companyName);
 					}
 				}
 			}

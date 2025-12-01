@@ -13,6 +13,7 @@
         tr:nth-child(even) { background-color: #f9f9f9; }
         .section { margin-bottom: 30px; }
         .label { font-weight: bold; }
+        button { padding: 4px 8px; margin: 0 4px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -24,12 +25,30 @@
 
     <div class="section">
         <p><span class="label">企業名:</span> ${companyDTO.company.companyName}</p>
-        <p><span class="label">リクエスト済み:</span>
+        <p><span class="label">リクエスト状況:</span>
             <c:choose>
                 <c:when test="${companyDTO.isRequest == '申請済み'}">はい</c:when>
                 <c:otherwise>いいえ</c:otherwise>
             </c:choose>
         </p>
+
+        <!-- ▼申請ボタン／取り消しボタン -->
+        <c:choose>
+            <c:when test="${companyDTO.isRequest == '申請済み'}">
+                <form action="appointment_request" method="POST" style="display:inline;">
+                    <input type="hidden" name="command" value="CancelRequest">
+                    <input type="hidden" name="companyId" value="${companyDTO.company.companyId}">
+                    <button type="submit">取り消し</button>
+                </form>
+            </c:when>
+            <c:otherwise>
+                <form action="appointment_request" method="POST" style="display:inline;">
+                    <input type="hidden" name="command" value="ApplyRequest">
+                    <input type="hidden" name="companyId" value="${companyDTO.company.companyId}">
+                    <button type="submit">申請</button>
+                </form>
+            </c:otherwise>
+        </c:choose>
     </div>
 
     <div class="section">
