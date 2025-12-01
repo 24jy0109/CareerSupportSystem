@@ -50,6 +50,7 @@ th {
 				<th>企業名</th>
 				<th>イベント状況</th>
 				<th>リクエスト状況</th>
+				<th>卒業生人数</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -59,6 +60,7 @@ th {
 					<td>${company.company.companyName}</td>
 					<td>${company.eventProgress}</td>
 					<td>${company.isRequest}</td>
+					<td>${company.graduateCount}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
