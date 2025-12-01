@@ -3,6 +3,8 @@
 build/
 *.class
 
+.classpath
+
 # Secret
 src/main/webapp/WEB-INF/classes/config.properties
 
