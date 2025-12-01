@@ -13,8 +13,14 @@ public class CompanyAction {
 		switch(action) {
 		case "CompanyList":
 			CompanyDBAccess companyDBA = new CompanyDBAccess();
-			companies = companyDBA.searchStudentCompanies("", data[1]);
-			break;
+			if (data[1].isEmpty()) {
+				companies = companyDBA.searchStaffCompanies(data[2]);
+				System.out.println(data[2]);
+				break;
+			} else {
+				companies = companyDBA.searchStudentCompanies(data[2], data[1]);
+				break;
+			}
 		}
 		return companies;
 	}

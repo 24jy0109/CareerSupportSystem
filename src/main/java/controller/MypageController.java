@@ -40,6 +40,9 @@ public class MypageController extends HttpServlet {
 			case "Mypage":
 				nextPage = "staff/Mypage.jsp";
 				break;
+			case "AppointmentMenu":
+				nextPage = "staff/AppointMenu.jsp";
+				break;
 			}
 		} else {
 			switch (command) {

@@ -34,6 +34,14 @@ th {
 </head>
 <body>
 	<h2 class="center">企業リスト</h2>
+	
+	<!-- ▼検索フォーム -->
+	<form action="company" method="GET">
+		<input type="hidden" name="command" value="CompanyList">
+	    <input type="text" name="companyName" placeholder="企業名で検索" 
+	           value="${param.companyName}">
+	    <button type="submit">検索</button>
+	</form>
 
 	<table>
 		<thead>

@@ -30,10 +30,10 @@ public class CompanyController extends HttpServlet {
 
 		// 各画面から送信されるリクエストパラメータ"command"の値を取得する
 		String command = request.getParameter("command");
-		
+
 		// 戻り値用のArrayList<Company>
 		List<CompanyDTO> companies = new ArrayList<CompanyDTO>();
-		
+
 		// sessionから値を取得
 		HttpSession session = request.getSession();
 		String studentNumber = (String) session.getAttribute("studentNumber");
@@ -44,20 +44,34 @@ public class CompanyController extends HttpServlet {
 			response.sendRedirect("login");
 			return;
 		}
-
 		// 次画面用の変数
 		String nextPage = null;
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
 		if (role.equals("staff")) {
 			// 職員の遷移
+			switch (command) {
+			case "CompanyList":
+				nextPage = "staff/CompanyList.jsp";
+				String companyName = (String) request.getParameter("companyName");
+				if (companyName == null) companyName = "";
+				CompanyAction companyAction = new CompanyAction();
+				try {
+					companies = companyAction.execute(new String[] { "CompanyList", "",  companyName});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			}
 		} else {
 			// 学生の遷移
 			switch (command) {
 			case "CompanyList":
 				nextPage = "student/CompanyList.jsp";
+				String companyName = (String) request.getParameter("companyName");
+				if (companyName == null) companyName = "";
 				CompanyAction companyAction = new CompanyAction();
 				try {
-					companies = companyAction.execute(new String[] { "CompanyList", studentNumber });
+					companies = companyAction.execute(new String[] { "CompanyList", studentNumber, companyName});
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
