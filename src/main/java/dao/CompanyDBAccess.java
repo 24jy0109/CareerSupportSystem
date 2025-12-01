@@ -8,6 +8,9 @@ import java.util.List;
 
 import dto.CompanyDTO;
 import model.Company;
+import model.Course;
+import model.Event;
+import model.Graduate;
 
 public class CompanyDBAccess extends DBAccess {
 	public List<CompanyDTO> searchStudentCompanies(String companyName, String studentNumber)
@@ -126,4 +129,94 @@ public class CompanyDBAccess extends DBAccess {
 
 		return list;
 	}
+
+	public List<CompanyDTO> SearchCompanyDetail(int companyId, String studentNumber) throws Exception {
+	    Connection con = createConnection();
+	    List<CompanyDTO> list = new ArrayList<>();
+	    CompanyDTO companyDTO = new CompanyDTO();
+	    Company company = new Company();
+	    ArrayList<Event> events = new ArrayList<>();
+	    ArrayList<Graduate> graduates = new ArrayList<>();
+
+	    try {
+	        // 会社情報
+	        String sqlCompany = "SELECT company_id, company_name FROM company WHERE company_id = ?";
+	        try (PreparedStatement ps = con.prepareStatement(sqlCompany)) {
+	            ps.setInt(1, companyId);
+	            try (ResultSet rs = ps.executeQuery()) {
+	                if (rs.next()) {
+	                    company.setCompanyId(rs.getInt("company_id"));
+	                    company.setCompanyName(rs.getString("company_name"));
+	                }
+	            }
+	        }
+
+	        // 開催予定イベント (progress = 2)
+	        String sqlEvent = "SELECT event_id, event_place, event_start_time, event_end_time, event_progress "
+	                        + "FROM event WHERE company_id = ? AND event_progress = 2";
+	        try (PreparedStatement ps = con.prepareStatement(sqlEvent)) {
+	            ps.setInt(1, companyId);
+	            try (ResultSet rs = ps.executeQuery()) {
+	                while (rs.next()) {
+	                    Event event = new Event();
+	                    event.setEventId(rs.getInt("event_id"));
+	                    event.setEventPlace(rs.getString("event_place"));
+	                    event.setEventStartTime(rs.getTimestamp("event_start_time").toLocalDateTime());
+	                    event.setEventEndTime(rs.getTimestamp("event_end_time").toLocalDateTime());
+	                    event.setEventProgress(rs.getInt("event_progress"));
+	                    events.add(event);
+	                }
+	            }
+	        }
+
+	        // 卒業生情報
+	        String sqlGraduate = "SELECT g.graduate_student_number, g.graduate_name, "
+	                           + "g.graduate_job_category, c.course_name, c.course_term "
+	                           + "FROM graduate g "
+	                           + "JOIN course c ON g.course_code = c.course_code "
+	                           + "WHERE g.company_id = ?";
+	        try (PreparedStatement ps = con.prepareStatement(sqlGraduate)) {
+	            ps.setInt(1, companyId);
+	            try (ResultSet rs = ps.executeQuery()) {
+	                while (rs.next()) {
+	                    Graduate graduate = new Graduate();
+	                    Course course = new Course();
+	                    graduate.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+	                    graduate.setGraduateName(rs.getString("graduate_name"));
+	                    graduate.setGraduateJobCategory(rs.getString("graduate_job_category"));
+	                    course.setCourseName(rs.getString("course_name"));
+	                    course.setCourseTerm(rs.getInt("course_term"));
+	                    graduate.setCourse(course);
+	                    graduates.add(graduate);
+	                }
+	            }
+	        }
+
+	        // 特定学生の申請済みフラグ
+	        String sqlRequest = "SELECT COUNT(*) AS cnt FROM request WHERE company_id = ? AND student_number = ?";
+	        boolean isRequested = false;
+	        try (PreparedStatement ps = con.prepareStatement(sqlRequest)) {
+	            ps.setInt(1, companyId);
+	            ps.setString(2, studentNumber);
+	            try (ResultSet rs = ps.executeQuery()) {
+	                if (rs.next()) {
+	                    isRequested = rs.getInt("cnt") > 0;
+	                }
+	            }
+	        }
+
+	        // DTOに詰める
+	        company.setEvents(events);
+	        company.setGraduates(graduates);
+	        companyDTO.setCompany(company);
+	        companyDTO.setIsRequest(isRequested ? "申請済み" : "");
+	        list.add(companyDTO);
+
+	    } finally {
+	        if (con != null) con.close();
+	    }
+
+	    return list;
+	}
+
 }

@@ -38,12 +38,21 @@ public class CompanyController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String studentNumber = (String) session.getAttribute("studentNumber");
 		String role = (String) session.getAttribute("role");
+		
+		// Test
+		System.out.println(studentNumber);
+		System.out.println(role);
+		System.out.println(command);
+		System.out.println();
 
 		// リクエストパラメータ"command"の値がない場合、セッションがstudent, staffではない
 		if (command == null || command.isEmpty() || (role != "student" && role != "staff")) {
 			response.sendRedirect("login");
 			return;
 		}
+		
+		CompanyAction companyAction = new CompanyAction();
+		
 		// 次画面用の変数
 		String nextPage = null;
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
@@ -54,7 +63,6 @@ public class CompanyController extends HttpServlet {
 				nextPage = "staff/CompanyList.jsp";
 				String companyName = (String) request.getParameter("companyName");
 				if (companyName == null) companyName = "";
-				CompanyAction companyAction = new CompanyAction();
 				try {
 					companies = companyAction.execute(new String[] { "CompanyList", "",  companyName});
 				} catch (Exception e) {
@@ -69,9 +77,17 @@ public class CompanyController extends HttpServlet {
 				nextPage = "student/CompanyList.jsp";
 				String companyName = (String) request.getParameter("companyName");
 				if (companyName == null) companyName = "";
-				CompanyAction companyAction = new CompanyAction();
 				try {
 					companies = companyAction.execute(new String[] { "CompanyList", studentNumber, companyName});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case "CompanyDetail":
+				nextPage = "student/CompanyDetail.jsp";
+				String companyId = (String) request.getParameter("companyId");
+				try {
+					companies = companyAction.execute(new String[] { "CompanyDetail", studentNumber, companyId});
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
