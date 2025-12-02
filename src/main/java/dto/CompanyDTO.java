@@ -8,15 +8,17 @@ public class CompanyDTO {
     private String eventProgress;
     private String isRequest;
     private int graduateCount;
+    private int requestCount;
 
 	public CompanyDTO() {
 	}
 
-    public CompanyDTO(Company company, String eventProgress, String isRequest, int graduateCount) {
+    public CompanyDTO(Company company, String eventProgress, String isRequest, int graduateCount, int requestCount) {
 		this.company = company;
         this.eventProgress = eventProgress;
         this.isRequest = isRequest;
         this.graduateCount = graduateCount;
+        this.requestCount = requestCount;
     }
 
 	public Company getCompany() {
@@ -49,5 +51,13 @@ public class CompanyDTO {
 
     public void setGraduateCount(int graduateCount) {
         this.graduateCount = graduateCount;
+    }
+    
+    public int getRequestCount() {
+        return requestCount;
+    }
+
+    public void setRequestCount(int requestCount) {
+        this.requestCount = requestCount;
     }
 }

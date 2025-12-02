@@ -21,7 +21,7 @@
 </head>
 <body>
 	<h1>マイページ（職員）</h1>
-	<a></a>
+	<a href="mypage?command=AppointmentMenu">アポイントメント画面</a>
     <h2>セッションの中身一覧</h2>
 
 <%

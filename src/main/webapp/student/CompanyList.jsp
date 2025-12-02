@@ -34,6 +34,14 @@ th {
 </head>
 <body>
 	<h2 class="center">企業リスト</h2>
+	
+	<!-- ▼検索フォーム -->
+	<form action="company" method="GET">
+		<input type="hidden" name="command" value="CompanyList">
+	    <input type="text" name="companyName" placeholder="企業名で検索" 
+	           value="${param.companyName}">
+	    <button type="submit">検索</button>
+	</form>
 
 	<table>
 		<thead>
@@ -42,6 +50,8 @@ th {
 				<th>企業名</th>
 				<th>イベント状況</th>
 				<th>リクエスト状況</th>
+				<th>卒業生人数</th>
+				<th>申請/詳細</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -51,6 +61,8 @@ th {
 					<td>${company.company.companyName}</td>
 					<td>${company.eventProgress}</td>
 					<td>${company.isRequest}</td>
+					<td>${company.graduateCount}</td>
+					<td><a href="company?command=CompanyDetail&companyId=${company.company.companyId}">申請/詳細</a></td>
 				</tr>
 			</c:forEach>
 		</tbody>
