@@ -62,6 +62,9 @@ public class CompanyController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
+			case "CompanyRegister":
+				nextPage = "staff/CompanyRegisterConfirm.jsp";
+				
 			}
 		}
 		request.setAttribute("companies", companies);
