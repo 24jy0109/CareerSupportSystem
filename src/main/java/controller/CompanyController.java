@@ -73,7 +73,7 @@ public class CompanyController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
-<<<<<<< HEAD
+
 			//				企業名入力、確認
 			case "CompanyRegister":
 				nextPage = "staff/CompanyRegister.jsp";
