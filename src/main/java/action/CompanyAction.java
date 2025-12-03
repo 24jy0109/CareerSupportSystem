@@ -28,20 +28,17 @@ public class CompanyAction {
 		case "CompanyDetail":
 			companies = companyDBA.SearchCompanyDetail(Integer.parseInt(data[2]), data[1]);
 			break;
-<<<<<<< HEAD
 		case "CompanyRegister":
 			String companyName = data[2];
 
 			CompanyDBAccess companyDBA2 = new CompanyDBAccess();
 			companyDBA2.insertCompany(companyName);
-
-=======
+			break;
 		case "RegistEvent":
 			companies = companyDBA.SearchCompanyWithGraduates(Integer.parseInt(data[2]));
 			List<Staff> staffs = new StaffDBAcess().getAllStaffs();
 			companies.getFirst().setStaffs(staffs);
 			break;
->>>>>>> branch 'master' of https://github.com/24jy0109/CareerSupportSystem.git
 		}
 		return companies;
 	}
