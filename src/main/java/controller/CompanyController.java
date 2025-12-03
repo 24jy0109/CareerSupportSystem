@@ -69,6 +69,15 @@ public class CompanyController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
+			case "RegistEvent":
+				nextPage = "staff/RegistEventInfo.jsp";
+				String companyId = (String) request.getParameter("companyId");
+				try {
+					companies = companyAction.execute(new String[] { command, "",  companyId});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			}
 		} else {
 			// 学生の遷移

@@ -216,5 +216,76 @@ public class CompanyDBAccess extends DBAccess {
 
 	    return list;
 	}
+	
+	public List<CompanyDTO> SearchCompanyWithGraduates(int companyId) throws Exception {
+	    Connection con = createConnection();
+	    List<CompanyDTO> list = new ArrayList<>();
+	    CompanyDTO companyDTO = new CompanyDTO();
+	    Company company = new Company();
+	    ArrayList<Graduate> graduates = new ArrayList<>();
+
+	    try {
+
+	        // ------------------------------
+	        // ① 会社情報
+	        // ------------------------------
+	        String sqlCompany =
+	            "SELECT company_id, company_name " +
+	            "FROM company WHERE company_id = ?";
+	        try (PreparedStatement ps = con.prepareStatement(sqlCompany)) {
+	            ps.setInt(1, companyId);
+	            try (ResultSet rs = ps.executeQuery()) {
+	                if (rs.next()) {
+	                    company.setCompanyId(rs.getInt("company_id"));
+	                    company.setCompanyName(rs.getString("company_name"));
+	                }
+	            }
+	        }
+
+	        // ------------------------------
+	        // ② 卒業生情報
+	        // ------------------------------
+	        String sqlGraduate =
+	            "SELECT g.graduate_student_number, g.graduate_name, g.graduate_job_category, " +
+	            "c.course_name, c.course_term " +
+	            "FROM graduate g " +
+	            "JOIN course c ON g.course_code = c.course_code " +
+	            "WHERE g.company_id = ?";
+	        try (PreparedStatement ps = con.prepareStatement(sqlGraduate)) {
+	            ps.setInt(1, companyId);
+	            try (ResultSet rs = ps.executeQuery()) {
+	                while (rs.next()) {
+	                    Graduate graduate = new Graduate();
+	                    Course course = new Course();
+ 
+	                    graduate.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+	                    graduate.setGraduateName(rs.getString("graduate_name"));
+	                    graduate.setGraduateJobCategory(rs.getString("graduate_job_category"));
+
+	                    course.setCourseName(rs.getString("course_name"));
+	                    course.setCourseTerm(rs.getInt("course_term"));
+
+	                    graduate.setCourse(course);
+	                    graduates.add(graduate);
+	                }
+	            }
+	        }
+
+	        // ------------------------------
+	        // ③ DTOへ詰める
+	        // ------------------------------
+	        company.setGraduates(graduates);
+
+	        companyDTO.setCompany(company);
+	        companyDTO.setIsRequest(""); // このDAOでは使用しないので空文字でOK
+
+	        list.add(companyDTO);
+	    } finally {
+	        if (con != null) con.close();
+	    }
+
+	    return list;
+	}
+
 
 }
