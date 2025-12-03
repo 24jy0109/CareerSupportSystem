@@ -2,6 +2,7 @@
 
 以下は卒業制作プロジェクトの設定手順です。  
 cloneは [こちらのドキュメント](https://docs.google.com/document/d/1RUgDfU4bfaxWd9tFt_Ed46x1Qzu7DmzuotqLDXWxfAk) に沿って行います。
+clone終了後は下記を実行します。
 
 ---
 
