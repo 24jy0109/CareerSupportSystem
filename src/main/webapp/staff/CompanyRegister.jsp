@@ -9,8 +9,9 @@
 <body>
 	<main>
 	<h1>企業登録</h1>
-	<form action="/company" method="post">
-	<input type="text" name="companyname" placeholder="企業目入力">
+	<form action="company" method="post">
+	<input type="hidden" name="command" value="CompanyRegisterConfirm">
+	<input type="text" name="companyName" placeholder="企業目入力">
 	<button type="submit">確認</button>
 	</form>
 	

@@ -13,7 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.CompanyAction;
+import dao.CourseDBAccess;
 import dto.CompanyDTO;
+import model.Course;
 
 @WebServlet("/company")
 public class CompanyController extends HttpServlet {
@@ -38,7 +40,7 @@ public class CompanyController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String studentNumber = (String) session.getAttribute("studentNumber");
 		String role = (String) session.getAttribute("role");
-		
+
 		// Test
 		System.out.println(studentNumber);
 		System.out.println(role);
@@ -50,35 +52,79 @@ public class CompanyController extends HttpServlet {
 			response.sendRedirect("login");
 			return;
 		}
-		
+
 		CompanyAction companyAction = new CompanyAction();
-		
+
 		// 次画面用の変数
 		String nextPage = null;
+		String companyName = null;
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
 		if (role.equals("staff")) {
 			// 職員の遷移
 			switch (command) {
 			case "CompanyList":
 				nextPage = "staff/CompanyList.jsp";
-				String companyName = (String) request.getParameter("companyName");
-				if (companyName == null) companyName = "";
+				companyName = (String) request.getParameter("companyName");
+				if (companyName == null)
+					companyName = "";
 				try {
-					companies = companyAction.execute(new String[] { "CompanyList", "",  companyName});
+					companies = companyAction.execute(new String[] { "CompanyList", "", companyName });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				break;
+			//				企業名入力、確認
+			case "CompanyRegister":
+				nextPage = "staff/CompanyRegister.jsp";
+				companyName = request.getParameter("companyname");
+				request.setAttribute("companyName", companyName);
+				break;
+			//				企業名追加
+			case "CompanyRegisterConfirm":
+				nextPage = "staff/AppointMenu.jsp";
+				companyName = request.getParameter("companyName");
+				CompanyAction companyAction1 = new CompanyAction();
+				try {
+					companyAction1.execute(new String[] { "CompanyRegister", "", companyName }); // ← requestを渡す！
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			//				卒業生追加
+			case "RegistEmail":
+				nextPage = "common/RegistEmail.jsp";
+				//				企業名
+				companyName = (String) request.getParameter("companyName");
+				if (companyName == null)
+					companyName = "";
+				try {
+					companies = companyAction.execute(new String[] { "CompanyList", "", companyName });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				List<Course> courses = new ArrayList<>();
+				CourseDBAccess courseDB = new CourseDBAccess();
+				try {
+					courses = courseDB.getAllCourses();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("courses", courses);
+				break;
+			case "ConfirmRegistEmail":
+				
 			}
 		} else {
 			// 学生の遷移
 			switch (command) {
 			case "CompanyList":
 				nextPage = "student/CompanyList.jsp";
-				String companyName = (String) request.getParameter("companyName");
-				if (companyName == null) companyName = "";
+				companyName = (String) request.getParameter("companyName");
+				if (companyName == null)
+					companyName = "";
 				try {
-					companies = companyAction.execute(new String[] { "CompanyList", studentNumber, companyName});
+					companies = companyAction.execute(new String[] { "CompanyList", studentNumber, companyName });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -87,14 +133,12 @@ public class CompanyController extends HttpServlet {
 				nextPage = "student/CompanyDetail.jsp";
 				String companyId = (String) request.getParameter("companyId");
 				try {
-					companies = companyAction.execute(new String[] { "CompanyDetail", studentNumber, companyId});
+					companies = companyAction.execute(new String[] { "CompanyDetail", studentNumber, companyId });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				break;
-			case "CompanyRegister":
-				nextPage = "staff/CompanyRegisterConfirm.jsp";
-				
+
 			}
 		}
 		request.setAttribute("companies", companies);
