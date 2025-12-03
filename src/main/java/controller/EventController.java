@@ -60,14 +60,32 @@ public class EventController extends HttpServlet {
 			// 職員の遷移
 			switch (command) {
 			case "RegistEvent":
-				nextPage = "staff/CompanyList.jsp";
-				String companyId = (String) request.getParameter("companyId");
+				// 配列を作成（必要な項目分のサイズを確保）
+				String[] data = new String[10];
+
+				data[0] = command;  // "RegistEvent"
+				data[1] = "";				
+				data[2] = request.getParameter("companyId");
+				data[3] = request.getParameter("staffId");
+				data[4] = request.getParameter("eventPlace");
+				data[5] = request.getParameter("eventStartTime");
+				data[6] = request.getParameter("eventEndTime");
+				data[7] = request.getParameter("eventCapacity");
+				data[8] = request.getParameter("eventOtherInfo");
+
+				// チェックボックスで選択された参加卒業生
+				String[] selectedGraduates = request.getParameterValues("graduateStudents");
+				data[9] = (selectedGraduates != null) ? String.join(",", selectedGraduates) : "";
+				
 				try {
-					events = eventAction.execute(new String[] { command, "",  companyId});
+					events = eventAction.execute(data);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				break;
+				response.sendRedirect("event?command=EventList");
+				return;
+			case "EventList":
+				nextPage = "staff/EventList.jsp";
 			}
 		} else {
 			// 学生の遷移

@@ -109,7 +109,7 @@ h3 {
          ============================ -->
 		<h3>イベント登録</h3>
 
-		<form action="event?command=EventRegister" method="post">
+		<form action="event?command=RegistEvent" method="post">
 			<input type="hidden" name="companyId" value="${company.companyId}" />
 
 			<div class="form-block">
@@ -136,6 +136,15 @@ h3 {
 				<label>備考：</label>
 				<textarea name="eventOtherInfo" class="input" rows="3"></textarea>
 			</div>
+
+			<div class="form-block">
+				<label>担当スタッフ：</label> <select name="staffId" class="input" required>
+					<c:forEach var="st" items="${dto.staffs}">
+						<option value="${st.staffId}">${st.staffName}</option>
+					</c:forEach>
+				</select>
+			</div>
+
 
 			<!-- ▼▼▼ ここから参加卒業生選択 ▼▼▼ -->
 			<h4>参加させる卒業生を選択：</h4>
