@@ -73,6 +73,7 @@ public class CompanyController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
+<<<<<<< HEAD
 			//				企業名入力、確認
 			case "CompanyRegister":
 				nextPage = "staff/CompanyRegister.jsp";
@@ -113,7 +114,18 @@ public class CompanyController extends HttpServlet {
 				request.setAttribute("courses", courses);
 				break;
 			case "ConfirmRegistEmail":
-				
+				break;
+
+			case "RegistEvent":
+				nextPage = "staff/RegistEventInfo.jsp";
+				String companyId = (String) request.getParameter("companyId");
+				try {
+					companies = companyAction.execute(new String[] { command, "",  companyId});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+
 			}
 		} else {
 			// 学生の遷移
