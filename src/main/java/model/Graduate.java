@@ -15,26 +15,25 @@ public class Graduate {
 
 	}
 
-	public Graduate(int graduateId, Company comapany, Staff staff, Course course, String graduateStudentNumber,
+	public Graduate(String graduateStudentNumber, Company comapany, Staff staff, Course course,
 			String graduateName, String graduateEmail, String otherInfo, String graduateJobCategory) {
 
-		this.graduateId = graduateId;
+		this.graduateStudentNumber = graduateStudentNumber;
 		this.comapany = comapany;
 		this.staff = staff;
 		this.course = course;
-		this.graduateStudentNumber = graduateStudentNumber;
 		this.graduateName = graduateName;
 		this.graduateEmail = graduateEmail;
 		this.otherInfo = otherInfo;
 		this.graduateJobCategory = graduateJobCategory;
 	}
 
-	public int getGraduateId() {
-		return graduateId;
+	public String getGraduateStudentNumber() {
+		return graduateStudentNumber;
 	}
-
-	public void setGraduateId(int graduateId) {
-		this.graduateId = graduateId;
+	
+	public void setGraduateStudentNumber(String graduateStudentNumber) {
+		this.graduateStudentNumber = graduateStudentNumber;
 	}
 
 	public Company getComapany() {
@@ -59,14 +58,6 @@ public class Graduate {
 
 	public void setCourse(Course course) {
 		this.course = course;
-	}
-
-	public String getGraduateStudentNumber() {
-		return graduateStudentNumber;
-	}
-
-	public void setGraduateStudentNumber(String graduateStudentNumber) {
-		this.graduateStudentNumber = graduateStudentNumber;
 	}
 
 	public String getGraduateName() {

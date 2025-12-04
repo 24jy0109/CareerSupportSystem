@@ -12,6 +12,7 @@ import model.Company;
 import model.Course;
 import model.Event;
 import model.Graduate;
+import model.Staff;
 
 public class CompanyDBAccess extends DBAccess {
 
@@ -241,7 +242,6 @@ public class CompanyDBAccess extends DBAccess {
 	    ArrayList<Graduate> graduates = new ArrayList<>();
 
 	    try {
-
 	        // ------------------------------
 	        // ① 会社情報
 	        // ------------------------------
@@ -259,29 +259,43 @@ public class CompanyDBAccess extends DBAccess {
 	        }
 
 	        // ------------------------------
-	        // ② 卒業生情報
+	        // ② 卒業生 + コース + スタッフ JOIN
 	        // ------------------------------
 	        String sqlGraduate =
 	            "SELECT g.graduate_student_number, g.graduate_name, g.graduate_job_category, " +
-	            "c.course_name, c.course_term " +
+	            "       c.course_name, c.course_term, " +
+	            "       s.staff_id, s.staff_name " +
 	            "FROM graduate g " +
 	            "JOIN course c ON g.course_code = c.course_code " +
+	            "LEFT JOIN staff s ON g.staff_id = s.staff_id " +
 	            "WHERE g.company_id = ?";
+
 	        try (PreparedStatement ps = con.prepareStatement(sqlGraduate)) {
 	            ps.setInt(1, companyId);
 	            try (ResultSet rs = ps.executeQuery()) {
 	                while (rs.next()) {
 	                    Graduate graduate = new Graduate();
 	                    Course course = new Course();
- 
+
 	                    graduate.setGraduateStudentNumber(rs.getString("graduate_student_number"));
 	                    graduate.setGraduateName(rs.getString("graduate_name"));
 	                    graduate.setGraduateJobCategory(rs.getString("graduate_job_category"));
 
+	                    // コース
 	                    course.setCourseName(rs.getString("course_name"));
 	                    course.setCourseTerm(rs.getInt("course_term"));
-
 	                    graduate.setCourse(course);
+
+	                    // スタッフ（NULL の場合もあり）
+	                    int staffId = rs.getInt("staff_id");
+	                    if (!rs.wasNull()) {
+	                        Staff staff = new Staff();
+	                        staff.setStaffId(staffId);
+	                        staff.setStaffName(rs.getString("staff_name"));
+	                        graduate.setStaff(staff);
+	                    } else {
+	                        graduate.setStaff(null);
+	                    }
 	                    graduates.add(graduate);
 	                }
 	            }
@@ -291,17 +305,12 @@ public class CompanyDBAccess extends DBAccess {
 	        // ③ DTOへ詰める
 	        // ------------------------------
 	        company.setGraduates(graduates);
-
 	        companyDTO.setCompany(company);
-	        companyDTO.setIsRequest(""); // このDAOでは使用しないので空文字でOK
-
+	        companyDTO.setIsRequest("");
 	        list.add(companyDTO);
 	    } finally {
 	        if (con != null) con.close();
 	    }
-
 	    return list;
 	}
-
-
 }
