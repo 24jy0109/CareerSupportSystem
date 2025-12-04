@@ -8,6 +8,8 @@ public class Key {
     private String clientId;
     private String clientSecret;
     private String redirectUri;
+    private String emailAddress;
+    private String emailPassword;
 
     // コンストラクタでプロパティをロード
     public Key() {
@@ -21,6 +23,8 @@ public class Key {
             this.clientId = prop.getProperty("CLIENT_ID");
             this.clientSecret = prop.getProperty("CLIENT_SECRET");
             this.redirectUri = prop.getProperty("REDIRECT_URI");
+            this.emailAddress = prop.getProperty("EMAIL_ADDRESS");
+            this.emailPassword = prop.getProperty("EMAIL_PASSWORD");
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("config.properties の読み込みに失敗しました", e);
@@ -38,6 +42,14 @@ public class Key {
 
     public String getRedirectUri() {
         return redirectUri;
+    }
+    
+    public String getEmailAddress() {
+    	return emailAddress;
+    }
+    
+    public String getEemailPassword() {
+    	return emailPassword;
     }
 
     @Override
