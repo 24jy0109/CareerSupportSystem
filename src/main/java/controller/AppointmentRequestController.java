@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.AppointmentRequestAction;
+import model.Request;
 
 @WebServlet("/appointment_request")
 public class AppointmentRequestController extends HttpServlet {
@@ -21,6 +23,7 @@ public class AppointmentRequestController extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,6 +58,18 @@ public class AppointmentRequestController extends HttpServlet {
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
 		if (role.equals("staff")) {
 			// 職員の遷移
+			switch(command) {
+			case "RequestList":
+				nextPage = "staff/RequestList.jsp";
+				String companyId = (String) request.getParameter("companyId");
+				try {
+					List<Request> list = appointmentRequestAction.execute(new String[] { command, "", companyId});
+					request.setAttribute("requests", list);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			}
 		} else {
 			// 学生の遷移
 			switch (command) {

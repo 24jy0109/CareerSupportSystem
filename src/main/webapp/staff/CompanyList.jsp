@@ -31,14 +31,14 @@
         <tr>
             <td>${companyDTO.company.companyName}</td>
             <td>${companyDTO.eventProgress}</td>
-            <td><a href="company?command=RequestList&companyId=${company.company.companyId}">申請者リスト</a>	${companyDTO.requestCount}人</td>
+            <td><a href="appointment_request?command=RequestList&companyId=${companyDTO.company.companyId}">申請者リスト</a>	${companyDTO.requestCount}人</td>
             <td>
                 <!-- 仮リンク -->
                 <a href="editCompany.jsp?companyId=${companyDTO.company.companyId}">編集</a>
             </td>
             <td>
                 <!-- 仮リンク -->
-                <a href="eventPage.jsp?companyId=${companyDTO.company.companyId}">開催ページ</a>
+                <a href="company?command=RegistEvent&companyId=${companyDTO.company.companyId}">開催ページ</a>
             </td>
         </tr>
     </c:forEach>

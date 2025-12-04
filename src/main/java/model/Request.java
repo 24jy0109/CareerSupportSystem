@@ -3,33 +3,34 @@ package model;
 import java.time.LocalDateTime;
 
 public class Request {
-	private int studentId;
-	private int companyId;
+	private Student student;
+	private Company company;
 	private LocalDateTime requestTime;
 	
 	public Request() {
 		
 	}
 	
-	public Request(int studentId,LocalDateTime requestTime) {
-		this.studentId = studentId;
+	public Request(Student student, Company company, LocalDateTime requestTime) {
+		this.student = student;
+		this.company = company;
 		this.requestTime = requestTime;
 	}
 
-	public int getStudentId() {
-		return studentId;
+	public Student getstudent() {
+		return student;
 	}
 
-	public void setStudentId(int studentId) {
-		this.studentId = studentId;
+	public void setstudent(Student student) {
+		this.student = student;
 	}
 
-	public int getCompanyId() {
-		return companyId;
+	public Company getcompany() {
+		return company;
 	}
 
-	public void setCompanyId(int companyId) {
-		this.companyId = companyId;
+	public void setcompany(Company company) {
+		this.company = company;
 	}
 
 	public LocalDateTime getRequestTime() {
