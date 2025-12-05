@@ -131,4 +131,28 @@ public class RequestDBAccess extends DBAccess {
 				con.close();
 		}
 	}
+
+	public List<String> searchEmailsByCompanyId(int companyId) throws Exception {
+	    Connection con = createConnection();
+	    List<String> emails = new ArrayList<>();
+
+	    String sql = "SELECT s.student_email FROM request r "
+	               + "JOIN student s ON r.student_number = s.student_number "
+	               + "WHERE r.company_id = ?";
+
+	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+	        pstmt.setInt(1, companyId);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            emails.add(rs.getString("student_email"));
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return emails;
+	}
 }

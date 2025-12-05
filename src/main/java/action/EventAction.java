@@ -6,7 +6,9 @@ import java.util.List;
 
 import dao.CompanyDBAccess;
 import dao.EventDBAccess;
+import dao.RequestDBAccess;
 import model.Company;
+import model.Email;
 import model.Event;
 import model.Graduate;
 import model.Staff;
@@ -59,11 +61,36 @@ public class EventAction {
 			}
 			event.setJoinGraduates(graduates);
 
-			// eventProgress は登録時は 0 にしておくなど
-			event.setEventProgress(0);
+			// eventProgress は登録時は2(開催)
+			event.setEventProgress(2);
 			
 			EventDBAccess eventDBA = new EventDBAccess();
 			eventDBA.insertEvent(event);
+			
+			RequestDBAccess requestDBA = new RequestDBAccess();
+			List<String> emails = requestDBA.searchEmailsByCompanyId(Integer.parseInt(data[2]));
+
+			// メールの件名・本文はあなたのデータに合わせて
+			String subject = "【イベント通知】" ;
+			String body = "イベントに関するお知らせです。";
+
+			for (String toEmail : emails) {
+
+			    Email mail = new Email();   // 1通ずつ新しく作る
+			    mail.setTo("24jy0109@jec.ac.jp");
+			    mail.setSubject(subject);
+			    mail.setBody(body + toEmail);
+
+			    boolean result = mail.send();
+
+			    if (!result) {
+			        System.out.println("送信失敗: " + toEmail);
+			    } else {
+			        System.out.println("送信成功: " + toEmail);
+			    }
+			}
+
+			break;
 		}
 
 		return list;
