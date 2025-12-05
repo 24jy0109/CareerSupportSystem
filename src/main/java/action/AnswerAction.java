@@ -1,13 +1,11 @@
 package action;
 
-import dao.AnswerDBAccess;
 import dao.GraduateDBAccess;
-import model.Answer;
 import model.Email;
 import model.Graduate;
 import model.Staff;
 
-public class GraduateAction {
+public class AnswerAction {
 	public void execute(String[] data) throws Exception {
 		// data[0] アクション
 		// data[1] 学籍番号
@@ -28,20 +26,15 @@ public class GraduateAction {
 			graduate.setStaff(staff);
 			GraduateDBA.setStaff(graduate);
 			
-			AnswerDBAccess AnswerDBA = new AnswerDBAccess();
-			Answer answer = new Answer();
-			answer.setGraduateStudentNumber(graduate.getGraduateStudentNumber());
-			answer = AnswerDBA.insertAnswer(answer);
-			
 
 			// メールの件名・本文はあなたのデータに合わせて
 			String subject = "【イベントのお願い】" ;
-			String body = "http://localhost:8080/CareerSupportSystem/answer?command=AnswerForm&answerId=" + answer.getAnswerId();
+			String body = "開催をお願いします";
 
 			    Email mail = new Email();   // 1通ずつ新しく作る
 			    mail.setTo("24jy0109@jec.ac.jp");
 			    mail.setSubject(subject);
-			    mail.setBody(body + "\n" + graduate.getGraduateEmail());
+			    mail.setBody(body + graduate.getGraduateEmail());
 
 			    boolean result = mail.send();
 
