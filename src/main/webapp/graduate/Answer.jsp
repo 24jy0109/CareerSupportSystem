@@ -15,7 +15,7 @@ String answerId = request.getParameter("answerId");
 
 	<h2>参加可否・希望日時フォーム</h2>
 
-	<form action="Answer" method="post">
+	<form action="answer" method="post">
 
 		<!-- Hidden: answerId -->
 		<input type="hidden" name="answerId" value="<%=answerId%>">

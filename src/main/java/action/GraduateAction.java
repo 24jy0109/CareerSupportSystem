@@ -32,7 +32,6 @@ public class GraduateAction {
 			Answer answer = new Answer();
 			answer.setGraduateStudentNumber(graduate.getGraduateStudentNumber());
 			answer = AnswerDBA.insertAnswer(answer);
-			
 
 			// メールの件名・本文はあなたのデータに合わせて
 			String subject = "【イベントのお願い】" ;

@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -11,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.AnswerAction;
+import model.Answer;
 
 /**
  * Servlet implementation class GraduateController
@@ -31,8 +34,8 @@ public class AnswerController extends HttpServlet {
 		// 各画面から送信されるリクエストパラメータ"command"の値を取得する
 		String command = request.getParameter("command");
 
-		// 戻り値用のArrayList<Company>
-		//		List<CompanyDTO> companies = new ArrayList<CompanyDTO>();
+//		 戻り値用のArrayList<Company>
+		List<Answer> answers = new ArrayList<>();
 
 		// sessionから値を取得
 		HttpSession session = request.getSession();
@@ -56,11 +59,20 @@ public class AnswerController extends HttpServlet {
 				nextPage = "graduate/Answer.jsp";
 				break;
 			case "registAnswer":
-				String answerId = request.getParameter("answerId");
-				String eventAvailabilityStr = request.getParameter("eventAvailability");
-				String firstChoiceStr = request.getParameter("firstChoice");
-				String secondChoiceStr = request.getParameter("secondChoice");
-				String thirdChoiceStr = request.getParameter("thirdChoice");
+				nextPage = "graduate/CompleteRegistAnswer.jsp";
+				String[] data = new String[6];
+				data[0] = command;
+				data[1] = request.getParameter("answerId");
+				data[2] = request.getParameter("eventAvailability");
+				data[3] = request.getParameter("firstChoice");
+				data[4] = request.getParameter("secondChoice");
+				data[5] = request.getParameter("thirdChoice");
+				try {
+					answers = answerAction.execute(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("answers", answers);
 				break;
 			case "CompanyList":
 				// セッションがstaffではない
@@ -81,6 +93,6 @@ public class AnswerController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		doGet(request, response);
 	}
 }
