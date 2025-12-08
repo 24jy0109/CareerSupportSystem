@@ -9,5 +9,7 @@
 <body>
 	<h1>アポイントメント画面</h1>
 	<a href="company?command=CompanyList">企業一覧</a>
+	<br>
+	<a href="company?command=RegistEmail">連絡先登録</a>
 </body>
 </html>

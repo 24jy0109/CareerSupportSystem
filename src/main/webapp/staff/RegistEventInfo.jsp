@@ -87,16 +87,27 @@ h3 {
 						<td>
 							<form action="graduate?command=AssignStaff" method="post">
 								<input type="hidden" name="graduateStudentNumber"
-									value="${g.graduateStudentNumber}" /> <select name="staffId"
-									class="input">
+									value="${g.graduateStudentNumber}" /> <input type="hidden"
+									name="companyId" value="${company.companyId}" />
+								<select name="staffId" class="input">
+
+									<!-- ▼割当なし用の空欄（未選択）▼ -->
+									<option value=""
+										<c:if test="${empty g.staff.staffId}">selected</c:if>>
+										（未割当）</option>
+
+									<!-- ▼スタッフ一覧から選択 ▼ -->
 									<c:forEach var="st" items="${dto.staffs}">
-										<option value="${st.staffId}">${st.staffName}</option>
+										<option value="${st.staffId}"
+											<c:if test="${g.staff.staffId == st.staffId}">selected</c:if>>
+											${st.staffName}</option>
 									</c:forEach>
 								</select>
 
 								<button type="submit" class="btn">割り当て</button>
 							</form>
 						</td>
+
 					</tr>
 				</c:forEach>
 			</table>

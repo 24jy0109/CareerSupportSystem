@@ -12,6 +12,9 @@
 	<br>
 	<a href="company?command=CompanyRegister">企業名登録</a>
 	<br>
-	<a href="company?command=RegistEmail">連絡先登録</a>
+	<form action="graduate?command=RegistEmail" method="post">
+	<input type="submit" value="連絡先登録">
+	</form>
+	
 </body>
 </html>

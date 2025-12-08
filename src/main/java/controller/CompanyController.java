@@ -13,9 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.CompanyAction;
-import dao.CourseDBAccess;
 import dto.CompanyDTO;
-import model.Course;
 
 @WebServlet("/company")
 public class CompanyController extends HttpServlet {
@@ -58,6 +56,12 @@ public class CompanyController extends HttpServlet {
 		// 次画面用の変数
 		String nextPage = null;
 		String companyName = null;
+		//		String jobType = null;
+		//		String graduateName = null;
+		//		String courseName = null;
+		//		String graduateEmail = null;
+		//		String otherInfo = null;
+
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
 		if (role.equals("staff")) {
 			// 職員の遷移
@@ -77,6 +81,11 @@ public class CompanyController extends HttpServlet {
 			//				企業名入力、確認
 			case "CompanyRegister":
 				nextPage = "staff/CompanyRegister.jsp";
+				//				companyName = request.getParameter("companyname");
+				//				request.setAttribute("companyName", companyName);
+				break;
+			case "CompanyRegisternext":
+				nextPage = "staff/CompanyRegisterConfirm.jsp";
 				companyName = request.getParameter("companyname");
 				request.setAttribute("companyName", companyName);
 				break;
@@ -90,37 +99,14 @@ public class CompanyController extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				break;
-			//				卒業生追加
-			case "RegistEmail":
-				nextPage = "common/RegistEmail.jsp";
-				//				企業名
-				companyName = (String) request.getParameter("companyName");
-				if (companyName == null)
-					companyName = "";
-				try {
-					companies = companyAction.execute(new String[] { "CompanyList", "", companyName });
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 
-				List<Course> courses = new ArrayList<>();
-				CourseDBAccess courseDB = new CourseDBAccess();
-				try {
-					courses = courseDB.getAllCourses();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				request.setAttribute("courses", courses);
-				break;
-			case "ConfirmRegistEmail":
 				break;
 
 			case "RegistEvent":
 				nextPage = "staff/RegistEventInfo.jsp";
 				String companyId = (String) request.getParameter("companyId");
 				try {
-					companies = companyAction.execute(new String[] { command, "",  companyId});
+					companies = companyAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

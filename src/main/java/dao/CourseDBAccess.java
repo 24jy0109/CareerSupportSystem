@@ -32,4 +32,28 @@ public class CourseDBAccess extends DBAccess {
 
 		return list;
 	}
+
+	public String findCourseNameById(String courseCode) throws Exception {
+		Connection con = createConnection();
+		String courseName = null;
+
+		try {
+			String sql = "SELECT course_name FROM course WHERE course_code = ?";
+			try (PreparedStatement ps = con.prepareStatement(sql)) {
+				ps.setString(1, courseCode);
+
+				try (ResultSet rs = ps.executeQuery()) {
+					if (rs.next()) {
+						courseName = rs.getString("course_name");
+					}
+				}
+			}
+		} finally {
+			if (con != null) {
+				con.close();
+			}
+		}
+
+		return courseName;
+	}
 }

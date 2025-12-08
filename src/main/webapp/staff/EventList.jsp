@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>イベント一覧</title>
 </head>
 <body>
-
+	イベント一覧表示予定
 </body>
 </html>
