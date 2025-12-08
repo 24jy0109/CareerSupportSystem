@@ -11,3 +11,4 @@ src/main/webapp/WEB-INF/classes/config.properties
 # Mac
 .DS_Store
 /bin/
+/Servers/
