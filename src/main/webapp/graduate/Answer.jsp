@@ -15,7 +15,11 @@ String answerId = request.getParameter("answerId");
 
 	<h2>参加可否・希望日時フォーム</h2>
 
+<<<<<<< HEAD
 	<form action="Answer" method="post">
+=======
+	<form action="answer" method="post">
+>>>>>>> branch 'master' of https://github.com/24jy0109/CareerSupportSystem.git
 
 		<!-- Hidden: answerId -->
 		<input type="hidden" name="answerId" value="<%=answerId%>">

@@ -32,7 +32,8 @@ public class GraduateController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+//		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request,response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -127,48 +128,48 @@ public class GraduateController extends HttpServlet {
 			//				確認へ
 			case "RegistEmailNext":
 				nextPage = "/common/RegistEmailConfirm.jsp";
-				  // 入力値取得
+				// 入力値取得
 				companyId = request.getParameter("companyId");
 
-			    jobType = request.getParameter("jobType");
-			    graduateName = request.getParameter("graduateName");
+				jobType = request.getParameter("jobType");
+				graduateName = request.getParameter("graduateName");
 
-			    courseCode = request.getParameter("courseCode");
+				courseCode = request.getParameter("courseCode");
 
-			    graduateStudentNumber = request.getParameter("graduateStudentNumber");
-			    graduateEmail = request.getParameter("graduateEmail");
-			    otherInfo = request.getParameter("otherInfo");
+				graduateStudentNumber = request.getParameter("graduateStudentNumber");
+				graduateEmail = request.getParameter("graduateEmail");
+				otherInfo = request.getParameter("otherInfo");
 
-			    // ★ ID → 名前に変換（ここ超重要）
-			    CompanyDBAccess cdb = new CompanyDBAccess();
-			    CourseDBAccess coursedb = new CourseDBAccess();
+				// ★ ID → 名前に変換（ここ超重要）
+				CompanyDBAccess cdb = new CompanyDBAccess();
+				CourseDBAccess coursedb = new CourseDBAccess();
 
-			    try {
-					companyName = cdb.findCompanyNameById(companyId);
+				try {
+					companyName = cdb.serchCompanyNameById(companyId);
 				} catch (Exception e) {
 					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
 				}
-			    try {
+				try {
 					courseName = coursedb.findCourseNameById(courseCode);
 				} catch (Exception e) {
 					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
 				}
 
-			    // JSPへ渡す値
-			    request.setAttribute("companyId", companyId);        // 登録処理用
-			    request.setAttribute("companyName", companyName);    // 表示用
+				// JSPへ渡す値
+				request.setAttribute("companyId", companyId); // 登録処理用
+				request.setAttribute("companyName", companyName); // 表示用
 
-			    request.setAttribute("jobType", jobType);
-			    request.setAttribute("graduateName", graduateName);
+				request.setAttribute("jobType", jobType);
+				request.setAttribute("graduateName", graduateName);
 
-			    request.setAttribute("courseCode", courseCode);      // 登録処理用
-			    request.setAttribute("courseName", courseName);      // 表示用
+				request.setAttribute("courseCode", courseCode); // 登録処理用
+				request.setAttribute("courseName", courseName); // 表示用
 
-			    request.setAttribute("graduateStudentNumber", graduateStudentNumber);
-			    request.setAttribute("graduateEmail", graduateEmail);
-			    request.setAttribute("otherInfo", otherInfo);
+				request.setAttribute("graduateStudentNumber", graduateStudentNumber);
+				request.setAttribute("graduateEmail", graduateEmail);
+				request.setAttribute("otherInfo", otherInfo);
 				break;
 
 			//				連絡先情報をデータベースに登録
@@ -193,6 +194,10 @@ public class GraduateController extends HttpServlet {
 				} // ← requestを渡す！
 
 				break;
+				
+			case "AppointMenu":
+				nextPage = "staff/AppointMenu.jsp";
+				break;
 			}
 		} else {
 			// 学生の遷移
@@ -201,11 +206,9 @@ public class GraduateController extends HttpServlet {
 				break;
 			}
 		}
-
-		//		request.setAttribute("companies", companies);
 		// 次のページへの転送
 		RequestDispatcher rd = request.getRequestDispatcher(nextPage);
 		rd.forward(request, response);
 	}
-
 }
+//		request.setAttribute("companies", companies);

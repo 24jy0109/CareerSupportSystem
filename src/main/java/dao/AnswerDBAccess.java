@@ -70,4 +70,54 @@ public class AnswerDBAccess extends DBAccess {
 
 		return answer;
 	}
+
+	public void updateAnswer(Answer answer) {
+		String sql = "UPDATE answer SET "
+				+ "event_availability = ?, "
+				+ "first_choice = ?, "
+				+ "second_choice = ?, "
+				+ "third_choice = ? "
+				+ "WHERE answer_id = ?";
+
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			// event_availability（Boolean → setObject）
+			if (answer.getEventAvailability() == null) {
+				ps.setNull(1, java.sql.Types.BOOLEAN);
+			} else {
+				ps.setBoolean(1, answer.getEventAvailability());
+			}
+
+			// first_choice
+			if (answer.getFirstChoice() == null) {
+				ps.setNull(2, java.sql.Types.TIMESTAMP);
+			} else {
+				ps.setTimestamp(2, Timestamp.valueOf(answer.getFirstChoice()));
+			}
+
+			// second_choice
+			if (answer.getSecondChoice() == null) {
+				ps.setNull(3, java.sql.Types.TIMESTAMP);
+			} else {
+				ps.setTimestamp(3, Timestamp.valueOf(answer.getSecondChoice()));
+			}
+
+			// third_choice
+			if (answer.getThirdChoice() == null) {
+				ps.setNull(4, java.sql.Types.TIMESTAMP);
+			} else {
+				ps.setTimestamp(4, Timestamp.valueOf(answer.getThirdChoice()));
+			}
+
+			// WHERE answer_id = ?
+			ps.setInt(5, answer.getAnswerId());
+
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

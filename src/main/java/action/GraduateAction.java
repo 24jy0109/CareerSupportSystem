@@ -87,7 +87,4 @@ public class GraduateAction {
 		    gdb.insertGraduate(graduate);
 		    
 			
-			break;
-		}
-	}
-}
+}}}

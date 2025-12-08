@@ -8,13 +8,14 @@ import java.util.List;
 
 import model.Graduate;
 
+
 public class GraduateDBAccess extends DBAccess {
 	public void setStaffId(int staffId) {
 
 	}
 
 	public void insertGraduate(Graduate graduate) {
-		String sql = "INSERT INTO graduate (company_id, staff_id, course_code, graduate_student_number, graduate_name, graduate_email, other_info, graduate_job_category) "
+		String sql = "INSERT INTO graduate (company_id, staff_id, course_code, graduate_student_number, graduate_name, graduate_email, graduate_other_info, graduate_job_category) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		 Connection con = null;
 		    PreparedStatement ps = null;
@@ -24,12 +25,13 @@ public class GraduateDBAccess extends DBAccess {
 		        ps = con.prepareStatement(sql);
 
 		        ps.setInt(1, graduate.getComapany().getCompanyId());
-		        ps.setString(2, graduate.getCourse().getCourseCode());
-		        ps.setString(3, graduate.getGraduateStudentNumber());
-		        ps.setString(4, graduate.getGraduateName());
-		        ps.setString(5, graduate.getGraduateEmail());
-		        ps.setString(6, graduate.getOtherInfo());
-		        ps.setString(7, graduate.getGraduateJobCategory());
+		        ps.setNull(2, java.sql.Types.INTEGER);  // staff_id を NULL
+		        ps.setString(3, graduate.getCourse().getCourseCode());
+		        ps.setString(4, graduate.getGraduateStudentNumber());
+		        ps.setString(5, graduate.getGraduateName());
+		        ps.setString(6, graduate.getGraduateEmail());
+		        ps.setString(7, graduate.getOtherInfo());
+		        ps.setString(8, graduate.getGraduateJobCategory());
 
 		        ps.executeUpdate();
 
@@ -86,7 +88,7 @@ public class GraduateDBAccess extends DBAccess {
 
 	    while (rs.next()) {
 	        Graduate g = new Graduate();
-	        g.setGraduateId(rs.getInt("graduate_id"));
+//	        g.setGraduateId(rs.getInt("graduate_id"));
 	        g.setGraduateName(rs.getString("graduate_name"));
 	        list.add(g);
 	    }
@@ -97,4 +99,51 @@ public class GraduateDBAccess extends DBAccess {
 
 	    return list;
 	}
+	// 既存卒業生の担当スタッフを変更 or 設定する
+	public void setStaff(Graduate graduate) throws Exception {
+		Connection con = createConnection();
+		try {
+			String sql = "UPDATE graduate "
+					+ "SET staff_id = ? "
+					+ "WHERE graduate_student_number = ?";
+			try (PreparedStatement ps = con.prepareStatement(sql)) {
+				ps.setInt(1, graduate.getStaff().getStaffId());
+				ps.setString(2, graduate.getGraduateStudentNumber());
+				ps.executeUpdate();
+			}
+		} finally {
+			if (con != null)
+				con.close();
+		}
+	}
+
+	public Graduate searchGraduateByGraduateStudentNumber(String graduateStudentNumber) throws Exception {
+	    Connection con = createConnection();
+
+	    String sql = "SELECT graduate_student_number, graduate_name, graduate_email, graduate_other_info, graduate_job_category "
+	               + "FROM graduate WHERE graduate_student_number = ?";
+
+	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+	        pstmt.setString(1, graduateStudentNumber);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            Graduate g = new Graduate();
+	            g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+	            g.setGraduateName(rs.getString("graduate_name"));
+	            g.setGraduateEmail(rs.getString("graduate_email"));
+	            g.setOtherInfo(rs.getString("graduate_other_info"));
+	            g.setGraduateJobCategory(rs.getString("graduate_job_category"));
+	            return g;
+	        }
+
+	    } finally {
+	        if (con != null) con.close();
+	    }
+
+	    return null; // 見つからなかった場合
+	}
+
+
 }

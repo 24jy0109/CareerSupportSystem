@@ -51,28 +51,28 @@ public class AnswerController extends HttpServlet {
 		String nextPage = null;
 
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
-			switch (command) {
-			case "AnswerForm":
-				nextPage = "graduate/Answer.jsp";
-				break;
-			case "registAnswer":
-				String answerId = request.getParameter("answerId");
-				String eventAvailabilityStr = request.getParameter("eventAvailability");
-				String firstChoiceStr = request.getParameter("firstChoice");
-				String secondChoiceStr = request.getParameter("secondChoice");
-				String thirdChoiceStr = request.getParameter("thirdChoice");
-				break;
-			case "CompanyList":
-				// セッションがstaffではない
-				if (role != "staff") {
-					response.sendRedirect("login");
-					return;
-				}
-				break;
-			default:
+		switch (command) {
+		case "AnswerForm":
+			nextPage = "graduate/Answer.jsp";
+			break;
+		case "registAnswer":
+			String answerId = request.getParameter("answerId");
+			String eventAvailabilityStr = request.getParameter("eventAvailability");
+			String firstChoiceStr = request.getParameter("firstChoice");
+			String secondChoiceStr = request.getParameter("secondChoice");
+			String thirdChoiceStr = request.getParameter("thirdChoice");
+			break;
+		case "CompanyList":
+			// セッションがstaffではない
+			if (role != "staff") {
 				response.sendRedirect("login");
 				return;
 			}
+			break;
+		default:
+			response.sendRedirect("login");
+			return;
+		}
 
 		// 次のページへの転送
 		RequestDispatcher rd = request.getRequestDispatcher(nextPage);
