@@ -93,8 +93,18 @@ public class EventController extends HttpServlet {
 				}
 				response.sendRedirect("event?command=EventList");
 				return;
+			case "ScheduleArrangeSend":
+				nextPage = "staff/ScheduleArrangeSend.jsp";
+				String graduateStudentNumber = request.getParameter("graduateStudentNumber");
+				try {
+					events = eventAction.execute(new String[] { command, "",  graduateStudentNumber});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			case "EventList":
 				nextPage = "staff/EventList.jsp";
+				break;
 			}
 		} else {
 			// 学生の遷移

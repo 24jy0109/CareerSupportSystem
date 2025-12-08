@@ -6,6 +6,7 @@ import java.util.List;
 
 import dao.CompanyDBAccess;
 import dao.EventDBAccess;
+import dao.GraduateDBAccess;
 import dao.RequestDBAccess;
 import dao.StaffDBAcess;
 import dto.CompanyDTO;
@@ -29,6 +30,7 @@ public class EventAction {
 		// data[8] = eventOtherInfo
 
 		String action = data[0];
+		EventDTO eventDTO = new EventDTO();
 		List<EventDTO> list = new ArrayList<EventDTO>();
 
 		CompanyDBAccess companyDBA = new CompanyDBAccess();
@@ -37,7 +39,6 @@ public class EventAction {
 		case "RegistEventForm":
 			List<CompanyDTO> companies = companyDBA.SearchCompanyWithGraduates(Integer.parseInt(data[2]));
 			List<Staff> staffs = new StaffDBAcess().getAllStaffs();
-			EventDTO eventDTO = new EventDTO();
 			Event e = new Event();
 			e.setCompany(companies.getFirst().getCompany());
 			eventDTO.setEvent(e);
@@ -105,6 +106,18 @@ public class EventAction {
 			    }
 			}
 
+			break;
+		case "ScheduleArrangeSend":
+			// data[2] = graduateStudentNumber
+			Graduate graduate = new GraduateDBAccess().searchGraduateByGraduateStudentNumber(data[2]);
+			List<Graduate> g = new ArrayList<Graduate>(); 
+			g.add(graduate);
+			eventDTO.setGraduates(g);
+			
+			List<Staff> s = new ArrayList<>();
+			s = new StaffDBAcess().getAllStaffs();
+			eventDTO.setStaffs(s);
+			list.add(eventDTO);
 			break;
 		}
 
