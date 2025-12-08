@@ -111,6 +111,7 @@ public class CompanyController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
+			case "CompanyRegisterBack":
 
 			}
 		} else {
