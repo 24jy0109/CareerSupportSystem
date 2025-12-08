@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.EventAction;
-import model.Event;
+import dto.EventDTO;
 
 @WebServlet("/event")
 public class EventController extends HttpServlet {
@@ -32,7 +32,7 @@ public class EventController extends HttpServlet {
 		String command = request.getParameter("command");
 
 		// 戻り値用のArrayList<Company>
-		List<Event> events = new ArrayList<Event>();
+		List<EventDTO> events = new ArrayList<EventDTO>();
 
 		// sessionから値を取得
 		HttpSession session = request.getSession();
@@ -59,6 +59,15 @@ public class EventController extends HttpServlet {
 		if (role.equals("staff")) {
 			// 職員の遷移
 			switch (command) {
+			case "RegistEventForm":
+				nextPage = "staff/RegistEventInfo.jsp";
+				String companyId = (String) request.getParameter("companyId");
+				try {
+					events = eventAction.execute(new String[] { command, "",  companyId});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			case "RegistEvent":
 				// 配列を作成（必要な項目分のサイズを確保）
 				String[] data = new String[10];

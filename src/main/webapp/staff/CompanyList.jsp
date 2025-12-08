@@ -38,7 +38,7 @@
             </td>
             <td>
                 <!-- 仮リンク -->
-                <a href="company?command=RegistEvent&companyId=${companyDTO.company.companyId}">開催ページ</a>
+                <a href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}">開催ページ</a>
             </td>
         </tr>
     </c:forEach>

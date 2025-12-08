@@ -4,10 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>アポイントメント画面</title>
+<title>Insert title here</title>
 </head>
 <body>
-	<h1>アポイントメント画面</h1>
-	<a href="company?command=CompanyList">企業一覧</a>
+
 </body>
 </html>

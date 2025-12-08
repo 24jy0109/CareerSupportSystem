@@ -7,6 +7,9 @@ import java.util.List;
 import dao.CompanyDBAccess;
 import dao.EventDBAccess;
 import dao.RequestDBAccess;
+import dao.StaffDBAcess;
+import dto.CompanyDTO;
+import dto.EventDTO;
 import model.Company;
 import model.Email;
 import model.Event;
@@ -14,7 +17,7 @@ import model.Graduate;
 import model.Staff;
 
 public class EventAction {
-	public List<Event> execute(String[] data) throws Exception {
+	public List<EventDTO> execute(String[] data) throws Exception {
 		// data[0] = アクション名 ("RegistEvent")
 		// data[1] = 学籍番号
 		// data[2] = companyId || companyName
@@ -26,11 +29,23 @@ public class EventAction {
 		// data[8] = eventOtherInfo
 
 		String action = data[0];
-		List<Event> list = new ArrayList<Event>();
+		List<EventDTO> list = new ArrayList<EventDTO>();
 
 		CompanyDBAccess companyDBA = new CompanyDBAccess();
 		
 		switch (action) {
+		case "RegistEventForm":
+			List<CompanyDTO> companies = companyDBA.SearchCompanyWithGraduates(Integer.parseInt(data[2]));
+			List<Staff> staffs = new StaffDBAcess().getAllStaffs();
+			EventDTO eventDTO = new EventDTO();
+			Event e = new Event();
+			e.setCompany(companies.getFirst().getCompany());
+			eventDTO.setEvent(e);
+			eventDTO.setGraduates(companies.getFirst().getCompany().getGraduates());
+			eventDTO.setStaffs(staffs);
+			
+			list.add(eventDTO);
+			break;
 		case "RegistEvent":
 			Event event = new Event();
 			

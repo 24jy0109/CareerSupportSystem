@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.CompanyDBAccess;
-import dao.StaffDBAcess;
 import dto.CompanyDTO;
-import model.Staff;
 
 public class CompanyAction {
 	public List<CompanyDTO> execute(String[] data) throws Exception {
@@ -33,11 +31,6 @@ public class CompanyAction {
 
 			CompanyDBAccess companyDBA2 = new CompanyDBAccess();
 			companyDBA2.insertCompany(companyName);
-			break;
-		case "RegistEvent":
-			companies = companyDBA.SearchCompanyWithGraduates(Integer.parseInt(data[2]));
-			List<Staff> staffs = new StaffDBAcess().getAllStaffs();
-			companies.getFirst().setStaffs(staffs);
 			break;
 		}
 		return companies;
