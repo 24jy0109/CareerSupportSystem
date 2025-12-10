@@ -2,7 +2,7 @@ package model;
 
 public class Graduate {
 	private int graduateId;
-	private Company comapany;
+	private Company company;
 	private Staff staff;
 	private Course course;
 	private String graduateStudentNumber;
@@ -19,7 +19,7 @@ public class Graduate {
 			String graduateName, String graduateEmail, String otherInfo, String graduateJobCategory) {
 
 		this.graduateStudentNumber = graduateStudentNumber;
-		this.comapany = comapany;
+		this.company = comapany;
 		this.staff = staff;
 		this.course = course;
 		this.graduateName = graduateName;
@@ -36,12 +36,12 @@ public class Graduate {
 		this.graduateStudentNumber = graduateStudentNumber;
 	}
 
-	public Company getComapany() {
-		return comapany;
+	public Company getCompany() {
+		return company;
 	}
 
-	public void setComapany(Company comapany) {
-		this.comapany = comapany;
+	public void setCompany(Company comapany) {
+		this.company = comapany;
 	}
 
 	public Staff getStaff() {

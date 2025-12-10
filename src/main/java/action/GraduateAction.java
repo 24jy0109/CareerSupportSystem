@@ -1,11 +1,8 @@
 package action;
 
-import dao.AnswerDBAccess;
 import dao.GraduateDBAccess;
-import model.Answer;
 import model.Company;
 import model.Course;
-import model.Email;
 import model.Graduate;
 import model.Staff;
 
@@ -18,7 +15,7 @@ public class GraduateAction {
 		GraduateDBAccess GraduateDBA = new GraduateDBAccess();
 		Graduate graduate = new Graduate();
 		switch (action) {
-		case "AssignStaff":
+		case "SendScheduleArrangeEmail":
 			// data[2] graduateStudentNumber
 			// data[3] staffId
 			
@@ -29,28 +26,6 @@ public class GraduateAction {
 			staff.setStaffId(Integer.parseInt(data[3]));
 			graduate.setStaff(staff);
 			GraduateDBA.setStaff(graduate);
-			
-			AnswerDBAccess AnswerDBA = new AnswerDBAccess();
-			Answer answer = new Answer();
-			answer.setGraduateStudentNumber(graduate.getGraduateStudentNumber());
-			answer = AnswerDBA.insertAnswer(answer);
-
-			// メールの件名・本文はあなたのデータに合わせて
-			String subject = "【イベントのお願い】" ;
-			String body = "http://localhost:8080/CareerSupportSystem/answer?command=AnswerForm&answerId=" + answer.getAnswerId();
-
-			    Email mail = new Email();   // 1通ずつ新しく作る
-			    mail.setTo("24jy0109@jec.ac.jp");
-			    mail.setSubject(subject);
-			    mail.setBody(body + "\n" + graduate.getGraduateEmail());
-
-			    boolean result = mail.send();
-
-			    if (!result) {
-			        System.out.println("送信失敗: " + graduate.getGraduateEmail());
-			    } else {
-			        System.out.println("送信成功: " + graduate.getGraduateEmail());
-			    }
 			break;
 		case "RegisterGraduate":
 //			Graduate graduate = new Graduate();
@@ -60,7 +35,7 @@ public class GraduateAction {
 		    // ① 会社ID
 			int companyId = Integer.parseInt(data[1]);
 			company.setCompanyId(companyId);
-			graduate.setComapany(company); 
+			graduate.setCompany(company); 
 			
 		    // jobType
 		    graduate.setGraduateJobCategory(data[2]);

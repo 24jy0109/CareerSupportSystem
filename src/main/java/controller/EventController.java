@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.EventAction;
+import action.GraduateAction;
 import dto.EventDTO;
 
 @WebServlet("/event")
@@ -38,6 +39,8 @@ public class EventController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String studentNumber = (String) session.getAttribute("studentNumber");
 		String role = (String) session.getAttribute("role");
+		
+		String data[];
 		
 		// Test
 		System.out.println(studentNumber);
@@ -70,7 +73,7 @@ public class EventController extends HttpServlet {
 				break;
 			case "RegistEvent":
 				// 配列を作成（必要な項目分のサイズを確保）
-				String[] data = new String[10];
+				data = new String[10];
 
 				data[0] = command;  // "RegistEvent"
 				data[1] = "";				
@@ -102,7 +105,29 @@ public class EventController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
-			case "":
+			case "SendScheduleArrangeEmail":
+				data = new String[6];
+				data[0] = command;
+				data[1] = "";
+				data[2] = (String) request.getParameter("graduateStudentNumber");
+				data[3] = (String) request.getParameter("staffId");
+				try {
+					new GraduateAction().execute(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				data[4] = request.getParameter("mailTitle");
+				data[5] = request.getParameter("mailBody");
+
+				try {
+					events = eventAction.execute(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				companyId = (String) request.getParameter("companyId");
+				response.sendRedirect("event?command=RegistEventForm&companyId=" + companyId);
+				return;
 			case "EventList":
 				nextPage = "staff/EventList.jsp";
 				break;

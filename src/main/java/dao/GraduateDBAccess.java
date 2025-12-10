@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Company;
 import model.Graduate;
 
 public class GraduateDBAccess extends DBAccess {
@@ -29,33 +30,49 @@ public class GraduateDBAccess extends DBAccess {
 	}
 
 	public Graduate searchGraduateByGraduateStudentNumber(String graduateStudentNumber) throws Exception {
-		Connection con = createConnection();
+	    Connection con = createConnection();
 
-		String sql = "SELECT graduate_student_number, graduate_name, graduate_email, graduate_other_info, graduate_job_category "
-				+ "FROM graduate WHERE graduate_student_number = ?";
+	    // company_id と company_name のみ JOIN
+	    String sql = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_email, " +
+	                 "g.graduate_other_info, g.graduate_job_category, g.company_id, " +
+	                 "c.company_name " +
+	                 "FROM graduate g " +
+	                 "LEFT JOIN company c ON g.company_id = c.company_id " +
+	                 "WHERE g.graduate_student_number = ?";
 
-		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-			pstmt.setString(1, graduateStudentNumber);
-			ResultSet rs = pstmt.executeQuery();
+	        pstmt.setString(1, graduateStudentNumber);
+	        ResultSet rs = pstmt.executeQuery();
 
-			if (rs.next()) {
-				Graduate g = new Graduate();
-				g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
-				g.setGraduateName(rs.getString("graduate_name"));
-				g.setGraduateEmail(rs.getString("graduate_email"));
-				g.setOtherInfo(rs.getString("graduate_other_info"));
-				g.setGraduateJobCategory(rs.getString("graduate_job_category"));
-				return g;
-			}
+	        if (rs.next()) {
+	            Graduate g = new Graduate();
+	            g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+	            g.setGraduateName(rs.getString("graduate_name"));
+	            g.setGraduateEmail(rs.getString("graduate_email"));
+	            g.setOtherInfo(rs.getString("graduate_other_info"));
+	            g.setGraduateJobCategory(rs.getString("graduate_job_category"));
 
-		} finally {
-			if (con != null)
-				con.close();
-		}
+	            // --- Company セット（company_id と company_name のみ） ---
+	            int companyId = rs.getInt("company_id");
+	            if (!rs.wasNull()) { // company_id が NULL でない場合
+	                Company c = new Company();
+	                c.setCompanyId(companyId);
+	                c.setCompanyName(rs.getString("company_name"));
+	                g.setCompany(c);
+	            }
 
-		return null; // 見つからなかった場合
+	            return g;
+	        }
+
+	    } finally {
+	        if (con != null) con.close();
+	    }
+
+	    return null;
 	}
+
+
 	
 	public List<Graduate> findAll() throws Exception {
 
@@ -91,7 +108,7 @@ public class GraduateDBAccess extends DBAccess {
 			con = createConnection();
 			ps = con.prepareStatement(sql);
 
-			ps.setInt(1, graduate.getComapany().getCompanyId());
+			ps.setInt(1, graduate.getCompany().getCompanyId());
 			ps.setNull(2, java.sql.Types.INTEGER); // staff_id を NULL
 			ps.setString(3, graduate.getCourse().getCourseCode());
 			ps.setString(4, graduate.getGraduateStudentNumber());

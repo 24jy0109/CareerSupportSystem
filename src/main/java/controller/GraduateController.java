@@ -83,19 +83,7 @@ public class GraduateController extends HttpServlet {
 		if (role.equals("staff")) {
 			// 職員の遷移
 			switch (command) {
-			case "AssignStaff":
-				graduateStudentNumber = (String) request.getParameter("graduateStudentNumber");
-				String staffId = (String) request.getParameter("staffId");
-				companyId = (String) request.getParameter("companyId");
-				try {
-					graduateAction.execute(new String[] { "AssignStaff", "", graduateStudentNumber, staffId });
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				response.sendRedirect("company?command=RegistEvent&companyId=" + companyId);
-				return;
 //				連絡先登録
-
 			//				入力画面
 			case "RegistEmail":
 				nextPage = "common/RegistEmail.jsp";
