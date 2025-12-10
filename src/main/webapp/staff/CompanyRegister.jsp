@@ -11,7 +11,7 @@
 	<h1>企業登録</h1>
 	<form action="company" method="post">
 	<input type="hidden" name="command" value="CompanyRegisterConfirm">
-	<input type="text" name="companyName" placeholder="企業目入力">
+	<input type="text" name="companyName" placeholder="企業名入力">
 	<button type="submit">確認</button>
 	</form>
 	

@@ -13,9 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.CompanyAction;
-import dao.CourseDBAccess;
 import dto.CompanyDTO;
-import model.Course;
 
 @WebServlet("/company")
 public class CompanyController extends HttpServlet {
@@ -77,6 +75,11 @@ public class CompanyController extends HttpServlet {
 			//				企業名入力、確認
 			case "CompanyRegister":
 				nextPage = "staff/CompanyRegister.jsp";
+				//				companyName = request.getParameter("companyname");
+				//				request.setAttribute("companyName", companyName);
+				break;
+			case "CompanyRegisternext":
+				nextPage = "staff/CompanyRegisterConfirm.jsp";
 				companyName = request.getParameter("companyname");
 				request.setAttribute("companyName", companyName);
 				break;
@@ -90,32 +93,19 @@ public class CompanyController extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+
 				break;
-			//				卒業生追加
-			case "RegistEmail":
-				nextPage = "common/RegistEmail.jsp";
-				//				企業名
-				companyName = (String) request.getParameter("companyName");
-				if (companyName == null)
-					companyName = "";
+
+			case "RegistEvent":
+				nextPage = "staff/RegistEventInfo.jsp";
+				String companyId = (String) request.getParameter("companyId");
 				try {
-					companies = companyAction.execute(new String[] { "CompanyList", "", companyName });
+					companies = companyAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				break;
 			case "CompanyRegisterBack":
-
-				List<Course> courses = new ArrayList<>();
-				CourseDBAccess courseDB = new CourseDBAccess();
-				try {
-					courses = courseDB.getAllCourses();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				request.setAttribute("courses", courses);
-				break;
-			case "ConfirmRegistEmail":
 				break;
 			}
 		} else {

@@ -3,6 +3,8 @@ package action;
 import dao.AnswerDBAccess;
 import dao.GraduateDBAccess;
 import model.Answer;
+import model.Company;
+import model.Course;
 import model.Email;
 import model.Graduate;
 import model.Staff;
@@ -50,6 +52,38 @@ public class GraduateAction {
 			        System.out.println("送信成功: " + graduate.getGraduateEmail());
 			    }
 			break;
+		case "RegisterGraduate":
+//			Graduate graduate = new Graduate();
+			Company company = new Company();
+			Course course = new Course();
+
+		    // ① 会社ID
+			int companyId = Integer.parseInt(data[1]);
+			company.setCompanyId(companyId);
+			graduate.setComapany(company); 
+			
+		    // jobType
+		    graduate.setGraduateJobCategory(data[2]);
+
+		    // 氏名
+		    graduate.setGraduateName(data[3]);
+
+		    // 学科CODE
+		    course.setCourseCode(data[4]);
+		    graduate.setCourse(course);
+		    
+		    // 学籍番号
+		    graduate.setGraduateStudentNumber(data[5]);
+
+		    // メール
+		    graduate.setGraduateEmail(data[6]);
+
+		    // その他
+		    graduate.setOtherInfo(data[7]);
+
+		    GraduateDBAccess gdb = new GraduateDBAccess();
+		    gdb.insertGraduate(graduate);
+		    break;
 		}
 	}
 }

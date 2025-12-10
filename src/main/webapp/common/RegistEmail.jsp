@@ -11,18 +11,20 @@
 </head>
 <body>
 	<h2>登録画面</h2>
-	<form action="company" method="post">
-		<input type="hidden" name="command" value="CompanyRegisterConfirm">
+	<form action="graduate" method="post">
+		<input type="hidden" name="command" value="RegistEmailNext">
 		<!--	企業選択-->
 		<h1>企業選択</h1>
 		<div>
 			<!--			企業名選択-->
-			<select name="companyName">
+			<select name="companyId">
 				<!--			<option value="">企業名を選択</option>-->
+				<option value="">企業を選択</option>
 				<c:forEach var="companyDTO" items="${companies}">
-					<option value="${companyDTO.company.companyName}">
+					<option value="${companyDTO.company.companyId}">
 						${companyDTO.company.companyName}</option>
 				</c:forEach>
+
 			</select>
 			<!--職種選択-->
 			<select name="jobType" id="jobType">
@@ -41,23 +43,17 @@
 		<!--		学生情報-->
 		<h1>学生情報</h1>
 		<div>
-			氏名：<input type="text" name="studentName"> 
-			<br>
-			学科： <select
-				name="courseName">
+			氏名：<input type="text" name="graduateName"> <br> 学科： <select
+				name="courseCode">
 				<option value="">学科を選択</option>
 				<c:forEach var="course" items="${courses}">
-					<option value="${course.courseName}">${course.courseName}
+					<option value="${course.courseCode}">${course.courseName}
 					</option>
 				</c:forEach>
-			</select>
-			<br>
-			学籍番号：<input type="text" name="studentNumber"> 
-			<br>
-			メールアドレス：<input type="text" name="mailAddress"> 
-			<br>
-			その他：<input type="text" name="other"> 
-			
+			</select> <br> 学籍番号：<input type="text" name="graduateStudentNumber">
+			<br> メールアドレス：<input type="text" name="graduateEmail"> <br>
+			その他：<input type="text" name="otherInfo">
+
 		</div>
 
 
