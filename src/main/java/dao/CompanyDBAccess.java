@@ -329,7 +329,7 @@ public class CompanyDBAccess extends DBAccess {
 		return list;
 	}
 
-	public String serchCompanyNameById(String companyId) throws SQLException, Exception {
+	public String searchCompanyNameById(String companyId) throws SQLException, Exception {
 		String companyName = null;
 
 		String sql = "SELECT company_name FROM company WHERE company_id = ?";

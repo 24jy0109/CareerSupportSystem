@@ -18,6 +18,7 @@ import dao.CompanyDBAccess;
 import dao.CourseDBAccess;
 import dto.CompanyDTO;
 import model.Course;
+import model.Graduate;
 
 /**
  * Servlet implementation class GraduateController
@@ -25,17 +26,19 @@ import model.Course;
 @WebServlet("/graduate")
 public class GraduateController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    public GraduateController() {
-        super();
-    }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
-		doPost(request,response);
+	public GraduateController() {
+		super();
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		//		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// リクエスト情報に対する文字コードの設定する
 		request.setCharacterEncoding("UTF-8");
 
@@ -43,7 +46,7 @@ public class GraduateController extends HttpServlet {
 		String command = request.getParameter("command");
 
 		// 戻り値用のArrayList<Company>
-//		List<CompanyDTO> companies = new ArrayList<CompanyDTO>();
+		//		List<CompanyDTO> companies = new ArrayList<CompanyDTO>();
 
 		// sessionから値を取得
 		HttpSession session = request.getSession();
@@ -65,7 +68,12 @@ public class GraduateController extends HttpServlet {
 		GraduateAction graduateAction = new GraduateAction();
 		CompanyAction companyAction = new CompanyAction();
 		List<CompanyDTO> companies = new ArrayList<CompanyDTO>();
-		
+
+		List<Graduate> graduate = new ArrayList<Graduate>();
+		//				学科
+		List<Course> courses = new ArrayList<>();
+		CourseDBAccess courseDB = new CourseDBAccess();
+
 		// 次画面用の変数
 		String nextPage = null;
 		String companyName = null;
@@ -78,7 +86,7 @@ public class GraduateController extends HttpServlet {
 
 		String companyId = null;
 		String courseCode = null;
-		
+
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
 		if (role.equals("staff")) {
 			// 職員の遷移
@@ -94,31 +102,62 @@ public class GraduateController extends HttpServlet {
 				}
 				response.sendRedirect("company?command=RegistEvent&companyId=" + companyId);
 				return;
-//				連絡先登録
-
+			//				連絡先登録
 			//				入力画面
 			case "RegistEmail":
 				nextPage = "common/RegistEmail.jsp";
+				//
+				 // Back の場合、入力値が送られてくる
+			    String backCompanyId = request.getParameter("companyId");
+			    String backCourseCode = request.getParameter("courseCode");
+			    String job = request.getParameter("jobType");
+			    String name = request.getParameter("graduateName");
+			    String sn = request.getParameter("graduateStudentNumber");
+			    String mail = request.getParameter("graduateEmail"); // hidden名に合わせる
+			    String info = request.getParameter("otherInfo");
 
-				//				企業名
-				companyId = (String) request.getParameter("companyId");
-				if (companyId == null)
-					companyId = "";
-				try {
-					companies = companyAction.execute(new String[] { "CompanyList", "", companyId });
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				request.setAttribute("companies", companies);
-				//				学科
-				List<Course> courses = new ArrayList<>();
-				CourseDBAccess courseDB = new CourseDBAccess();
-				try {
-					courses = courseDB.getAllCourses();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				request.setAttribute("courses", courses);
+			    // 会社IDと会社名を設定
+			    if (backCompanyId != null && !backCompanyId.isEmpty()) {
+			        companyId = backCompanyId; // 登録用ID
+			        try {
+			            companyName = new CompanyDBAccess().searchCompanyNameById(backCompanyId); // 表示用
+			        } catch (Exception e) {
+			            e.printStackTrace();
+			            companyName = ""; // 念のため初期化
+			        }
+			    } else {
+			        // 初回表示
+			        companyId = "";
+			        companyName = "";
+			    }
+
+			    // 企業一覧読み込み
+			    try {
+			        companies = companyAction.execute(new String[] { "CompanyList", "", "" });
+			    } catch (Exception e) {
+			        e.printStackTrace();
+			    }
+			    request.setAttribute("companies", companies);
+
+			    // 学科一覧読み込み
+			    try {
+			        courses = new CourseDBAccess().getAllCourses();
+			    } catch (Exception e) {
+			        e.printStackTrace();
+			    }
+			    request.setAttribute("courses", courses);
+
+			    // JSPへ渡す入力値
+			    request.setAttribute("companyId", companyId); // 登録処理用
+			    request.setAttribute("companyName", companyName); // 表示用
+			    request.setAttribute("backCompany", backCompanyId); // Back 判定用（必要なら）
+			    request.setAttribute("jobType", job);
+			    request.setAttribute("graduateName", name);
+			    request.setAttribute("courseCode", backCourseCode); // 登録処理用
+			    request.setAttribute("graduateStudentNumber", sn);
+			    request.setAttribute("graduateEmail", mail);
+			    request.setAttribute("otherInfo", info);
+
 				break;
 			//				確認へ
 			case "RegistEmailNext":
@@ -140,7 +179,7 @@ public class GraduateController extends HttpServlet {
 				CourseDBAccess coursedb = new CourseDBAccess();
 
 				try {
-					companyName = cdb.serchCompanyNameById(companyId);
+					companyName = cdb.searchCompanyNameById(companyId);
 				} catch (Exception e) {
 					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
@@ -189,7 +228,7 @@ public class GraduateController extends HttpServlet {
 				} // ← requestを渡す！
 
 				break;
-				
+
 			case "AppointMenu":
 				nextPage = "staff/AppointMenu.jsp";
 				break;
@@ -201,8 +240,8 @@ public class GraduateController extends HttpServlet {
 				break;
 			}
 		}
-		
-//		request.setAttribute("companies", companies);
+
+		//		request.setAttribute("companies", companies);
 		// 次のページへの転送
 		RequestDispatcher rd = request.getRequestDispatcher(nextPage);
 		rd.forward(request, response);

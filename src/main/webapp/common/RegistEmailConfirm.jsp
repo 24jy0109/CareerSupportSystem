@@ -8,7 +8,6 @@
 </head>
 <body>
 <form action="graduate" method="post">
-    <input type="hidden" name="command" value="RegistEmailConfirm">
 
     <p>会社名：${companyName}</p>
     <input type="hidden" name="companyId" value="${companyId}">
@@ -31,7 +30,8 @@
     <p>その他：${otherInfo}</p>
     <input type="hidden" name="otherInfo" value="${otherInfo}">
 
-    <button type="submit">登録する</button>
+	<button type="submit" name="command" value="RegistEmail">編集する</button>
+    <button type="submit" name="command" value="RegistEmailConfirm">登録する</button>
 </form>
 </body>
 </html>
