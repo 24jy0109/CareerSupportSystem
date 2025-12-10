@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.AnswerDBAccess;
 import dao.CompanyDBAccess;
 import dao.EventDBAccess;
 import dao.GraduateDBAccess;
@@ -11,6 +12,7 @@ import dao.RequestDBAccess;
 import dao.StaffDBAcess;
 import dto.CompanyDTO;
 import dto.EventDTO;
+import model.Answer;
 import model.Company;
 import model.Email;
 import model.Event;
@@ -32,29 +34,34 @@ public class EventAction {
 		String action = data[0];
 		EventDTO eventDTO = new EventDTO();
 		List<EventDTO> list = new ArrayList<EventDTO>();
-
-		CompanyDBAccess companyDBA = new CompanyDBAccess();
+		ArrayList<Graduate> graduates = new ArrayList<>();
 		
+		EventDBAccess eventDBA = new EventDBAccess();
+		CompanyDBAccess companyDBA = new CompanyDBAccess();
+
+		Event event = new Event();
+		Company company = new Company();
+		Staff staff = new Staff();
+		Graduate graduate = new Graduate();
+		
+		String title;
+		String body;
+
 		switch (action) {
 		case "RegistEventForm":
 			List<CompanyDTO> companies = companyDBA.SearchCompanyWithGraduates(Integer.parseInt(data[2]));
 			List<Staff> staffs = new StaffDBAcess().getAllStaffs();
-			Event e = new Event();
-			e.setCompany(companies.getFirst().getCompany());
-			eventDTO.setEvent(e);
+			event.setCompany(companies.getFirst().getCompany());
+			eventDTO.setEvent(event);
 			eventDTO.setGraduates(companies.getFirst().getCompany().getGraduates());
 			eventDTO.setStaffs(staffs);
-			
+
 			list.add(eventDTO);
 			break;
 		case "RegistEvent":
-			Event event = new Event();
-			
-			Company company = new Company();
 			company.setCompanyId(Integer.parseInt(data[2]));
 			event.setCompany(company);
-			
-			Staff staff = new Staff();
+
 			staff.setStaffId(Integer.parseInt(data[3]));
 			event.setStaff(staff);
 
@@ -66,7 +73,6 @@ public class EventAction {
 			event.setEventOtherInfo(data[8]);
 
 			// 参加させる卒業生をセット
-			ArrayList<Graduate> graduates = new ArrayList<>();
 			if (!data[9].isEmpty()) {
 				String[] graduateNumbers = data[9].split(",");
 				for (String num : graduateNumbers) {
@@ -79,44 +85,93 @@ public class EventAction {
 
 			// eventProgress は登録時は2(開催)
 			event.setEventProgress(2);
-			
-			EventDBAccess eventDBA = new EventDBAccess();
+
 			eventDBA.insertEvent(event);
-			
+
 			RequestDBAccess requestDBA = new RequestDBAccess();
 			List<String> emails = requestDBA.searchEmailsByCompanyId(Integer.parseInt(data[2]));
 
 			// メールの件名・本文はあなたのデータに合わせて
-			String subject = "【イベント通知】" ;
-			String body = "イベントに関するお知らせです。";
+			title = "【イベント通知】";
+			body = "イベントに関するお知らせです。";
 
 			for (String toEmail : emails) {
 
-			    Email mail = new Email();   // 1通ずつ新しく作る
-			    mail.setTo("24jy0109@jec.ac.jp");
-			    mail.setSubject(subject);
-			    mail.setBody(body + toEmail);
+				Email mail = new Email(); // 1通ずつ新しく作る
+				mail.setTo("24jy0109@jec.ac.jp");
+				mail.setSubject(title);
+				mail.setBody(body + toEmail);
 
-			    boolean result = mail.send();
+				boolean result = mail.send();
 
-			    if (!result) {
-			        System.out.println("送信失敗: " + toEmail);
-			    } else {
-			        System.out.println("送信成功: " + toEmail);
-			    }
+				if (!result) {
+					System.out.println("送信失敗: " + toEmail);
+				} else {
+					System.out.println("送信成功: " + toEmail);
+				}
 			}
 
 			break;
 		case "ScheduleArrangeSendForm":
 			// data[2] = graduateStudentNumber
-			Graduate graduate = new GraduateDBAccess().searchGraduateByGraduateStudentNumber(data[2]);
-			List<Graduate> g = new ArrayList<Graduate>(); 
+			graduate = new GraduateDBAccess().searchGraduateByGraduateStudentNumber(data[2]);
+			List<Graduate> g = new ArrayList<Graduate>();
 			g.add(graduate);
 			eventDTO.setGraduates(g);
-			
+
 			List<Staff> s = new ArrayList<>();
 			s = new StaffDBAcess().getAllStaffs();
 			eventDTO.setStaffs(s);
+			list.add(eventDTO);
+			break;
+		case "SendScheduleArrangeEmail":
+			//			data[0]=コマンド
+			//			data[1]=空文字
+			//			data[2]=卒業生学籍番号
+			//			data[3]=スタッフID
+			//			data[4]=件名
+			//			data[5]=本文
+			//			data[6]=companyId
+			
+			// 空のイベント作成
+			company.setCompanyId(Integer.parseInt(data[6]));
+			staff.setStaffId(Integer.parseInt(data[3]));
+			event.setCompany(company);
+			event.setStaff(staff);
+			event = eventDBA.insertEvent(event);
+			
+			AnswerDBAccess answerDBA = new AnswerDBAccess();
+			Answer answer = new Answer();
+			graduate.setGraduateStudentNumber(data[2]);
+			answer.setGraduate(graduate);
+			answer.setEvent(event);
+			answer = answerDBA.insertAnswer(answer);
+
+			// メールの件名・本文はあなたのデータに合わせて
+			title = data[4];
+			body = data[5];
+			body += "\n\n回答URL:" + "http://localhost:8080/CareerSupportSystem/answer?command=AnswerForm&answerId="
+					+ answer.getAnswerId();
+			
+			Email mail = new Email();
+			graduate = new GraduateDBAccess().searchGraduateByGraduateStudentNumber(data[2]);
+			
+			body += "\n\n担当者名" + graduate.getStaff().getStaffName();
+			body += "\n\n担当者メールアドレス" + graduate.getStaff().getStaffEmail();
+			
+			mail.setTo("24jy0109@jec.ac.jp");
+			mail.setSubject(title);
+			mail.setBody(body + "\nテスト用：" + graduate.getGraduateEmail());
+
+			boolean result = mail.send();
+
+			if (!result) {
+				System.out.println("送信失敗: " + graduate.getGraduateEmail());
+			} else {
+				System.out.println("送信成功: " + graduate.getGraduateEmail());
+			}
+			graduates.add(graduate);
+			eventDTO.setGraduates(graduates);
 			list.add(eventDTO);
 			break;
 		}

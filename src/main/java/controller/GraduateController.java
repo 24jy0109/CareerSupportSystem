@@ -103,60 +103,61 @@ public class GraduateController extends HttpServlet {
 				response.sendRedirect("company?command=RegistEvent&companyId=" + companyId);
 				return;
 			//				連絡先登録
+			//				連絡先登録
 			//				入力画面
 			case "RegistEmail":
 				nextPage = "common/RegistEmail.jsp";
 				//
-				 // Back の場合、入力値が送られてくる
-			    String backCompanyId = request.getParameter("companyId");
-			    String backCourseCode = request.getParameter("courseCode");
-			    String job = request.getParameter("jobType");
-			    String name = request.getParameter("graduateName");
-			    String sn = request.getParameter("graduateStudentNumber");
-			    String mail = request.getParameter("graduateEmail"); // hidden名に合わせる
-			    String info = request.getParameter("otherInfo");
+				// Back の場合、入力値が送られてくる
+				String backCompanyId = request.getParameter("companyId");
+				String backCourseCode = request.getParameter("courseCode");
+				String job = request.getParameter("jobType");
+				String name = request.getParameter("graduateName");
+				String sn = request.getParameter("graduateStudentNumber");
+				String mail = request.getParameter("graduateEmail"); // hidden名に合わせる
+				String info = request.getParameter("otherInfo");
 
-			    // 会社IDと会社名を設定
-			    if (backCompanyId != null && !backCompanyId.isEmpty()) {
-			        companyId = backCompanyId; // 登録用ID
-			        try {
-			            companyName = new CompanyDBAccess().searchCompanyNameById(backCompanyId); // 表示用
-			        } catch (Exception e) {
-			            e.printStackTrace();
-			            companyName = ""; // 念のため初期化
-			        }
-			    } else {
-			        // 初回表示
-			        companyId = "";
-			        companyName = "";
-			    }
+				// 会社IDと会社名を設定
+				if (backCompanyId != null && !backCompanyId.isEmpty()) {
+					companyId = backCompanyId; // 登録用ID
+					try {
+						companyName = new CompanyDBAccess().searchCompanyNameById(backCompanyId); // 表示用
+					} catch (Exception e) {
+						e.printStackTrace();
+						companyName = ""; // 念のため初期化
+					}
+				} else {
+					// 初回表示
+					companyId = "";
+					companyName = "";
+				}
 
-			    // 企業一覧読み込み
-			    try {
-			        companies = companyAction.execute(new String[] { "CompanyList", "", "" });
-			    } catch (Exception e) {
-			        e.printStackTrace();
-			    }
-			    request.setAttribute("companies", companies);
+				// 企業一覧読み込み
+				try {
+					companies = companyAction.execute(new String[] { "CompanyList", "", "" });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("companies", companies);
 
-			    // 学科一覧読み込み
-			    try {
-			        courses = new CourseDBAccess().getAllCourses();
-			    } catch (Exception e) {
-			        e.printStackTrace();
-			    }
-			    request.setAttribute("courses", courses);
+				// 学科一覧読み込み
+				try {
+					courses = new CourseDBAccess().getAllCourses();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("courses", courses);
 
-			    // JSPへ渡す入力値
-			    request.setAttribute("companyId", companyId); // 登録処理用
-			    request.setAttribute("companyName", companyName); // 表示用
-			    request.setAttribute("backCompany", backCompanyId); // Back 判定用（必要なら）
-			    request.setAttribute("jobType", job);
-			    request.setAttribute("graduateName", name);
-			    request.setAttribute("courseCode", backCourseCode); // 登録処理用
-			    request.setAttribute("graduateStudentNumber", sn);
-			    request.setAttribute("graduateEmail", mail);
-			    request.setAttribute("otherInfo", info);
+				// JSPへ渡す入力値
+				request.setAttribute("companyId", companyId); // 登録処理用
+				request.setAttribute("companyName", companyName); // 表示用
+				request.setAttribute("backCompany", backCompanyId); // Back 判定用（必要なら）
+				request.setAttribute("jobType", job);
+				request.setAttribute("graduateName", name);
+				request.setAttribute("courseCode", backCourseCode); // 登録処理用
+				request.setAttribute("graduateStudentNumber", sn);
+				request.setAttribute("graduateEmail", mail);
+				request.setAttribute("otherInfo", info);
 
 				break;
 			//				確認へ

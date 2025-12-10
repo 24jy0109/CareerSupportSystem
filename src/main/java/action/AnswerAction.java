@@ -7,9 +7,7 @@ import java.util.List;
 import dao.AnswerDBAccess;
 import dao.GraduateDBAccess;
 import model.Answer;
-import model.Email;
 import model.Graduate;
-import model.Staff;
 
 public class AnswerAction {
 	public List<Answer> execute(String[] data) throws Exception {
@@ -25,36 +23,6 @@ public class AnswerAction {
 		Answer answer = new Answer();
 		
 		switch (action) {
-		case "AssignStaff":
-			// data[1] 学籍番号
-			// data[2] graduateStudentNumber
-			// data[3] staffId
-			
-			graduate = GraduateDBA.searchGraduateByGraduateStudentNumber(data[2]);
-			
-//			graduate.setGraduateStudentNumber(data[2]);
-			Staff staff = new Staff();
-			staff.setStaffId(Integer.parseInt(data[3]));
-			graduate.setStaff(staff);
-			GraduateDBA.setStaff(graduate);
-			
-			// メールの件名・本文
-			String subject = "【イベントのお願い】" ;
-			String body = "開催をお願いします";
-
-			    Email mail = new Email();   // 1通ずつ新しく作る
-			    mail.setTo("24jy0109@jec.ac.jp");
-			    mail.setSubject(subject);
-			    mail.setBody(body + graduate.getGraduateEmail());
-
-			    boolean result = mail.send();
-
-			    if (!result) {
-			        System.out.println("送信失敗: " + graduate.getGraduateEmail());
-			    } else {
-			        System.out.println("送信成功: " + graduate.getGraduateEmail());
-			    }
-			break;
 		case "registAnswer":
 		    // data[1] answerId
 		    // data[2] eventAvailability
@@ -77,8 +45,12 @@ public class AnswerAction {
 		    answer.setThirdChoiceStartTime(LocalDateTime.parse(data[7]));
 		    answer.setThirdChoiceEndTime(LocalDateTime.parse(data[8]));
 
+		    answerDBA.updateAnswer(answer);
 		    answers.add(answer);
 		    break;
+		case "ScheduleAnswerCheck":
+//			answers = answerDBA
+			break;
 		}
 		return answers;
 	}

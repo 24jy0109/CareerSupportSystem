@@ -1,79 +1,91 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="java.util.*" %>
+<%@ page import="dto.EventDTO" %>
+<%@ page import="model.Graduate" %>
+<%@ page import="model.Staff" %>
+<%@ page import="model.Event" %>
 
+<!DOCTYPE html>
 <html>
 <head>
-<title>メール作成（開催相談）</title>
-<style>
-body { font-family: sans-serif; padding: 20px; }
-.form-block { margin: 12px 0; }
-.input, textarea, select { padding: 6px; width: 300px; }
-textarea { width: 520px; height: 200px; }
-.btn { padding: 8px 15px; background: #448aff; color: #fff; border-radius: 4px; border: none; }
-</style>
+<meta charset="UTF-8">
+<title>日程調整メール作成</title>
 </head>
 <body>
 
-<!-- ▼ List<EventDTO> の 1 件目を取り出す -->
-<c:set var="dto" value="${events[0]}" />
-<c:set var="g" value="${dto.graduates[0]}" />
+<%
+    List<EventDTO> events = (List<EventDTO>) request.getAttribute("events");
+    EventDTO dto = events.get(0);
+
+    Event event = dto.getEvent();
+    List<Staff> staffs = dto.getStaffs();
+    List<Graduate> graduates = dto.getGraduates();
+
+    Graduate grad = graduates.get(0);
+
+    // デフォルト件名
+    String defaultTitle = "【イベント開催】参加可否・希望日程の回答のお願い";
+
+    // デフォルト本文
+    String defaultBody =
+        grad.getGraduateName() + " 様\n\n"
+        + "お世話になっております。\n"
+        + "キャリアサポートセンターの担当スタッフよりご連絡です。\n\n"
+        + "この度、卒業生アポイントメントを開催するにあたり、\n"
+        + "ご都合の良い日時をお伺いしたく存じます。\n\n"
+        + "記載のリンクより、参加可能な日時をご回答ください。\n"
+        + "また、ご不明点などありましたら、\n"
+        + "担当スタッフまでお気軽にご連絡ください。\n\n"
+        + "よろしくお願いいたします。\n\n";
+%>
 
 <h2>日程調整メール作成</h2>
 
-<p>卒業生番号：<strong>${g.graduateStudentNumber}</strong></p>
-<p>氏名：<strong>${g.graduateName}</strong></p>
+<form action="event" method="post">
 
-<hr>
+    <input type="hidden" name="command" value="SendScheduleArrangeEmail">
 
-<form action="event?command=SendScheduleArrangeEmail" method="post">
+    <label>宛先</label><br>
+    <p>
+        <%= grad.getGraduateName() %>
+        （学籍番号：<%= grad.getGraduateStudentNumber() %>）
+    </p>
+    <input type="hidden" name="graduateStudentNumber"
+           value="<%= grad.getGraduateStudentNumber() %>">
 
-    <!-- ▼ Hidden：卒業生番号 -->
-    <input type="hidden" name="graduateStudentNumber" value="${g.graduateStudentNumber}" />
+    <input type="hidden" name="companyId"
+           value="<%= grad.getCompany().getCompanyId() %>">
 
-    <!-- ▼ 宛先 -->
-    <div class="form-block">
-        <label>宛先メールアドレス：</label><br>
-        <input type="email" name="toEmail" class="input"
-               value="${g.graduateEmail}" required />
-    </div>
+    <br>
 
-    <!-- ▼ 件名 -->
-    <div class="form-block">
-        <label>件名：</label><br>
-        <input type="text" name="subject" class="input"
-               value="【日程調整】企業訪問の候補日について" required />
-    </div>
+    <!-- 担当スタッフ -->
+    <label>担当スタッフ</label><br>
+    <select name="staffId">
+        <% for (Staff s : staffs) { %>
+            <option value="<%= s.getStaffId() %>">
+                <%= s.getStaffName() %>
+            </option>
+        <% } %>
+    </select>
 
-    <!-- ▼ 本文 -->
-    <div class="form-block">
-        <label>本文：</label><br>
-        <textarea name="body" required>
-${g.graduateName} さん
+    <br><br>
 
-お世話になっております。
-以下の日程候補の中から、ご都合の良い日時をお知らせください。
+    <!-- 件名（デフォルト値入り） -->
+    <label>件名</label><br>
+    <input type="text" name="mailTitle" size="60"
+           value="<%= defaultTitle %>" required>
 
-・第1候補：
-・第2候補：
-・第3候補：
+    <br><br>
 
-どうぞよろしくお願いいたします。
-        </textarea>
-    </div>
+    <!-- 本文（デフォルト値入り） -->
+    <label>本文</label><br>
+    <textarea name="mailBody" rows="14" cols="60" required><%= defaultBody %></textarea>
 
-    <!-- ▼ 担当スタッフ -->
-    <div class="form-block">
-        <label>担当スタッフ：</label><br>
-        <select name="staffId" class="input" required>
-            <c:forEach var="st" items="${dto.staffs}">
-                <option value="${st.staffId}">
-                    ${st.staffName}
-                </option>
-            </c:forEach>
-        </select>
-    </div>
+    <br><br>
 
-    <button type="submit" class="btn">確認画面へ</button>
+    <input type="submit" value="メールを送信する">
+
 </form>
 
 </body>

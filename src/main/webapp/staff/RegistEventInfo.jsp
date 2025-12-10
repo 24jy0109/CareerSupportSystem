@@ -85,31 +85,11 @@ h3 {
                     <td>${g.course.courseTerm}</td>
 
                     <td>
-                        <form action="graduate?command=AssignStaff" method="post">
-                            <input type="hidden" name="graduateStudentNumber"
-                                value="${g.graduateStudentNumber}" />
-                            <input type="hidden" name="eventId" value="${event.eventId}" />
-
-                            <select name="staffId" class="input">
-                                <option value=""
-                                    <c:if test="${empty g.staff}">selected</c:if>>
-                                    （未割当）
-                                </option>
-
-                                <c:forEach var="st" items="${dto.staffs}">
-                                    <option value="${st.staffId}"
-                                        <c:if test="${g.staff.staffId == st.staffId}">selected</c:if>>
-                                        ${st.staffName}
-                                    </option>
-                                </c:forEach>
-                            </select>
-
-                            <button type="submit" class="btn">割り当て</button>
+                            <p>${empty g.staff ? '未割当' : g.staff.staffName}</p>
 
                             <a href="event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}">
                                 開催相談
                             </a>
-                        </form>
                     </td>
                 </tr>
             </c:forEach>

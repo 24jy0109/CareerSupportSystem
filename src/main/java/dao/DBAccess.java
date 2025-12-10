@@ -2,6 +2,8 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 
 public class DBAccess {
 	public Connection createConnection() throws Exception {
@@ -43,6 +45,23 @@ public class DBAccess {
 					+ "DB接続の切断に失敗しました！<br>"
 					+ "管理者に連絡してください。";
 			throw new Exception(errorMessage);
+		}
+	}
+
+	// ===== 共通：NULL 対応 =====
+	public void setNullable(PreparedStatement ps, int idx, Object value, int sqlType) throws Exception {
+		if (value == null) {
+			ps.setNull(idx, sqlType);
+			return;
+		}
+		if (value instanceof Boolean) {
+			ps.setBoolean(idx, (Boolean) value);
+		} else if (value instanceof String) {
+			ps.setString(idx, (String) value);
+		} else if (value instanceof Timestamp) {
+			ps.setTimestamp(idx, (Timestamp) value);
+		} else {
+			ps.setObject(idx, value);
 		}
 	}
 }
