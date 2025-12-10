@@ -25,7 +25,7 @@ textarea { width: 520px; height: 200px; }
 
 <hr>
 
-<form action="event?command=ScheduleArrangeSubmit" method="post">
+<form action="event?command=SendScheduleArrangeEmail" method="post">
 
     <!-- ▼ Hidden：卒業生番号 -->
     <input type="hidden" name="graduateStudentNumber" value="${g.graduateStudentNumber}" />
