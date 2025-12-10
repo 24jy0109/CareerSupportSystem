@@ -30,6 +30,21 @@ public class CompanyDBAccess extends DBAccess {
 				con.close();
 		}
 	}
+	public boolean existsCompanyName(String companyName) throws Exception {
+	    String sql = "SELECT COUNT(*) FROM company WHERE company_name = ?";
+	    Connection con = createConnection();
+
+	    try (PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setString(1, companyName);
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) {
+	            return rs.getInt(1) > 0;
+	        }
+	    } finally {
+	        if (con != null) con.close();
+	    }
+	    return false;
+	}
 
 	public List<CompanyDTO> searchStudentCompanies(String companyName, String studentNumber)
 			throws Exception {

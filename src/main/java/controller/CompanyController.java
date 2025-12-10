@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.CompanyAction;
+import dao.CompanyDBAccess;
 import dto.CompanyDTO;
 
 @WebServlet("/company")
@@ -78,12 +79,29 @@ public class CompanyController extends HttpServlet {
 				//				companyName = request.getParameter("companyname");
 				//				request.setAttribute("companyName", companyName);
 				break;
-			case "CompanyRegisternext":
-				nextPage = "staff/CompanyRegisterConfirm.jsp";
-				companyName = request.getParameter("companyname");
-				request.setAttribute("companyName", companyName);
+			case "CompanyRegisterNext":
+
+				companyName = request.getParameter("companyName");
+				CompanyDBAccess db = new CompanyDBAccess();
+				boolean exists = false;
+				try {
+					exists = db.existsCompanyName(companyName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				if (exists) {
+					// 重複してる場合 → 入力画面へ戻す
+					request.setAttribute("error", "この企業名はすでに登録されています。");
+					request.setAttribute("companyName", companyName);
+					nextPage = "staff/CompanyRegister.jsp";
+				} else {
+					// 重複なし → 確認画面へ
+					request.setAttribute("companyName", companyName);
+					nextPage = "staff/CompanyRegisterConfirm.jsp";
+				}
 				break;
-			//				企業名追加
+				//				企業名追加
 			case "CompanyRegisterConfirm":
 				nextPage = "staff/AppointMenu.jsp";
 				companyName = request.getParameter("companyName");
@@ -95,6 +113,11 @@ public class CompanyController extends HttpServlet {
 				}
 
 				break;
+			case "CompanyRegisterBack":
+				nextPage = "staff/CompanyRegister.jsp";
+				companyName = request.getParameter("companyName");
+				request.setAttribute("companyName", companyName);
+				break;
 
 			case "RegistEvent":
 				nextPage = "staff/RegistEventInfo.jsp";
@@ -105,8 +128,7 @@ public class CompanyController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
-			case "CompanyRegisterBack":
-				break;
+
 			}
 		} else {
 			// 学生の遷移
