@@ -25,15 +25,10 @@ textarea { width: 520px; height: 200px; }
 
 <hr>
 
-<form action="event?command=ScheduleArrangeConfirm" method="post">
+<form action="event?command=ScheduleArrangeSubmit" method="post">
 
     <!-- ▼ Hidden：卒業生番号 -->
     <input type="hidden" name="graduateStudentNumber" value="${g.graduateStudentNumber}" />
-
-    <!-- ▼ Hidden：Event があるなら eventId も送る -->
-    <c:if test="${not empty dto.event.eventId}">
-        <input type="hidden" name="eventId" value="${dto.event.eventId}" />
-    </c:if>
 
     <!-- ▼ 宛先 -->
     <div class="form-block">

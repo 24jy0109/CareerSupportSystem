@@ -56,19 +56,29 @@ public class AnswerAction {
 			    }
 			break;
 		case "registAnswer":
-			// data[1] answerId
-			// data[2] eventAvailability
-			// data[3] firstChoice
-			// data[4] secondChoice
-			// data[5] thirdhoice
-			answer.setAnswerId(Integer.parseInt(data[1]));
-			answer.setEventAvailability(Boolean.parseBoolean(data[2]));
-			answer.setFirstChoice(LocalDateTime.parse(data[3]));
-			answer.setSecondChoice(LocalDateTime.parse(data[4]));
-			answer.setThirdChoice(LocalDateTime.parse(data[5]));
-			answerDBA.updateAnswer(answer);
-			answers.add(answer);
-			break;
+		    // data[1] answerId
+		    // data[2] eventAvailability
+		    // data[3] firstChoiceStart
+		    // data[4] firstChoiceEnd
+		    // data[5] secondChoiceStart
+		    // data[6] secondChoiceEnd
+		    // data[7] thirdChoiceStart
+		    // data[8] thirdChoiceEnd
+
+		    answer.setAnswerId(Integer.parseInt(data[1]));
+		    answer.setEventAvailability(Boolean.parseBoolean(data[2]));
+
+		    answer.setFirstChoiceStartTime(LocalDateTime.parse(data[3]));
+		    answer.setFirstChoiceEndTime(LocalDateTime.parse(data[4]));
+
+		    answer.setSecondChoiceStartTime(LocalDateTime.parse(data[5]));
+		    answer.setSecondChoiceEndTime(LocalDateTime.parse(data[6]));
+
+		    answer.setThirdChoiceStartTime(LocalDateTime.parse(data[7]));
+		    answer.setThirdChoiceEndTime(LocalDateTime.parse(data[8]));
+
+		    answers.add(answer);
+		    break;
 		}
 		return answers;
 	}

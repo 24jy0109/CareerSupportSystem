@@ -107,7 +107,7 @@ public class EventAction {
 			}
 
 			break;
-		case "ScheduleArrangeSend":
+		case "ScheduleArrangeSendForm":
 			// data[2] = graduateStudentNumber
 			Graduate graduate = new GraduateDBAccess().searchGraduateByGraduateStudentNumber(data[2]);
 			List<Graduate> g = new ArrayList<Graduate>(); 

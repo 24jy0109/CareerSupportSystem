@@ -4,32 +4,26 @@ import java.time.LocalDateTime;
 
 public class Answer {
 
-    private int answerId;
+    private Integer answerId;
     private String graduateStudentNumber;
-    private Boolean eventAvailability; 
-    private LocalDateTime firstChoice;
-    private LocalDateTime secondChoice;
-    private LocalDateTime thirdChoice;
+    private Boolean eventAvailability;
+
+    private LocalDateTime firstChoiceStartTime;
+    private LocalDateTime firstChoiceEndTime;
+
+    private LocalDateTime secondChoiceStartTime;
+    private LocalDateTime secondChoiceEndTime;
+
+    private LocalDateTime thirdChoiceStartTime;
+    private LocalDateTime thirdChoiceEndTime;
 
     public Answer() {}
 
-    public Answer(int answerId, String graduateStudentNumber, Boolean eventAvailability,
-                  LocalDateTime firstChoice, LocalDateTime secondChoice, LocalDateTime thirdChoice) {
-        this.answerId = answerId;
-        this.graduateStudentNumber = graduateStudentNumber;
-        this.eventAvailability = eventAvailability;
-        this.firstChoice = firstChoice;
-        this.secondChoice = secondChoice;
-        this.thirdChoice = thirdChoice;
-    }
-
-    // ---- Getter / Setter ----
-
-    public int getAnswerId() {
+    public Integer getAnswerId() {
         return answerId;
     }
 
-    public void setAnswerId(int answerId) {
+    public void setAnswerId(Integer answerId) {
         this.answerId = answerId;
     }
 
@@ -49,27 +43,51 @@ public class Answer {
         this.eventAvailability = eventAvailability;
     }
 
-    public LocalDateTime getFirstChoice() {
-        return firstChoice;
+    public LocalDateTime getFirstChoiceStartTime() {
+        return firstChoiceStartTime;
     }
 
-    public void setFirstChoice(LocalDateTime firstChoice) {
-        this.firstChoice = firstChoice;
+    public void setFirstChoiceStartTime(LocalDateTime firstChoiceStartTime) {
+        this.firstChoiceStartTime = firstChoiceStartTime;
     }
 
-    public LocalDateTime getSecondChoice() {
-        return secondChoice;
+    public LocalDateTime getFirstChoiceEndTime() {
+        return firstChoiceEndTime;
     }
 
-    public void setSecondChoice(LocalDateTime secondChoice) {
-        this.secondChoice = secondChoice;
+    public void setFirstChoiceEndTime(LocalDateTime firstChoiceEndTime) {
+        this.firstChoiceEndTime = firstChoiceEndTime;
     }
 
-    public LocalDateTime getThirdChoice() {
-        return thirdChoice;
+    public LocalDateTime getSecondChoiceStartTime() {
+        return secondChoiceStartTime;
     }
 
-    public void setThirdChoice(LocalDateTime thirdChoice) {
-        this.thirdChoice = thirdChoice;
+    public void setSecondChoiceStartTime(LocalDateTime secondChoiceStartTime) {
+        this.secondChoiceStartTime = secondChoiceStartTime;
+    }
+
+    public LocalDateTime getSecondChoiceEndTime() {
+        return secondChoiceEndTime;
+    }
+
+    public void setSecondChoiceEndTime(LocalDateTime secondChoiceEndTime) {
+        this.secondChoiceEndTime = secondChoiceEndTime;
+    }
+
+    public LocalDateTime getThirdChoiceStartTime() {
+        return thirdChoiceStartTime;
+    }
+
+    public void setThirdChoiceStartTime(LocalDateTime thirdChoiceStartTime) {
+        this.thirdChoiceStartTime = thirdChoiceStartTime;
+    }
+
+    public LocalDateTime getThirdChoiceEndTime() {
+        return thirdChoiceEndTime;
+    }
+
+    public void setThirdChoiceEndTime(LocalDateTime thirdChoiceEndTime) {
+        this.thirdChoiceEndTime = thirdChoiceEndTime;
     }
 }

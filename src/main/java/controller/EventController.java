@@ -93,7 +93,7 @@ public class EventController extends HttpServlet {
 				}
 				response.sendRedirect("event?command=EventList");
 				return;
-			case "ScheduleArrangeSend":
+			case "ScheduleArrangeSendForm":
 				nextPage = "staff/ScheduleArrangeSend.jsp";
 				String graduateStudentNumber = request.getParameter("graduateStudentNumber");
 				try {
@@ -102,6 +102,7 @@ public class EventController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
+			case "":
 			case "EventList":
 				nextPage = "staff/EventList.jsp";
 				break;

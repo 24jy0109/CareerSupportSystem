@@ -10,114 +10,100 @@ import model.Answer;
 
 public class AnswerDBAccess extends DBAccess {
 
-	public Answer insertAnswer(Answer answer) throws Exception {
+    // ===== 共通：NULL 対応 =====
+    private void setNullable(PreparedStatement ps, int idx, Object value, int sqlType) throws Exception {
+        if (value == null) {
+            ps.setNull(idx, sqlType);
+            return;
+        }
+        if (value instanceof Boolean) {
+            ps.setBoolean(idx, (Boolean) value);
+        } else if (value instanceof String) {
+            ps.setString(idx, (String) value);
+        } else if (value instanceof Timestamp) {
+            ps.setTimestamp(idx, (Timestamp) value);
+        } else {
+            ps.setObject(idx, value);
+        }
+    }
 
-		Connection con = createConnection();
+    // ===================================================================================
+    // INSERT
+    // ===================================================================================
+    public Answer insertAnswer(Answer answer) throws Exception {
 
-		String sql = "INSERT INTO answer ("
-				+ "graduate_student_number, event_availability, "
-				+ "first_choice, second_choice, third_choice"
-				+ ") VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO answer ("
+                + "graduate_student_number, event_availability, "
+                + "first_choice_start_time, first_choice_end_time, "
+                + "second_choice_start_time, second_choice_end_time, "
+                + "third_choice_start_time, third_choice_end_time"
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-		try (PreparedStatement pstmt = con.prepareStatement(
-				sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (
+            Connection con = createConnection();
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+        ) {
 
-			// graduate_student_number
-			if (answer.getGraduateStudentNumber() != null) {
-				pstmt.setString(1, answer.getGraduateStudentNumber());
-			} else {
-				pstmt.setNull(1, java.sql.Types.VARCHAR);
-			}
+            setNullable(ps, 1, answer.getGraduateStudentNumber(), java.sql.Types.CHAR);
+            setNullable(ps, 2, answer.getEventAvailability(), java.sql.Types.BOOLEAN);
 
-			// event_availability
-			if (answer.getEventAvailability() != null) {
-				pstmt.setBoolean(2, answer.getEventAvailability());
-			} else {
-				pstmt.setNull(2, java.sql.Types.BOOLEAN);
-			}
+            setNullable(ps, 3,  answer.getFirstChoiceStartTime()  == null ? null : Timestamp.valueOf(answer.getFirstChoiceStartTime()), java.sql.Types.TIMESTAMP);
+            setNullable(ps, 4,  answer.getFirstChoiceEndTime()    == null ? null : Timestamp.valueOf(answer.getFirstChoiceEndTime()),   java.sql.Types.TIMESTAMP);
 
-			// first_choice
-			if (answer.getFirstChoice() != null) {
-				pstmt.setTimestamp(3, Timestamp.valueOf(answer.getFirstChoice()));
-			} else {
-				pstmt.setNull(3, java.sql.Types.TIMESTAMP);
-			}
+            setNullable(ps, 5,  answer.getSecondChoiceStartTime() == null ? null : Timestamp.valueOf(answer.getSecondChoiceStartTime()), java.sql.Types.TIMESTAMP);
+            setNullable(ps, 6,  answer.getSecondChoiceEndTime()   == null ? null : Timestamp.valueOf(answer.getSecondChoiceEndTime()),   java.sql.Types.TIMESTAMP);
 
-			// second_choice
-			if (answer.getSecondChoice() != null) {
-				pstmt.setTimestamp(4, Timestamp.valueOf(answer.getSecondChoice()));
-			} else {
-				pstmt.setNull(4, java.sql.Types.TIMESTAMP);
-			}
+            setNullable(ps, 7,  answer.getThirdChoiceStartTime()  == null ? null : Timestamp.valueOf(answer.getThirdChoiceStartTime()), java.sql.Types.TIMESTAMP);
+            setNullable(ps, 8,  answer.getThirdChoiceEndTime()    == null ? null : Timestamp.valueOf(answer.getThirdChoiceEndTime()),   java.sql.Types.TIMESTAMP);
 
-			// third_choice
-			if (answer.getThirdChoice() != null) {
-				pstmt.setTimestamp(5, Timestamp.valueOf(answer.getThirdChoice()));
-			} else {
-				pstmt.setNull(5, java.sql.Types.TIMESTAMP);
-			}
+            ps.executeUpdate();
 
-			pstmt.executeUpdate();
+            // AUTO_INCREMENT の取得
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    answer.setAnswerId(rs.getInt(1));
+                }
+            }
+        }
 
-			// ---- ここでAUTO_INCREMENTされたIDを取得 ----
-			try (ResultSet rs = pstmt.getGeneratedKeys()) {
-				if (rs.next()) {
-					int generatedId = rs.getInt(1);
-					answer.setAnswerId(generatedId);
-				}
-			}
-		}
+        return answer;
+    }
 
-		return answer;
-	}
+    // ===================================================================================
+    // UPDATE
+    // ===================================================================================
+    public void updateAnswer(Answer answer) {
 
-	public void updateAnswer(Answer answer) {
-		String sql = "UPDATE answer SET "
-				+ "event_availability = ?, "
-				+ "first_choice = ?, "
-				+ "second_choice = ?, "
-				+ "third_choice = ? "
-				+ "WHERE answer_id = ?";
+        String sql = "UPDATE answer SET "
+                + "event_availability = ?, "
+                + "first_choice_start_time = ?, first_choice_end_time = ?, "
+                + "second_choice_start_time = ?, second_choice_end_time = ?, "
+                + "third_choice_start_time = ?, third_choice_end_time = ? "
+                + "WHERE answer_id = ?";
 
-		try (Connection con = createConnection();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+        try (
+            Connection con = createConnection();
+            PreparedStatement ps = con.prepareStatement(sql)
+        ) {
 
-			// event_availability（Boolean → setObject）
-			if (answer.getEventAvailability() == null) {
-				ps.setNull(1, java.sql.Types.BOOLEAN);
-			} else {
-				ps.setBoolean(1, answer.getEventAvailability());
-			}
+            setNullable(ps, 1, answer.getEventAvailability(), java.sql.Types.BOOLEAN);
 
-			// first_choice
-			if (answer.getFirstChoice() == null) {
-				ps.setNull(2, java.sql.Types.TIMESTAMP);
-			} else {
-				ps.setTimestamp(2, Timestamp.valueOf(answer.getFirstChoice()));
-			}
+            setNullable(ps, 2, answer.getFirstChoiceStartTime()  == null ? null : Timestamp.valueOf(answer.getFirstChoiceStartTime()), java.sql.Types.TIMESTAMP);
+            setNullable(ps, 3, answer.getFirstChoiceEndTime()    == null ? null : Timestamp.valueOf(answer.getFirstChoiceEndTime()),   java.sql.Types.TIMESTAMP);
 
-			// second_choice
-			if (answer.getSecondChoice() == null) {
-				ps.setNull(3, java.sql.Types.TIMESTAMP);
-			} else {
-				ps.setTimestamp(3, Timestamp.valueOf(answer.getSecondChoice()));
-			}
+            setNullable(ps, 4, answer.getSecondChoiceStartTime() == null ? null : Timestamp.valueOf(answer.getSecondChoiceStartTime()), java.sql.Types.TIMESTAMP);
+            setNullable(ps, 5, answer.getSecondChoiceEndTime()   == null ? null : Timestamp.valueOf(answer.getSecondChoiceEndTime()),   java.sql.Types.TIMESTAMP);
 
-			// third_choice
-			if (answer.getThirdChoice() == null) {
-				ps.setNull(4, java.sql.Types.TIMESTAMP);
-			} else {
-				ps.setTimestamp(4, Timestamp.valueOf(answer.getThirdChoice()));
-			}
+            setNullable(ps, 6, answer.getThirdChoiceStartTime()  == null ? null : Timestamp.valueOf(answer.getThirdChoiceStartTime()), java.sql.Types.TIMESTAMP);
+            setNullable(ps, 7, answer.getThirdChoiceEndTime()    == null ? null : Timestamp.valueOf(answer.getThirdChoiceEndTime()),   java.sql.Types.TIMESTAMP);
 
-			// WHERE answer_id = ?
-			ps.setInt(5, answer.getAnswerId());
+            ps.setInt(8, answer.getAnswerId());
 
-			ps.executeUpdate();
+            ps.executeUpdate();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

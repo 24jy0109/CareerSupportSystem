@@ -60,13 +60,19 @@ public class AnswerController extends HttpServlet {
 				break;
 			case "registAnswer":
 				nextPage = "graduate/CompleteRegistAnswer.jsp";
-				String[] data = new String[6];
-				data[0] = command;
-				data[1] = request.getParameter("answerId");
-				data[2] = request.getParameter("eventAvailability");
-				data[3] = request.getParameter("firstChoice");
-				data[4] = request.getParameter("secondChoice");
-				data[5] = request.getParameter("thirdChoice");
+			    String[] data = new String[9];
+			    data[0] = command;
+			    data[1] = request.getParameter("answerId");
+			    data[2] = request.getParameter("eventAvailability");
+
+			    data[3] = request.getParameter("firstChoiceStart");
+			    data[4] = request.getParameter("firstChoiceEnd");
+
+			    data[5] = request.getParameter("secondChoiceStart");
+			    data[6] = request.getParameter("secondChoiceEnd");
+
+			    data[7] = request.getParameter("thirdChoiceStart");
+			    data[8] = request.getParameter("thirdChoiceEnd");
 				try {
 					answers = answerAction.execute(data);
 				} catch (Exception e) {

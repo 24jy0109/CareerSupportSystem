@@ -106,7 +106,7 @@ h3 {
 
                             <button type="submit" class="btn">割り当て</button>
 
-                            <a href="event?command=ScheduleArrangeSend&graduateStudentNumber=${g.graduateStudentNumber}">
+                            <a href="event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}">
                                 開催相談
                             </a>
                         </form>
