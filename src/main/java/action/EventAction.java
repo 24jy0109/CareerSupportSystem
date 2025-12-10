@@ -35,9 +35,15 @@ public class EventAction {
 		EventDTO eventDTO = new EventDTO();
 		List<EventDTO> list = new ArrayList<EventDTO>();
 		ArrayList<Graduate> graduates = new ArrayList<>();
-
+		
+		EventDBAccess eventDBA = new EventDBAccess();
 		CompanyDBAccess companyDBA = new CompanyDBAccess();
 
+		Event event = new Event();
+		Company company = new Company();
+		Staff staff = new Staff();
+		Graduate graduate = new Graduate();
+		
 		String title;
 		String body;
 
@@ -45,22 +51,17 @@ public class EventAction {
 		case "RegistEventForm":
 			List<CompanyDTO> companies = companyDBA.SearchCompanyWithGraduates(Integer.parseInt(data[2]));
 			List<Staff> staffs = new StaffDBAcess().getAllStaffs();
-			Event e = new Event();
-			e.setCompany(companies.getFirst().getCompany());
-			eventDTO.setEvent(e);
+			event.setCompany(companies.getFirst().getCompany());
+			eventDTO.setEvent(event);
 			eventDTO.setGraduates(companies.getFirst().getCompany().getGraduates());
 			eventDTO.setStaffs(staffs);
 
 			list.add(eventDTO);
 			break;
 		case "RegistEvent":
-			Event event = new Event();
-
-			Company company = new Company();
 			company.setCompanyId(Integer.parseInt(data[2]));
 			event.setCompany(company);
 
-			Staff staff = new Staff();
 			staff.setStaffId(Integer.parseInt(data[3]));
 			event.setStaff(staff);
 
@@ -85,7 +86,6 @@ public class EventAction {
 			// eventProgress は登録時は2(開催)
 			event.setEventProgress(2);
 
-			EventDBAccess eventDBA = new EventDBAccess();
 			eventDBA.insertEvent(event);
 
 			RequestDBAccess requestDBA = new RequestDBAccess();
@@ -114,7 +114,7 @@ public class EventAction {
 			break;
 		case "ScheduleArrangeSendForm":
 			// data[2] = graduateStudentNumber
-			Graduate graduate = new GraduateDBAccess().searchGraduateByGraduateStudentNumber(data[2]);
+			graduate = new GraduateDBAccess().searchGraduateByGraduateStudentNumber(data[2]);
 			List<Graduate> g = new ArrayList<Graduate>();
 			g.add(graduate);
 			eventDTO.setGraduates(g);
@@ -131,11 +131,21 @@ public class EventAction {
 			//			data[3]=スタッフID
 			//			data[4]=件名
 			//			data[5]=本文
-
-			AnswerDBAccess AnswerDBA = new AnswerDBAccess();
+			//			data[6]=companyId
+			
+			// 空のイベント作成
+			company.setCompanyId(Integer.parseInt(data[6]));
+			staff.setStaffId(Integer.parseInt(data[3]));
+			event.setCompany(company);
+			event.setStaff(staff);
+			event = eventDBA.insertEvent(event);
+			
+			AnswerDBAccess answerDBA = new AnswerDBAccess();
 			Answer answer = new Answer();
-			answer.setGraduateStudentNumber(data[2]);
-			answer = AnswerDBA.insertAnswer(answer);
+			graduate.setGraduateStudentNumber(data[2]);
+			answer.setGraduate(graduate);
+			answer.setEvent(event);
+			answer = answerDBA.insertAnswer(answer);
 
 			// メールの件名・本文はあなたのデータに合わせて
 			title = data[4];

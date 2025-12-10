@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 
 public class Answer {
 
-    private Integer answerId;
-    private String graduateStudentNumber;
+    private int answerId;
+    
+    private Event event;
+	private Graduate graduate;
     private Boolean eventAvailability;
 
     private LocalDateTime firstChoiceStartTime;
@@ -19,20 +21,28 @@ public class Answer {
 
     public Answer() {}
 
-    public Integer getAnswerId() {
+    public int getAnswerId() {
         return answerId;
     }
 
-    public void setAnswerId(Integer answerId) {
+    public void setAnswerId(int answerId) {
         this.answerId = answerId;
     }
+    
+    public Event getEvent() {
+		return event;
+	}
 
-    public String getGraduateStudentNumber() {
-        return graduateStudentNumber;
+	public void setEvent(Event event) {
+		this.event = event;
+	}
+
+    public Graduate getGraduate() {
+        return graduate;
     }
 
-    public void setGraduateStudentNumber(String graduateStudentNumber) {
-        this.graduateStudentNumber = graduateStudentNumber;
+    public void setGraduate(Graduate graduate) {
+        this.graduate = graduate;
     }
 
     public Boolean getEventAvailability() {

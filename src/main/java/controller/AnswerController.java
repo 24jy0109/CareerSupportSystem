@@ -73,6 +73,7 @@ public class AnswerController extends HttpServlet {
 
 			data[7] = request.getParameter("thirdChoiceStart");
 			data[8] = request.getParameter("thirdChoiceEnd");
+			
 			try {
 				answers = answerAction.execute(data);
 			} catch (Exception e) {

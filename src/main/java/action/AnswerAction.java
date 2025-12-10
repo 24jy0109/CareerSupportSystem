@@ -46,11 +46,7 @@ public class AnswerAction {
 		    answer.setThirdChoiceEndTime(LocalDateTime.parse(data[8]));
 
 		    answerDBA.updateAnswer(answer);
-		    
 		    answers.add(answer);
-		    for(String d : data) {
-		    	System.out.println(d);
-		    }
 		    break;
 		case "ScheduleAnswerCheck":
 //			answers = answerDBA
