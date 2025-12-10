@@ -15,18 +15,29 @@
 <body>
 
 <%
-    // Controller で渡された events（List<EventDTO>）
     List<EventDTO> events = (List<EventDTO>) request.getAttribute("events");
-
-    // 今回は EventDTO が1件だけ入っている前提
     EventDTO dto = events.get(0);
 
     Event event = dto.getEvent();
     List<Staff> staffs = dto.getStaffs();
     List<Graduate> graduates = dto.getGraduates();
 
-    // 卒業生は1人だけ入っている前提
     Graduate grad = graduates.get(0);
+
+    // デフォルト件名
+    String defaultTitle = "【イベント開催】参加可否・希望日程の回答のお願い";
+
+    // デフォルト本文
+    String defaultBody =
+        grad.getGraduateName() + " 様\n\n"
+        + "お世話になっております。\n"
+        + "キャリアサポートセンターの担当スタッフよりご連絡です。\n\n"
+        + "この度、卒業生アポイントメントを開催するにあたり、\n"
+        + "ご都合の良い日時をお伺いしたく存じます。\n\n"
+        + "記載のリンクより、参加可能な日時をご回答ください。\n"
+        + "また、ご不明点などありましたら、\n"
+        + "担当スタッフまでお気軽にご連絡ください。\n\n"
+        + "よろしくお願いいたします。\n\n";
 %>
 
 <h2>日程調整メール作成</h2>
@@ -35,7 +46,6 @@
 
     <input type="hidden" name="command" value="SendScheduleArrangeEmail">
 
-    <!-- 宛先（卒業生） -->
     <label>宛先</label><br>
     <p>
         <%= grad.getGraduateName() %>
@@ -44,9 +54,6 @@
     <input type="hidden" name="graduateStudentNumber"
            value="<%= grad.getGraduateStudentNumber() %>">
 
-    <br>
-    
-        <!-- 企業ID -->
     <input type="hidden" name="companyId"
            value="<%= grad.getCompany().getCompanyId() %>">
 
@@ -64,15 +71,16 @@
 
     <br><br>
 
-    <!-- 件名 -->
+    <!-- 件名（デフォルト値入り） -->
     <label>件名</label><br>
-    <input type="text" name="mailTitle" size="60" required>
+    <input type="text" name="mailTitle" size="60"
+           value="<%= defaultTitle %>" required>
 
     <br><br>
 
-    <!-- 本文 -->
+    <!-- 本文（デフォルト値入り） -->
     <label>本文</label><br>
-    <textarea name="mailBody" rows="10" cols="60" required></textarea>
+    <textarea name="mailBody" rows="14" cols="60" required><%= defaultBody %></textarea>
 
     <br><br>
 

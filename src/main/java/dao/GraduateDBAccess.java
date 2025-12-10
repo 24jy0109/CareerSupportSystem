@@ -8,6 +8,7 @@ import java.util.List;
 
 import model.Company;
 import model.Graduate;
+import model.Staff;
 
 public class GraduateDBAccess extends DBAccess {
 
@@ -32,12 +33,14 @@ public class GraduateDBAccess extends DBAccess {
 	public Graduate searchGraduateByGraduateStudentNumber(String graduateStudentNumber) throws Exception {
 	    Connection con = createConnection();
 
-	    // company_id と company_name のみ JOIN
+	    // company と staff を JOIN
 	    String sql = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_email, " +
-	                 "g.graduate_other_info, g.graduate_job_category, g.company_id, " +
-	                 "c.company_name " +
+	                 "g.graduate_other_info, g.graduate_job_category, " +
+	                 "g.company_id, c.company_name, " +
+	                 "g.staff_id, s.staff_name, s.staff_email " +
 	                 "FROM graduate g " +
 	                 "LEFT JOIN company c ON g.company_id = c.company_id " +
+	                 "LEFT JOIN staff s ON g.staff_id = s.staff_id " +
 	                 "WHERE g.graduate_student_number = ?";
 
 	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -53,13 +56,23 @@ public class GraduateDBAccess extends DBAccess {
 	            g.setOtherInfo(rs.getString("graduate_other_info"));
 	            g.setGraduateJobCategory(rs.getString("graduate_job_category"));
 
-	            // --- Company セット（company_id と company_name のみ） ---
+	            // --- Company セット ---
 	            int companyId = rs.getInt("company_id");
-	            if (!rs.wasNull()) { // company_id が NULL でない場合
+	            if (!rs.wasNull()) {
 	                Company c = new Company();
 	                c.setCompanyId(companyId);
 	                c.setCompanyName(rs.getString("company_name"));
 	                g.setCompany(c);
+	            }
+
+	            // --- Staff セット ---
+	            int staffId = rs.getInt("staff_id");
+	            if (!rs.wasNull()) {
+	                Staff s = new Staff();
+	                s.setStaffId(staffId);
+	                s.setStaffName(rs.getString("staff_name"));
+	                s.setStaffEmail(rs.getString("staff_email"));
+	                g.setStaff(s);
 	            }
 
 	            return g;
@@ -71,7 +84,6 @@ public class GraduateDBAccess extends DBAccess {
 
 	    return null;
 	}
-
 
 	
 	public List<Graduate> findAll() throws Exception {

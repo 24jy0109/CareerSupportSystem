@@ -140,14 +140,18 @@ public class EventAction {
 			// メールの件名・本文はあなたのデータに合わせて
 			title = data[4];
 			body = data[5];
-			body += "\n" + "http://localhost:8080/CareerSupportSystem/answer?command=AnswerForm&answerId="
+			body += "\n\n回答URL:" + "http://localhost:8080/CareerSupportSystem/answer?command=AnswerForm&answerId="
 					+ answer.getAnswerId();
-
-			Email mail = new Email(); // 1通ずつ新しく作る
+			
+			Email mail = new Email();
 			graduate = new GraduateDBAccess().searchGraduateByGraduateStudentNumber(data[2]);
+			
+			body += "\n\n担当者名" + graduate.getStaff().getStaffName();
+			body += "\n\n担当者メールアドレス" + graduate.getStaff().getStaffEmail();
+			
 			mail.setTo("24jy0109@jec.ac.jp");
 			mail.setSubject(title);
-			mail.setBody(body + "\n" + graduate.getGraduateEmail());
+			mail.setBody(body + "\nテスト用：" + graduate.getGraduateEmail());
 
 			boolean result = mail.send();
 
