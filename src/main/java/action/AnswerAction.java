@@ -52,6 +52,9 @@ public class AnswerAction {
 		    	System.out.println(d);
 		    }
 		    break;
+		case "ScheduleAnswerCheck":
+//			answers = answerDBA
+			break;
 		}
 		return answers;
 	}

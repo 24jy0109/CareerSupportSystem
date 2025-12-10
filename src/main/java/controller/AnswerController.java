@@ -34,7 +34,7 @@ public class AnswerController extends HttpServlet {
 		// 各画面から送信されるリクエストパラメータ"command"の値を取得する
 		String command = request.getParameter("command");
 
-//		 戻り値用のArrayList<Company>
+		//		 戻り値用のArrayList<Company>
 		List<Answer> answers = new ArrayList<>();
 
 		// sessionから値を取得
@@ -54,44 +54,50 @@ public class AnswerController extends HttpServlet {
 		String nextPage = null;
 
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
-			switch (command) {
-			case "AnswerForm":
-				nextPage = "graduate/Answer.jsp";
-				break;
-			case "registAnswer":
-				nextPage = "graduate/CompleteRegistAnswer.jsp";
-			    String[] data = new String[9];
-			    data[0] = command;
-			    data[1] = request.getParameter("answerId");
-			    data[2] = request.getParameter("eventAvailability");
+		switch (command) {
+		case "AnswerForm":
+			nextPage = "graduate/Answer.jsp";
+			break;
+		case "registAnswer":
+			nextPage = "graduate/CompleteRegistAnswer.jsp";
+			String[] data = new String[9];
+			data[0] = command;
+			data[1] = request.getParameter("answerId");
+			data[2] = request.getParameter("eventAvailability");
 
-			    data[3] = request.getParameter("firstChoiceStart");
-			    data[4] = request.getParameter("firstChoiceEnd");
+			data[3] = request.getParameter("firstChoiceStart");
+			data[4] = request.getParameter("firstChoiceEnd");
 
-			    data[5] = request.getParameter("secondChoiceStart");
-			    data[6] = request.getParameter("secondChoiceEnd");
+			data[5] = request.getParameter("secondChoiceStart");
+			data[6] = request.getParameter("secondChoiceEnd");
 
-			    data[7] = request.getParameter("thirdChoiceStart");
-			    data[8] = request.getParameter("thirdChoiceEnd");
-				try {
-					answers = answerAction.execute(data);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				request.setAttribute("answers", answers);
-				break;
-			case "CompanyList":
-				// セッションがstaffではない
-				if (role != "staff") {
-					response.sendRedirect("login");
-					return;
-				}
-				break;
-			default:
+			data[7] = request.getParameter("thirdChoiceStart");
+			data[8] = request.getParameter("thirdChoiceEnd");
+			try {
+				answers = answerAction.execute(data);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+		case "ScheduleAnswerCheck":
+			// セッションがstaffではない
+			if (role != "staff") {
 				response.sendRedirect("login");
 				return;
 			}
+			try {
+				answers = answerAction.execute(new String[] { command });
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
+			break;
+		default:
+			response.sendRedirect("login");
+			return;
+		}
+
+		request.setAttribute("answers", answers);
 		// 次のページへの転送
 		RequestDispatcher rd = request.getRequestDispatcher(nextPage);
 		rd.forward(request, response);
