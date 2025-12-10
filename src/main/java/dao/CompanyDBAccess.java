@@ -4,6 +4,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -233,84 +234,103 @@ public class CompanyDBAccess extends DBAccess {
 
 		return list;
 	}
-	
+
 	public List<CompanyDTO> SearchCompanyWithGraduates(int companyId) throws Exception {
-	    Connection con = createConnection();
-	    List<CompanyDTO> list = new ArrayList<>();
-	    CompanyDTO companyDTO = new CompanyDTO();
-	    Company company = new Company();
-	    ArrayList<Graduate> graduates = new ArrayList<>();
+		Connection con = createConnection();
+		List<CompanyDTO> list = new ArrayList<>();
+		CompanyDTO companyDTO = new CompanyDTO();
+		Company company = new Company();
+		ArrayList<Graduate> graduates = new ArrayList<>();
 
-	    try {
-	        // ------------------------------
-	        // ① 会社情報
-	        // ------------------------------
-	        String sqlCompany =
-	            "SELECT company_id, company_name " +
-	            "FROM company WHERE company_id = ?";
-	        try (PreparedStatement ps = con.prepareStatement(sqlCompany)) {
-	            ps.setInt(1, companyId);
-	            try (ResultSet rs = ps.executeQuery()) {
-	                if (rs.next()) {
-	                    company.setCompanyId(rs.getInt("company_id"));
-	                    company.setCompanyName(rs.getString("company_name"));
-	                }
-	            }
-	        }
+		try {
+			// ------------------------------
+			// ① 会社情報
+			// ------------------------------
+			String sqlCompany = "SELECT company_id, company_name " +
+					"FROM company WHERE company_id = ?";
+			try (PreparedStatement ps = con.prepareStatement(sqlCompany)) {
+				ps.setInt(1, companyId);
+				try (ResultSet rs = ps.executeQuery()) {
+					if (rs.next()) {
+						company.setCompanyId(rs.getInt("company_id"));
+						company.setCompanyName(rs.getString("company_name"));
+					}
+				}
+			}
 
-	        // ------------------------------
-	        // ② 卒業生 + コース + スタッフ JOIN
-	        // ------------------------------
-	        String sqlGraduate =
-	            "SELECT g.graduate_student_number, g.graduate_name, g.graduate_job_category, " +
-	            "       c.course_name, c.course_term, " +
-	            "       s.staff_id, s.staff_name " +
-	            "FROM graduate g " +
-	            "JOIN course c ON g.course_code = c.course_code " +
-	            "LEFT JOIN staff s ON g.staff_id = s.staff_id " +
-	            "WHERE g.company_id = ?";
+			// ------------------------------
+			// ② 卒業生 + コース + スタッフ JOIN
+			// ------------------------------
+			String sqlGraduate = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_job_category, " +
+					"       c.course_name, c.course_term, " +
+					"       s.staff_id, s.staff_name " +
+					"FROM graduate g " +
+					"JOIN course c ON g.course_code = c.course_code " +
+					"LEFT JOIN staff s ON g.staff_id = s.staff_id " +
+					"WHERE g.company_id = ?";
 
-	        try (PreparedStatement ps = con.prepareStatement(sqlGraduate)) {
-	            ps.setInt(1, companyId);
-	            try (ResultSet rs = ps.executeQuery()) {
-	                while (rs.next()) {
-	                    Graduate graduate = new Graduate();
-	                    Course course = new Course();
+			try (PreparedStatement ps = con.prepareStatement(sqlGraduate)) {
+				ps.setInt(1, companyId);
+				try (ResultSet rs = ps.executeQuery()) {
+					while (rs.next()) {
+						Graduate graduate = new Graduate();
+						Course course = new Course();
 
-	                    graduate.setGraduateStudentNumber(rs.getString("graduate_student_number"));
-	                    graduate.setGraduateName(rs.getString("graduate_name"));
-	                    graduate.setGraduateJobCategory(rs.getString("graduate_job_category"));
+						graduate.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+						graduate.setGraduateName(rs.getString("graduate_name"));
+						graduate.setGraduateJobCategory(rs.getString("graduate_job_category"));
 
-	                    // コース
-	                    course.setCourseName(rs.getString("course_name"));
-	                    course.setCourseTerm(rs.getInt("course_term"));
-	                    graduate.setCourse(course);
+						// コース
+						course.setCourseName(rs.getString("course_name"));
+						course.setCourseTerm(rs.getInt("course_term"));
+						graduate.setCourse(course);
 
-	                    // スタッフ（NULL の場合もあり）
-	                    int staffId = rs.getInt("staff_id");
-	                    if (!rs.wasNull()) {
-	                        Staff staff = new Staff();
-	                        staff.setStaffId(staffId);
-	                        staff.setStaffName(rs.getString("staff_name"));
-	                        graduate.setStaff(staff);
-	                    } else {
-	                        graduate.setStaff(null);
-	                    }
-	                    graduates.add(graduate);
-	                }
-	            }
-	        }
+						// スタッフ（NULL の場合もあり）
+						int staffId = rs.getInt("staff_id");
+						if (!rs.wasNull()) {
+							Staff staff = new Staff();
+							staff.setStaffId(staffId);
+							staff.setStaffName(rs.getString("staff_name"));
+							graduate.setStaff(staff);
+						} else {
+							graduate.setStaff(null);
+						}
+						graduates.add(graduate);
+					}
+				}
+			}
 
-	        // ------------------------------
-	        // ③ DTOへ詰める
-	        // ------------------------------
-	        company.setGraduates(graduates);
-	        companyDTO.setCompany(company);
-	        companyDTO.setIsRequest("");
-	        list.add(companyDTO);
-	    } finally {
-	        if (con != null) con.close();
-	    }
-	    return list;
+			// ------------------------------
+			// ③ DTOへ詰める
+			// ------------------------------
+			company.setGraduates(graduates);
+			companyDTO.setCompany(company);
+			companyDTO.setIsRequest("");
+			list.add(companyDTO);
+		} finally {
+			if (con != null)
+				con.close();
+		}
+		return list;
+	}
+
+	public String serchCompanyNameById(String companyId) throws SQLException, Exception {
+		String companyName = null;
+
+		String sql = "SELECT company_name FROM company WHERE company_id = ?";
+
+		try (Connection con = createConnection();
+				PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+			pstmt.setString(1, companyId);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				companyName = rs.getString("company_name");
+			}
+		}
+
+		return companyName;
 	}
 }

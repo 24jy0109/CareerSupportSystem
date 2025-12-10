@@ -12,6 +12,6 @@
 	<br>
 	<a href="company?command=CompanyRegister">企業名登録</a>
 	<br>
-	<a href="company?command=RegistEmail">連絡先登録</a>
+	<a href="graduate?command=RegistEmail">連絡先登録</a>
 </body>
 </html>
