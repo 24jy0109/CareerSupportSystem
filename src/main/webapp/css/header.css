@@ -1,0 +1,105 @@
+@charset "UTF-8";
+
+body {
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+/* ヘッダー部分 */
+.head-part {
+    display: grid;
+    grid-template-columns: 5% 50% 1fr;
+    align-items: center;
+    gap: 10%;
+    height: 140px;
+    background-color: #009A37;
+}
+
+#h-left img {
+    width: 145px;
+    background-color: white;
+}
+
+.header-title {
+    color: white;
+    margin-right: 80px;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    text-align: center;
+
+}
+
+.title-jp {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.title-en {
+    font-size: 24px;
+    opacity: 0.9;
+}
+
+.header-nav {
+    display: flex;
+    justify-content: left;
+    gap: 100px;
+    width: 400px;
+
+}
+
+.nav-item {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 16px;
+}
+
+.nav-item img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 5px;
+}
+
+/* ヘッダー部分ユーザー名 */
+.header-user {
+    color: white;
+    text-align: center;
+    margin-right: 35px;
+    margin-left: 40px;
+    font-size: 20px;
+    
+}
+
+main {
+    width: 90%;
+    margin: 0 auto;
+    /* ← これで中央配置 */
+    padding: 40px 0;
+    /* 上下だけ余白 */
+}
+
+/* 下のボタンをページ下部に固定するもの */
+.wrapper {
+    /* 画面全体の高さを確保 */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    /* コンテンツ部分が伸びてフッターを押し下げる */
+    flex: 1;
+}
+
+/* フッター */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    color: white;
+    background-color: #009A37;
+}

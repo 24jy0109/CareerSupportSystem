@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+/* ーーーログイン画面ーーー */
+.page-subtitle {
+    text-align: center;
+    font-size: 25px;
+}
+
+.login-button {
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* ----アポイントメントメニュー画面 */
+/* タイトル */
+.page-title {
+    text-align: center;
+    color: #009A37;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+/* メニューを左右で配置 */
+.apo-menu, .apo-menu-staff {
+    max-width: 500px;
+    margin: 0 auto;
+    display: grid;
+    gap: 50px 40px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* 各メニュー */
+.menu-item {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.menu-item img {
+    width: 60px;
+    height: 60px;
+    margin: 0px;
+}
+
+.menu-item span {
+    font-size: 20px;
+    color: #333;
+}
