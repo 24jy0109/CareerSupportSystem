@@ -52,7 +52,7 @@
 						<option value="${jobType}">${jobType}</option>
 					</c:otherwise>
 				</c:choose>
-				
+
 				<option value="エンジニア">エンジニア</option>
 				<option value="デザイナー">デザイナー</option>
 				<option value="営業">営業</option>
@@ -68,7 +68,7 @@
 		<h1>学生情報</h1>
 		<div>
 			氏名：<input type="text" name="graduateName" value="${graduateName}"><br>
-			
+
 			学科： <select name="courseCode">
 
 				<c:choose>
@@ -90,13 +90,14 @@
 						${course.courseName}</option>
 				</c:forEach>
 
-			</select> <br>
-		 	学籍番号：<input type="text" name="graduateStudentNumber"value="${graduateStudentNumber}" pattern="^[0-9]{2}[a-z]{2}[0-9]{4}$"
-       title="例: 24jy0101 の形式で入力してください"> <br>
-				
-			メールアドレス：<input type="text" name="graduateEmail" value="${graduateEmail}"  pattern="^(?!.*@jec\.ac\.jp$).+" title="jec.ac.jpのメールアドレスは使用できません"> <br>
-			
-			その他： <input type="text" name="otherInfo" value="${otherInfo}">
+			</select> <br> 学籍番号：<input type="text" name="graduateStudentNumber"
+				value="${graduateStudentNumber}"
+				pattern="^[0-9]{2}[a-z]{2}[0-9]{4}$"
+				title="例: 24jy0101 の形式で入力してください"> <br> メールアドレス：<input
+				type="text" name="graduateEmail" value="${graduateEmail}"
+				pattern="^(?!.*@jec\.ac\.jp$).+" title="jec.ac.jpのメールアドレスは使用できません">
+			<br> その他： <input type="text" name="otherInfo"
+				value="${otherInfo}">
 		</div>
 
 
