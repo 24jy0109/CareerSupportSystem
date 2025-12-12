@@ -72,7 +72,7 @@ public class GraduateController extends HttpServlet {
 		List<Graduate> graduate = new ArrayList<Graduate>();
 		//				学科
 		List<Course> courses = new ArrayList<>();
-//		CourseDBAccess courseDB = new CourseDBAccess();
+		CourseDBAccess courseDB = new CourseDBAccess();
 
 		// 次画面用の変数
 		String nextPage = null;
@@ -121,9 +121,7 @@ public class GraduateController extends HttpServlet {
 				if (backCompanyId != null && !backCompanyId.isEmpty()) {
 					companyId = backCompanyId; // 登録用ID
 					try {
-						graduate = graduateAction.execute(new String[] {"findCompanyName",companyId});
-						companyName = graduate.get(0).getCompany().getCompanyName();
-//						companyName = new CompanyDBAccess().searchCompanyNameById(backCompanyId); // 表示用
+						companyName = new CompanyDBAccess().searchCompanyNameById(backCompanyId); // 表示用
 					} catch (Exception e) {
 						e.printStackTrace();
 						companyName = ""; // 念のため初期化
@@ -134,23 +132,6 @@ public class GraduateController extends HttpServlet {
 					companyName = "";
 				}
 
-				// 学科コードと学科を設定
-				if (backCourseCode != null && !backCourseCode.isEmpty()) {
-					courseCode = backCourseCode; // 登録用ID
-					try {
-						graduate = graduateAction.execute(new String[] {"findCourseName",courseCode});
-						courseName = graduate.get(1).getCourse().getCourseName();
-//						courseName = new CompanyDBAccess().searchCompanyNameById(backCourseCode); // 表示用
-					} catch (Exception e) {
-						e.printStackTrace();
-						courseName = ""; // 念のため初期化
-					}
-				} else {
-					// 初回表示
-					courseCode = "";
-					courseName = "";
-				}
-				
 				// 企業一覧読み込み
 				try {
 					companies = companyAction.execute(new String[] { "CompanyList", "", "" });
@@ -173,8 +154,6 @@ public class GraduateController extends HttpServlet {
 				request.setAttribute("backCompany", backCompanyId); // Back 判定用（必要なら）
 				request.setAttribute("jobType", job);
 				request.setAttribute("graduateName", name);
-				request.setAttribute("courseCode", courseCode);
-				request.setAttribute("courseName", courseName);
 				request.setAttribute("courseCode", backCourseCode); // 登録処理用
 				request.setAttribute("graduateStudentNumber", sn);
 				request.setAttribute("graduateEmail", mail);

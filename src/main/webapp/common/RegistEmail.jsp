@@ -26,7 +26,7 @@
 					</c:when>
 
 					<%-- 戻ってきたとき（Back 時）は companyName を見出しに表示 --%>
-					<c:otherwise>
+					<c:otherwise>                                 
 						<option value="${companyId}">${companyName}</option>
 					</c:otherwise>
 				</c:choose>
@@ -38,6 +38,14 @@
 						${companyDTO.company.companyName}</option>
 				</c:forEach>
 			</select>
+
+			<!--				<option value="">企業を選択</option>-->
+			<!--							<c:forEach var="companyDTO" items="${companies}">-->
+			<!--								<option value="${companyDTO.company.companyId}"-->
+			<!--									<c:if test="${companyId == companyDTO.company.companyId}">selected</c:if>>-->
+			<!--									${companyDTO.company.companyName}</option>-->
+			<!--							</c:forEach>-->
+
 
 			<!--職種選択-->
 			<select name="jobType" id="jobType">
@@ -58,26 +66,11 @@
 		<div>
 			氏名：<input type="text" name="graduateName" value="${graduateName}">
 			<br> 学科： <select name="courseCode">
-
-				<c:choose>
-					<%-- 新規登録の時だけ「学科を選択」を出す --%>
-					<c:when test="${empty courseCode}">
-						<option value="">企業選択</option>
-					</c:when>
-
-					<%-- 戻ってきたとき（Back 時）は courseName を見出しに表示 --%>
-					<c:otherwise>
-						<option value="${courseCode}">${courseName}</option>
-					</c:otherwise>
-				</c:choose>
-
-				<!-- 企業一覧 --> <
+				<option value="">学科を選択</option>
 				<c:forEach var="course" items="${courses}">
-					<option value="${course.courseCode}"
-						<c:if test="${courseCode == course.courseCode}">selected</c:if>>
-						${course.courseName}</option>
+					<option value="${course.courseCode}">${course.courseName}
+					</option>
 				</c:forEach>
-
 			</select> <br> 学籍番号：<input type="text" name="graduateStudentNumber"
 				value="${graduateStudentNumber}"> <br> メールアドレス：<input
 				type="text" name="graduateEmail" value="${graduateEmail}"> <br>
