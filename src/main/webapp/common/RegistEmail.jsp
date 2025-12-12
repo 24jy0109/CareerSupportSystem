@@ -90,9 +90,11 @@
 						${course.courseName}</option>
 				</c:forEach>
 
-			</select> <br> 学籍番号：<input type="text" name="graduateStudentNumber"
-				value="${graduateStudentNumber}"> <br> メールアドレス：<input
-				type="text" name="graduateEmail" value="${graduateEmail}"> <br>
+			</select> <br>
+		 	学籍番号：<input type="text" name="graduateStudentNumber"value="${graduateStudentNumber}"> <br>
+				
+			メールアドレス：<input type="text" name="graduateEmail" value="${graduateEmail}"> <br>
+			
 			その他： <input type="text" name="otherInfo" value="${otherInfo}">
 		</div>
 

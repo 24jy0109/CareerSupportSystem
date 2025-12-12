@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>確認画面</title>
 </head>
 <body>
 	<form action="graduate" method="post">
@@ -26,7 +26,7 @@
 			value="${graduateStudentNumber}">
 
 		<p>メールアドレス：${graduateEmail}</p>
-		<input type="hidden" name="mailAddress" value="${graduateEmail}">
+		<input type="hidden" name="graduateEmail" value="${graduateEmail}">
 
 		<p>その他：${otherInfo}</p>
 		<input type="hidden" name="otherInfo" value="${otherInfo}">
