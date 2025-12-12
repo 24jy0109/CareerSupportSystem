@@ -85,7 +85,7 @@ public class GraduateAction {
 
 			break;
 		case "findCourseName":
-			int courseCode = Integer.parseInt(data[1]);
+			String courseCode = data[1];
 			graduate.setCourse(course);
 
 			String courseName = CourseDBA.findCourseNameById(String.valueOf(courseCode));

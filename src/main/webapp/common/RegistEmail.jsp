@@ -91,9 +91,10 @@
 				</c:forEach>
 
 			</select> <br>
-		 	学籍番号：<input type="text" name="graduateStudentNumber"value="${graduateStudentNumber}"> <br>
+		 	学籍番号：<input type="text" name="graduateStudentNumber"value="${graduateStudentNumber}" pattern="^[0-9]{2}[a-z]{2}[0-9]{4}$"
+       title="例: 24jy0101 の形式で入力してください"> <br>
 				
-			メールアドレス：<input type="text" name="graduateEmail" value="${graduateEmail}"> <br>
+			メールアドレス：<input type="text" name="graduateEmail" value="${graduateEmail}"  pattern="^(?!.*@jec\.ac\.jp$).+" title="jec.ac.jpのメールアドレスは使用できません"> <br>
 			
 			その他： <input type="text" name="otherInfo" value="${otherInfo}">
 		</div>

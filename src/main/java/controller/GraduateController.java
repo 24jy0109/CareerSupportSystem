@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpSession;
 
 import action.CompanyAction;
 import action.GraduateAction;
-import dao.CompanyDBAccess;
 import dao.CourseDBAccess;
 import dto.CompanyDTO;
 import model.Course;
@@ -106,6 +105,7 @@ public class GraduateController extends HttpServlet {
 			//				連絡先登録
 			//				入力画面
 			case "RegistEmail":
+				
 				nextPage = "common/RegistEmail.jsp";
 				//
 				// Back の場合、入力値が送られてくる
@@ -123,7 +123,6 @@ public class GraduateController extends HttpServlet {
 					try {
 						graduate = graduateAction.execute(new String[] {"findCompanyName",companyId});
 						companyName = graduate.get(0).getCompany().getCompanyName();
-//						companyName = new CompanyDBAccess().searchCompanyNameById(backCompanyId); // 表示用
 					} catch (Exception e) {
 						e.printStackTrace();
 						companyName = ""; // 念のため初期化
@@ -139,8 +138,7 @@ public class GraduateController extends HttpServlet {
 					courseCode = backCourseCode; // 登録用ID
 					try {
 						graduate = graduateAction.execute(new String[] {"findCourseName",courseCode});
-						courseName = graduate.get(1).getCourse().getCourseName();
-//						courseName = new CompanyDBAccess().searchCompanyNameById(backCourseCode); // 表示用
+						courseName = graduate.get(0).getCourse().getCourseName();
 					} catch (Exception e) {
 						e.printStackTrace();
 						courseName = ""; // 念のため初期化
@@ -175,7 +173,6 @@ public class GraduateController extends HttpServlet {
 				request.setAttribute("graduateName", name);
 				request.setAttribute("courseCode", courseCode);
 				request.setAttribute("courseName", courseName);
-				request.setAttribute("courseCode", backCourseCode); // 登録処理用
 				request.setAttribute("graduateStudentNumber", sn);
 				request.setAttribute("graduateEmail", mail);
 				request.setAttribute("otherInfo", info);
@@ -183,6 +180,10 @@ public class GraduateController extends HttpServlet {
 				break;
 			//				確認へ
 			case "RegistEmailNext":
+				// RegistEmailNext の冒頭付近に追加
+				courseCode = request.getParameter("courseCode");
+				System.out.println("DEBUG: RegistEmailNext - received courseCode -> '" + courseCode +  "'");
+
 				nextPage = "/common/RegistEmailConfirm.jsp";
 				// 入力値取得
 				companyId = request.getParameter("companyId");
@@ -196,18 +197,17 @@ public class GraduateController extends HttpServlet {
 				graduateEmail = request.getParameter("graduateEmail");
 				otherInfo = request.getParameter("otherInfo");
 
-				// ★ ID → 名前に変換（ここ超重要）
-				CompanyDBAccess cdb = new CompanyDBAccess();
-				CourseDBAccess coursedb = new CourseDBAccess();
 
 				try {
-					companyName = cdb.searchCompanyNameById(companyId);
+					graduate = graduateAction.execute(new String[] {"findCompanyName",companyId});
+					companyName = graduate.get(0).getCompany().getCompanyName();
 				} catch (Exception e) {
 					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
 				}
 				try {
-					courseName = coursedb.findCourseNameById(courseCode);
+					graduate = graduateAction.execute(new String[] {"findCourseName",courseCode});
+					courseName = graduate.get(0).getCourse().getCourseName();
 				} catch (Exception e) {
 					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
@@ -239,7 +239,7 @@ public class GraduateController extends HttpServlet {
 				registEmailInfo[3] = request.getParameter("graduateName");
 				registEmailInfo[4] = request.getParameter("courseCode");
 				registEmailInfo[5] = request.getParameter("graduateStudentNumber");
-				registEmailInfo[6] = request.getParameter("mailAddress");
+				registEmailInfo[6] = request.getParameter("graduateEmail");
 				registEmailInfo[7] = request.getParameter("otherInfo");
 
 				try {
