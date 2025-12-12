@@ -5,6 +5,7 @@ import java.util.List;
 
 import dao.AnswerDBAccess;
 import dao.CompanyDBAccess;
+import dao.CourseDBAccess;
 import dao.GraduateDBAccess;
 import model.Answer;
 import model.Company;
@@ -17,27 +18,27 @@ public class GraduateAction {
 		// data[0] アクション
 		// data[1] 学籍番号
 		List<Graduate> list = new ArrayList<Graduate>();
-		
+
 		String action = data[0];
 		GraduateDBAccess GraduateDBA = new GraduateDBAccess();
 		CompanyDBAccess CompanyDBA = new CompanyDBAccess();
+		CourseDBAccess CourseDBA = new CourseDBAccess();
+		
 		Graduate graduate = new Graduate();
-		
-		
 		Company company = new Company();
 		Course course = new Course();
 
 		AnswerDBAccess AnswerDBA = new AnswerDBAccess();
 		Answer answer = new Answer();
-		
+
 		switch (action) {
 		case "SendScheduleArrangeEmail":
 			// data[2] graduateStudentNumber
 			// data[3] staffId
-			
+
 			graduate = GraduateDBA.searchGraduateByGraduateStudentNumber(data[2]);
-			
-//			graduate.setGraduateStudentNumber(data[2]);
+
+			//			graduate.setGraduateStudentNumber(data[2]);
 			Staff staff = new Staff();
 			staff.setStaffId(Integer.parseInt(data[3]));
 			graduate.setStaff(staff);
@@ -75,8 +76,8 @@ public class GraduateAction {
 			break;
 		case "findCompanyName":
 			companyId = Integer.parseInt(data[1]);
-			graduate.setCompany(company); 
-			
+			graduate.setCompany(company);
+
 			String companyName = CompanyDBA.searchCompanyNameById(String.valueOf(companyId));
 			company.setCompanyName(companyName);
 			graduate.setCompany(company);
@@ -84,8 +85,13 @@ public class GraduateAction {
 
 			break;
 		case "findCourseName":
-			course = new Course();
+			int courseCode = Integer.parseInt(data[1]);
+			graduate.setCourse(course);
 
+			String courseName = CourseDBA.findCourseNameById(String.valueOf(courseCode));
+			course.setCourseName(courseName);
+			graduate.setCourse(course);
+			list.add(graduate);
 			break;
 		}
 		return list;
