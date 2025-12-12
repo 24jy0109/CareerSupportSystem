@@ -41,7 +41,18 @@
 
 			<!--職種選択-->
 			<select name="jobType" id="jobType">
-				<option value="">職種を選択</option>
+				<c:choose>
+					<%-- 新規登録の時だけ「職種を選択」を出す --%>
+					<c:when test="${empty jobType}">
+						<option value="">職種を選択</option>
+					</c:when>
+
+					<%-- 戻ってきたとき（Back 時）は jobType を見出しに表示 --%>
+					<c:otherwise>
+						<option value="${jobType}">${jobType}</option>
+					</c:otherwise>
+				</c:choose>
+				
 				<option value="エンジニア">エンジニア</option>
 				<option value="デザイナー">デザイナー</option>
 				<option value="営業">営業</option>
@@ -56,8 +67,9 @@
 		<!--		学生情報-->
 		<h1>学生情報</h1>
 		<div>
-			氏名：<input type="text" name="graduateName" value="${graduateName}">
-			<br> 学科： <select name="courseCode">
+			氏名：<input type="text" name="graduateName" value="${graduateName}"><br>
+			
+			学科： <select name="courseCode">
 
 				<c:choose>
 					<%-- 新規登録の時だけ「学科を選択」を出す --%>
