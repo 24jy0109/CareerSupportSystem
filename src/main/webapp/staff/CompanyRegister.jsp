@@ -8,7 +8,7 @@
 <!--<link rel="stylesheet" href="./css/appointment.css">-->
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>Insert title here</title>
+<title>企業登録</title>
 </head>
 <body>
 	<header>
