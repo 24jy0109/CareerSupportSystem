@@ -31,83 +31,83 @@ public class GraduateDBAccess extends DBAccess {
 	}
 
 	public Graduate searchGraduateByGraduateStudentNumber(String graduateStudentNumber) throws Exception {
-	    Connection con = createConnection();
+		Connection con = createConnection();
 
-	    // company と staff を JOIN
-	    String sql = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_email, " +
-	                 "g.graduate_other_info, g.graduate_job_category, " +
-	                 "g.company_id, c.company_name, " +
-	                 "g.staff_id, s.staff_name, s.staff_email " +
-	                 "FROM graduate g " +
-	                 "LEFT JOIN company c ON g.company_id = c.company_id " +
-	                 "LEFT JOIN staff s ON g.staff_id = s.staff_id " +
-	                 "WHERE g.graduate_student_number = ?";
+		// company と staff を JOIN
+		String sql = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_email, " +
+				"g.graduate_other_info, g.graduate_job_category, " +
+				"g.company_id, c.company_name, " +
+				"g.staff_id, s.staff_name, s.staff_email " +
+				"FROM graduate g " +
+				"LEFT JOIN company c ON g.company_id = c.company_id " +
+				"LEFT JOIN staff s ON g.staff_id = s.staff_id " +
+				"WHERE g.graduate_student_number = ?";
 
-	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-	        pstmt.setString(1, graduateStudentNumber);
-	        ResultSet rs = pstmt.executeQuery();
+			pstmt.setString(1, graduateStudentNumber);
+			ResultSet rs = pstmt.executeQuery();
 
-	        if (rs.next()) {
-	            Graduate g = new Graduate();
-	            g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
-	            g.setGraduateName(rs.getString("graduate_name"));
-	            g.setGraduateEmail(rs.getString("graduate_email"));
-	            g.setOtherInfo(rs.getString("graduate_other_info"));
-	            g.setGraduateJobCategory(rs.getString("graduate_job_category"));
+			if (rs.next()) {
+				Graduate g = new Graduate();
+				g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+				g.setGraduateName(rs.getString("graduate_name"));
+				g.setGraduateEmail(rs.getString("graduate_email"));
+				g.setOtherInfo(rs.getString("graduate_other_info"));
+				g.setGraduateJobCategory(rs.getString("graduate_job_category"));
 
-	            // --- Company セット ---
-	            int companyId = rs.getInt("company_id");
-	            if (!rs.wasNull()) {
-	                Company c = new Company();
-	                c.setCompanyId(companyId);
-	                c.setCompanyName(rs.getString("company_name"));
-	                g.setCompany(c);
-	            }
+				// --- Company セット ---
+				int companyId = rs.getInt("company_id");
+				if (!rs.wasNull()) {
+					Company c = new Company();
+					c.setCompanyId(companyId);
+					c.setCompanyName(rs.getString("company_name"));
+					g.setCompany(c);
+				}
 
-	            // --- Staff セット ---
-	            int staffId = rs.getInt("staff_id");
-	            if (!rs.wasNull()) {
-	                Staff s = new Staff();
-	                s.setStaffId(staffId);
-	                s.setStaffName(rs.getString("staff_name"));
-	                s.setStaffEmail(rs.getString("staff_email"));
-	                g.setStaff(s);
-	            }
+				// --- Staff セット ---
+				int staffId = rs.getInt("staff_id");
+				if (!rs.wasNull()) {
+					Staff s = new Staff();
+					s.setStaffId(staffId);
+					s.setStaffName(rs.getString("staff_name"));
+					s.setStaffEmail(rs.getString("staff_email"));
+					g.setStaff(s);
+				}
 
-	            return g;
-	        }
+				return g;
+			}
 
-	    } finally {
-	        if (con != null) con.close();
-	    }
+		} finally {
+			if (con != null)
+				con.close();
+		}
 
-	    return null;
+		return null;
 	}
 
-	
 	public List<Graduate> findAll() throws Exception {
 
-	    List<Graduate> list = new ArrayList<>();
+		List<Graduate> list = new ArrayList<>();
 
-	    Connection con = createConnection();
+		Connection con = createConnection();
 
-	    String sql = "SELECT * FROM graduate";
-	    PreparedStatement ps = con.prepareStatement(sql);
-	    ResultSet rs = ps.executeQuery();
+		String sql = "SELECT * FROM graduate";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
 
-	    while (rs.next()) {
-	        Graduate g = new Graduate();
-//	        g.setGraduateId(rs.getInt("graduate_id"));
-	        g.setGraduateName(rs.getString("graduate_name"));
-	        list.add(g);
-	    }
+		while (rs.next()) {
+			Graduate g = new Graduate();
+			//	        g.setGraduateId(rs.getInt("graduate_id"));
+			g.setGraduateName(rs.getString("graduate_name"));
+			list.add(g);
+		}
 
-	    rs.close();
-	    ps.close();
-	    con.close();
+		rs.close();
+		ps.close();
+		con.close();
 
-	    return list;
+		return list;
 	}
 
 	public void insertGraduate(Graduate graduate) {
@@ -155,6 +155,12 @@ public class GraduateDBAccess extends DBAccess {
 
 	public void searchGraduate(int graduate) {
 
+	}
+
+	public boolean findGraduateStudentNumber(String graduateStudentNumber)throws Exception {
+
+		Graduate g = searchGraduateByGraduateStudentNumber(graduateStudentNumber);
+		return g != null;
 	}
 
 }

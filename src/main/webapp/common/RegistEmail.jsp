@@ -30,6 +30,11 @@
 	</header>
 
 	<h2>登録画面</h2>
+	<c:if test="${not empty error}">
+		<div style="color: red; font-weight: bold; margin-bottom: 10px;">
+			${error}</div>
+	</c:if>
+
 	<form action="graduate" method="post">
 		<input type="hidden" name="command" value="RegistEmailNext">
 		<!--	企業選択-->
@@ -249,7 +254,7 @@
 							<td>
 								<div>メールアドレス</div>
 							</td>
-							<td><input type="text" name="graduateEmail"
+							<td><input type="email" name="graduateEmail"
 								value="${graduateEmail}" pattern="^(?!.*@jec\.ac\.jp$).+"
 								title="jec.ac.jpのメールアドレスは使用できません" class="email-input">
 
