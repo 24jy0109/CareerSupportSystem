@@ -85,9 +85,14 @@
     color: red;
 }
 
-/* .event-info{
-    font-size: 20px;
-} */
+ .event-info{
+    margin-top: 10px;
+} 
+
+.event-frex{
+	display: flex;
+	gap: 10px;
+}
 
 /* テーブル */
 .gra-table {
@@ -287,8 +292,8 @@
 
 /* -----申請者一覧画面（職員）------*/
 .request-top {
-    display: flex;
-    align-items: center;
+/*    display: flex;*/
+/*    align-items: center;*/
     gap: 20px;
 }
 

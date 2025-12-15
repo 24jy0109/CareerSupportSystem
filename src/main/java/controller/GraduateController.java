@@ -184,7 +184,7 @@ public class GraduateController extends HttpServlet {
 				courseCode = request.getParameter("courseCode");
 				System.out.println("DEBUG: RegistEmailNext - received courseCode -> '" + courseCode +  "'");
 
-				nextPage = "/common/RegistEmailConfirm.jsp";
+				
 				// 入力値取得
 				companyId = request.getParameter("companyId");
 
@@ -212,6 +212,23 @@ public class GraduateController extends HttpServlet {
 					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
 				}
+				
+				//学籍番号が既にあるかチェック！
+				List<Graduate> exists = null;
+				try {
+				    exists = graduateAction.execute(
+				        new String[] {"findGraduateStudentNumber", graduateStudentNumber});
+				} catch (Exception e) {
+				    e.printStackTrace();
+				}
+				
+				if (exists != null && !exists.isEmpty()) {
+				    request.setAttribute("error",
+				        "この学籍番号はすでに登録されています");
+				    nextPage = "/common/RegistEmail.jsp";
+				}else {
+					nextPage = "/common/RegistEmailConfirm.jsp";
+				}
 
 				// JSPへ渡す値
 				request.setAttribute("companyId", companyId); // 登録処理用
@@ -226,6 +243,8 @@ public class GraduateController extends HttpServlet {
 				request.setAttribute("graduateStudentNumber", graduateStudentNumber);
 				request.setAttribute("graduateEmail", graduateEmail);
 				request.setAttribute("otherInfo", otherInfo);
+				
+		
 				break;
 
 			//				連絡先情報をデータベースに登録
@@ -248,7 +267,10 @@ public class GraduateController extends HttpServlet {
 					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
 				} // ← requestを渡す！
+				
+				
 
+				
 				break;
 
 			case "AppointMenu":

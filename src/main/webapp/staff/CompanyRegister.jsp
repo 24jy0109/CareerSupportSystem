@@ -27,7 +27,7 @@
 		</div>
 	</header>
 	
-s
+
 	<main>
 		<form action="company" method="post">
 			<div class="left-screen">

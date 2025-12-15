@@ -36,49 +36,110 @@
 
 		<c:if test="${not empty requests}">
 			<!-- 最初の Request から会社情報を取得 -->
-			<c:set var="company" value="${requests[0].company}" />
+			<c:set var="company" value="${requests[0].company}">
 
-			<h3>企業名：${company.companyName}</h3>
+				<h3>企業名：${company.companyName}</h3>
 
-			<!-- progress=2 のイベント一覧 -->
-			<h4>イベント情報</h4>
+				<!-- progress=2 のイベント一覧 -->
+				<h4>イベント情報</h4>
 
-			<c:if test="${empty company.events}">
-				<p>対象イベントがありません。</p>
-			</c:if>
+				<c:if test="${empty company.events}">
+					<p>対象イベントがありません。</p>
+				</c:if>
 
-			<c:forEach var="ev" items="${company.events}">
-				<div style="margin-bottom: 12px;">
-					<b>開始 :</b> ${ev.eventStartTime}<br> <b>終了 :</b>
-					${ev.eventEndTime}<br> <b>場所 :</b> ${ev.eventPlace}
-				</div>
-				<hr>
-			</c:forEach>
-
-			<!-- 学生リクエスト一覧 -->
-			<h3>リクエストした学生一覧</h3>
-
-			<table border="1" cellpadding="8">
-				<tr>
-					<th>学生番号</th>
-					<th>氏名</th>
-					<th>コース名</th>
-					<th>リクエスト日時</th>
-				</tr>
-
-				<c:forEach var="req" items="${requests}">
-					<tr>
-						<td>${req.student.studentNumber}</td>
-						<td>${req.student.studentName}</td>
-						<td>${req.student.course.courseName}</td>
-						<td>${req.requestTime}</td>
-					</tr>
+				<c:forEach var="ev" items="${company.events}">
+					<div style="margin-bottom: 12px;">
+						<b>開始 :</b> ${ev.eventStartTime}<br> <b>終了 :</b>
+						${ev.eventEndTime}<br> <b>場所 :</b> ${ev.eventPlace}
+					</div>
+					<hr>
 				</c:forEach>
 
-			</table>
+				<!-- 学生リクエスト一覧 -->
+				<h3>リクエストした学生一覧</h3>
 
+				<table border="1" cellpadding="8">
+					<tr>
+						<th>学生番号</th>
+						<th>氏名</th>
+						<th>コース名</th>
+						<th>リクエスト日時</th>
+					</tr>
+
+					<c:forEach var="req" items="${requests}">
+						<tr>
+							<td>${req.student.studentNumber}</td>
+							<td>${req.student.studentName}</td>
+							<td>${req.student.course.courseName}</td>
+							<td>${req.requestTime}</td>
+						</tr>
+					</c:forEach>
+
+				</table>
 		</c:if>
 	</main>
+
+	<div class="wrapper">
+		<main class="content">
+			<div class="request-top">
+				<c:set var="company" value="${requests[0].company}" />
+
+				<div class="company">
+					<div class="field-name">企業名</div>
+					<div class="company-name">${companyName}</div>
+				</div>
+
+				<div class="event">
+					<div class="event-info">
+						<c:if test="${empty company.events}">
+							<p>対象イベントがありません。</p>
+						</c:if>
+
+						<c:forEach var="ev" items="${company.events}">
+							<div class="event-frex">
+								<div>${ev.eventStartTime}～${ev.eventEndTime}</div>
+								<div>${ev.eventPlace}</div>
+							</div>
+
+						</c:forEach>
+					</div>
+				</div>
+
+
+			</div>
+			<c:if test="${empty requests}">
+				<p 　class="errormsg">リクエストした学生はいません。</p>
+			</c:if>
+			<c:if test="${not empty requests}">
+
+				<table class="request-table">
+					<tr class="request-info">
+						<th class="request-h">氏名</th>
+						<th class="request-h">学科</th>
+						<th class="request-h">学籍番号</th>
+						<th class="request-h">リクエスト日時</th>
+					</tr>
+
+					<c:forEach var="req" items="${requests}">
+						<tr class="request-info">
+							<td>${req.student.studentName}</td>
+							<td>${req.student.course.courseName}</td>
+							<td>${req.student.studentNumber}</td>
+							<td>${req.requestTime}</td>
+						</tr>
+					</c:forEach>
+
+				</table>
+			</c:if>
+
+			<div class="bottom-btn-left">
+				<!-- 戻るボタン　左側 -->
+				<button type="button" onclick="location.href='./CompanyList.html'">企業一覧に戻る</button>
+			</div>
+
+		</main>
+	</div>
+
 	<footer>
 		<p>
 			<small>&copy; 2024 Example Inc.</small>
