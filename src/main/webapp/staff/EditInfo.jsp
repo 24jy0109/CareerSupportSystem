@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>就職先登録完了画面（在校生/職員）</title>
+<title>情報編集画面（職員）</title>
 </head>
 <body>
 	<header>
@@ -25,21 +25,13 @@
 			<div class="header-user">ようこそ 24jy0119 さん</div>
 		</div>
 	</header>
-	<main>
-		<div class="complete-screen">
-			<p class="complete-msg">登録完了しました！</p>
-			<p>
-				<img src="../img/complete_regist_job.png">
-			</p>
-			<p>メールを送信しました。</p>
-			<p>変更したい場合はメニュー画面内の就職先登録より変更してください。</p>
-		</div>
-		<div class="bottom-btn-right">
-			<button type="button"
-				onclick="location.href='graduate?command=AppointMenu'">メニュー画面に戻る</button>
-		</div>
-		</div>
 
-	</main>
+	<main></main>
+
+	<footer>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
+	</footer>
 </body>
 </html>

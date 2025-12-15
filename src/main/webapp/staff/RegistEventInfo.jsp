@@ -3,178 +3,209 @@
 
 <html>
 <head>
-<title>イベント詳細（卒業生一覧 + イベント登録）</title>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="./css/header.css">
+<link rel="stylesheet" href="./css/companylist.css">
+<link rel="stylesheet" href="./css/layout.css">
+<title>開催情報登録画面（職員）</title>
 <style>
 table {
-    border-collapse: collapse;
-    width: 90%;
-    margin-top: 20px;
+	border-collapse: collapse;
+	width: 90%;
+	margin-top: 20px;
 }
+
 th, td {
-    border: 1px solid #333;
-    padding: 8px;
+	border: 1px solid #333;
+	padding: 8px;
 }
+
 th {
-    background: #eee;
+	background: #eee;
 }
+
 h3 {
-    margin-top: 40px;
+	margin-top: 40px;
 }
+
 .btn {
-    padding: 5px 10px;
-    background: #448aff;
-    color: #fff;
-    border-radius: 4px;
-    text-decoration: none;
+	padding: 5px 10px;
+	background: #448aff;
+	color: #fff;
+	border-radius: 4px;
+	text-decoration: none;
 }
+
 .btn-danger {
-    background: #ff5252;
+	background: #ff5252;
 }
+
 .input {
-    padding: 5px;
+	padding: 5px;
 }
+
 .form-block {
-    margin: 10px 0;
+	margin: 10px 0;
 }
 </style>
 </head>
 <body>
+	<header>
+		<div class="head-part">
+			<div id="h-left">
+				<img src="img/rogo.png" alt="アイコン">
+			</div>
 
-<c:forEach var="dto" items="${events}">
-    <!-- EventDTO の event -->
-    <c:set var="event" value="${dto.event}" />
+			<div class="header-title"
+				onclick="location.href='mypage?command=AppointmentMenu'">
+				<div class="title-jp">就活サポート</div>
+				<div class="title-en">Career Support</div>
+			</div>
 
-    <h2>イベントID：${event.eventId}</h2>
-    <p>企業ID：${event.company.companyId}</p>
+			<div class="header-user">ようこそ 24jy0119 さん</div>
+		</div>
+	</header>
+	<main>
 
-    <p>
-        開始：${event.eventStartTime} <br/>
-        終了：${event.eventEndTime} <br/>
-        場所：${event.eventPlace} <br/>
-        定員：${event.eventCapacity}
-    </p>
+		<c:forEach var="dto" items="${events}">
+			<!-- EventDTO の event -->
+			<c:set var="event" value="${dto.event}" />
 
-    <hr />
+			<h2>イベントID：${event.eventId}</h2>
+			<p>企業ID：${event.company.companyId}</p>
 
-    <!-- ============================
+			<p>
+				開始：${event.eventStartTime} <br /> 終了：${event.eventEndTime} <br />
+				場所：${event.eventPlace} <br /> 定員：${event.eventCapacity}
+			</p>
+
+			<hr />
+
+			<!-- ============================
          卒業生一覧
          ============================ -->
-    <h3>卒業生一覧</h3>
+			<h3>卒業生一覧</h3>
 
-    <c:if test="${empty dto.graduates}">
-        <p>卒業生情報はありません。</p>
-    </c:if>
+			<c:if test="${empty dto.graduates}">
+				<p>卒業生情報はありません。</p>
+			</c:if>
 
-    <c:if test="${not empty dto.graduates}">
-        <table>
-            <tr>
-                <th>卒業生番号</th>
-                <th>氏名</th>
-                <th>職種</th>
-                <th>コース名</th>
-                <th>学年</th>
-                <th>スタッフ割当</th>
-            </tr>
+			<c:if test="${not empty dto.graduates}">
+				<table>
+					<tr>
+						<th>卒業生番号</th>
+						<th>氏名</th>
+						<th>職種</th>
+						<th>コース名</th>
+						<th>学年</th>
+						<th>スタッフ割当</th>
+					</tr>
 
-            <c:forEach var="g" items="${dto.graduates}">
-                <tr>
-                    <td>${g.graduateStudentNumber}</td>
-                    <td>${g.graduateName}</td>
-                    <td>${g.graduateJobCategory}</td>
-                    <td>${g.course.courseName}</td>
-                    <td>${g.course.courseTerm}</td>
+					<c:forEach var="g" items="${dto.graduates}">
+						<tr>
+							<td>${g.graduateStudentNumber}</td>
+							<td>${g.graduateName}</td>
+							<td>${g.graduateJobCategory}</td>
+							<td>${g.course.courseName}</td>
+							<td>${g.course.courseTerm}</td>
 
-                    <td>
-                            <p>${empty g.staff ? '未割当' : g.staff.staffName}</p>
+							<td>
+								<p>${empty g.staff ? '未割当' : g.staff.staffName}</p> <a
+								href="event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}">
+									開催相談 </a>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</c:if>
 
-                            <a href="event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}">
-                                開催相談
-                            </a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-    </c:if>
+			<hr />
 
-    <hr />
-
-    <!-- ============================
+			<!-- ============================
          イベント登録フォーム
          ============================ -->
-    <h3>イベント登録</h3>
+			<h3>イベント登録</h3>
 
-    <form action="event?command=RegistEvent" method="post">
+			<form action="event?command=RegistEvent" method="post">
 
-        <input type="hidden" name="companyId" value="${event.company.companyId}" />
+				<input type="hidden" name="companyId"
+					value="${event.company.companyId}" />
 
-        <div class="form-block">
-            <label>開催場所：</label>
-            <input type="text" name="eventPlace" class="input" required />
-        </div>
+				<div class="form-block">
+					<label>開催場所：</label> <input type="text" name="eventPlace"
+						class="input" required />
+				</div>
 
-        <div class="form-block">
-            <label>開始日時：</label>
-            <input type="datetime-local" name="eventStartTime" class="input" required />
-        </div>
+				<div class="form-block">
+					<label>開始日時：</label> <input type="datetime-local"
+						name="eventStartTime" class="input" required />
+				</div>
 
-        <div class="form-block">
-            <label>終了日時：</label>
-            <input type="datetime-local" name="eventEndTime" class="input" required />
-        </div>
+				<div class="form-block">
+					<label>終了日時：</label> <input type="datetime-local"
+						name="eventEndTime" class="input" required />
+				</div>
 
-        <div class="form-block">
-            <label>定員：</label>
-            <input type="number" name="eventCapacity" class="input" required min="1" />
-        </div>
+				<div class="form-block">
+					<label>定員：</label> <input type="number" name="eventCapacity"
+						class="input" required min="1" />
+				</div>
 
-        <div class="form-block">
-            <label>備考：</label>
-            <textarea name="eventOtherInfo" class="input" rows="3"></textarea>
-        </div>
+				<div class="form-block">
+					<label>備考：</label>
+					<textarea name="eventOtherInfo" class="input" rows="3"></textarea>
+				</div>
 
-        <div class="form-block">
-            <label>担当スタッフ：</label>
-            <select name="staffId" class="input" required>
-                <c:forEach var="st" items="${dto.staffs}">
-                    <option value="${st.staffId}">${st.staffName}</option>
-                </c:forEach>
-            </select>
-        </div>
+				<div class="form-block">
+					<label>担当スタッフ：</label> <select name="staffId" class="input"
+						required>
+						<c:forEach var="st" items="${dto.staffs}">
+							<option value="${st.staffId}">${st.staffName}</option>
+						</c:forEach>
+					</select>
+				</div>
 
-        <!-- 卒業生選択 -->
-        <h4>参加させる卒業生を選択：</h4>
+				<!-- 卒業生選択 -->
+				<h4>参加させる卒業生を選択：</h4>
 
-        <c:if test="${empty dto.graduates}">
-            <p>卒業生情報なし</p>
-        </c:if>
+				<c:if test="${empty dto.graduates}">
+					<p>卒業生情報なし</p>
+				</c:if>
 
-        <c:if test="${not empty dto.graduates}">
-            <table>
-                <tr>
-                    <th>選択</th>
-                    <th>卒業生番号</th>
-                    <th>氏名</th>
-                    <th>コース</th>
-                    <th>学年</th>
-                </tr>
+				<c:if test="${not empty dto.graduates}">
+					<table>
+						<tr>
+							<th>選択</th>
+							<th>卒業生番号</th>
+							<th>氏名</th>
+							<th>コース</th>
+							<th>学年</th>
+						</tr>
 
-                <c:forEach var="g" items="${dto.graduates}">
-                    <tr>
-                        <td><input type="checkbox" name="graduateStudents"
-                            value="${g.graduateStudentNumber}" /></td>
-                        <td>${g.graduateStudentNumber}</td>
-                        <td>${g.graduateName}</td>
-                        <td>${g.course.courseName}</td>
-                        <td>${g.course.courseTerm}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-        </c:if>
+						<c:forEach var="g" items="${dto.graduates}">
+							<tr>
+								<td><input type="checkbox" name="graduateStudents"
+									value="${g.graduateStudentNumber}" /></td>
+								<td>${g.graduateStudentNumber}</td>
+								<td>${g.graduateName}</td>
+								<td>${g.course.courseName}</td>
+								<td>${g.course.courseTerm}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</c:if>
 
-        <button type="submit" class="btn">イベント登録</button>
-    </form>
+				<button type="submit" class="btn">イベント登録</button>
+			</form>
 
-</c:forEach>
+		</c:forEach>
+
+	</main>
+	<footer>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
+	</footer>
 
 </body>
 </html>
