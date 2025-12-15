@@ -76,15 +76,15 @@ td a {
     display: flex;
     gap: 15px;
 }
-.search-box {
+.search-box{
     width: 250px;
-    height: 15px;
+    height: 30px;
     font-size: 15px;
-    padding: 5px 10px;
+    padding: 10px 10px;
     border: 2px solid #009A37;
 }
 
-.search-button {
+.search-button{
     width: 80px;
     height: 30px;
     font-size: 15px;
@@ -105,7 +105,7 @@ input[type = radio]{
 .bottom-btn-right{
     display: flex;
     justify-content: flex-end;
-    width: 100%;
+    width: 90%;
     box-sizing: border-box;
     /* position: fixed; */
     bottom: 10%;

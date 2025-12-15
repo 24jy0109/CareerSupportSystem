@@ -8,7 +8,7 @@
 <!--<link rel="stylesheet" href="./css/appointment.css">-->
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>Insert title here</title>
+<title>企業登録画面（職員）</title>
 </head>
 <body>
 	<header>
@@ -18,7 +18,7 @@
 			</div>
 
 			<div class="header-title"
-				onclick="location.href='./AppointMenu.html'">
+				onclick="location.href='mypage?command=AppointmentMenu'">
 				<div class="title-jp">就活サポート</div>
 				<div class="title-en">Career Support</div>
 			</div>

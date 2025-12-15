@@ -17,7 +17,7 @@
 			</div>
 
 			<div class="header-title"
-				onclick="location.href='./AppointMenu.html'">
+				onclick="location.href='mypage?command=AppointmentMenu'">
 				<div class="title-jp">就活サポート</div>
 				<div class="title-en">Career Support</div>
 			</div>
@@ -35,7 +35,7 @@
 				<img src="img/company.png" alt="企業一覧(申請)"> <span>企業一覧（申請）</span>
 			</div>
 
-			<div class="menu-item" onclick="location.href='company?command=EventList'">
+			<div class="menu-item" onclick="location.href='event?command=EventList'">
 				<img src="img/history.png" alt="開催一覧/履歴"> <span>開催一覧/履歴</span>
 			</div>
 
@@ -49,7 +49,7 @@
 			</div>
 
 			<div class="menu-item"
-				onclick="location.href='ScheduleAnswerCheck'">
+				onclick="location.href='answer?command=ScheduleAnswerCheck'">
 				<img src="img/schedule_check.png" alt="日程回答確認"> <span>日程回答確認</span>
 			</div>
 

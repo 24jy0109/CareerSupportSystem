@@ -1,64 +1,89 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>リクエスト学生一覧</title>
+<link rel="stylesheet" href="./css/header.css">
+<link rel="stylesheet" href="./css/companylist.css">
+<link rel="stylesheet" href="./css/layout.css">
+<title>申請者一覧（職員）</title>
 </head>
 <body>
+	<header>
+		<div class="head-part">
+			<div id="h-left">
+				<img src="img/rogo.png" alt="アイコン">
+			</div>
 
-<h2>企業リクエスト一覧</h2>
+			<div class="header-title"
+				onclick="location.href='mypage?command=AppointmentMenu'">
+				<div class="title-jp">就活サポート</div>
+				<div class="title-en">Career Support</div>
+			</div>
 
-<c:if test="${empty requests}">
-    <p>リクエストした学生はいません。</p>
-</c:if>
+			<div class="header-user">ようこそ 24jy0119 さん</div>
+		</div>
+	</header>
+	<main>
 
-<c:if test="${not empty requests}">
-    <!-- 最初の Request から会社情報を取得 -->
-    <c:set var="company" value="${requests[0].company}" />
+		<h2>企業リクエスト一覧</h2>
 
-    <h3>企業名：${company.companyName}</h3>
+		<c:if test="${empty requests}">
+			<p>リクエストした学生はいません。</p>
+		</c:if>
 
-    <!-- progress=2 のイベント一覧 -->
-    <h4>イベント情報</h4>
+		<c:if test="${not empty requests}">
+			<!-- 最初の Request から会社情報を取得 -->
+			<c:set var="company" value="${requests[0].company}" />
 
-    <c:if test="${empty company.events}">
-        <p>対象イベントがありません。</p>
-    </c:if>
+			<h3>企業名：${company.companyName}</h3>
 
-    <c:forEach var="ev" items="${company.events}">
-        <div style="margin-bottom:12px;">
-            <b>開始 :</b> ${ev.eventStartTime}<br>
-            <b>終了 :</b> ${ev.eventEndTime}<br>
-            <b>場所 :</b> ${ev.eventPlace}
-        </div>
-        <hr>
-    </c:forEach>
+			<!-- progress=2 のイベント一覧 -->
+			<h4>イベント情報</h4>
 
-    <!-- 学生リクエスト一覧 -->
-    <h3>リクエストした学生一覧</h3>
+			<c:if test="${empty company.events}">
+				<p>対象イベントがありません。</p>
+			</c:if>
 
-    <table border="1" cellpadding="8">
-        <tr>
-            <th>学生番号</th>
-            <th>氏名</th>
-            <th>コース名</th>
-            <th>リクエスト日時</th>
-        </tr>
+			<c:forEach var="ev" items="${company.events}">
+				<div style="margin-bottom: 12px;">
+					<b>開始 :</b> ${ev.eventStartTime}<br> <b>終了 :</b>
+					${ev.eventEndTime}<br> <b>場所 :</b> ${ev.eventPlace}
+				</div>
+				<hr>
+			</c:forEach>
 
-        <c:forEach var="req" items="${requests}">
-            <tr>
-                <td>${req.student.studentNumber}</td>
-                <td>${req.student.studentName}</td>
-                <td>${req.student.course.courseName}</td>
-                <td>${req.requestTime}</td>
-            </tr>
-        </c:forEach>
+			<!-- 学生リクエスト一覧 -->
+			<h3>リクエストした学生一覧</h3>
 
-    </table>
+			<table border="1" cellpadding="8">
+				<tr>
+					<th>学生番号</th>
+					<th>氏名</th>
+					<th>コース名</th>
+					<th>リクエスト日時</th>
+				</tr>
 
-</c:if>
+				<c:forEach var="req" items="${requests}">
+					<tr>
+						<td>${req.student.studentNumber}</td>
+						<td>${req.student.studentName}</td>
+						<td>${req.student.course.courseName}</td>
+						<td>${req.requestTime}</td>
+					</tr>
+				</c:forEach>
+
+			</table>
+
+		</c:if>
+	</main>
+	<footer>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
+	</footer>
 
 </body>
 </html>

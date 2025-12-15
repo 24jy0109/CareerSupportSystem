@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>確認画面</title>
+<title>連絡先登録確認画面（在校生/職員）</title>
 </head>
 <body>
 	<form action="graduate" method="post">
