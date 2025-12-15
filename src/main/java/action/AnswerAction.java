@@ -49,7 +49,7 @@ public class AnswerAction {
 		    answers.add(answer);
 		    break;
 		case "ScheduleAnswerCheck":
-//			answers = answerDBA
+			answers = answerDBA.getAllAnswers();
 			break;
 		}
 		return answers;

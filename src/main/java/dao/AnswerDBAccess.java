@@ -5,8 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Answer;
+import model.Company;
+import model.Event;
+import model.Graduate;
 
 public class AnswerDBAccess extends DBAccess {
     // ===================================================================================
@@ -89,5 +94,76 @@ public class AnswerDBAccess extends DBAccess {
             e.printStackTrace();
         }
     }
+    
+    public List<Answer> getAllAnswers() {
+        List<Answer> list = new ArrayList<>();
+
+        String sql =
+            "SELECT "
+          + "a.answer_id, "
+          + "c.company_name, "
+          + "g.graduate_name, "
+          + "a.first_choice_start_time, a.first_choice_end_time, "
+          + "a.second_choice_start_time, a.second_choice_end_time, "
+          + "a.third_choice_start_time, a.third_choice_end_time "
+          + "FROM answer a "
+          + "JOIN graduate g ON a.graduate_student_number = g.graduate_student_number "
+          + "JOIN event e ON a.event_id = e.event_id "
+          + "JOIN company c ON e.company_id = c.company_id "
+          + "ORDER BY a.answer_id";
+
+        try (
+            Connection con = createConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ) {
+
+            while (rs.next()) {
+                Answer answer = new Answer();
+                answer.setAnswerId(rs.getInt("answer_id"));
+
+                // ----- Graduate -----
+                Graduate graduate = new Graduate();
+                graduate.setGraduateName(rs.getString("graduate_name"));
+                answer.setGraduate(graduate);
+
+                // ----- Company（Event 経由）-----
+                Company company = new Company();
+                company.setCompanyName(rs.getString("company_name"));
+
+                Event event = new Event();
+                event.setCompany(company);
+                answer.setEvent(event);
+
+                Timestamp ts;
+
+                ts = rs.getTimestamp("first_choice_start_time");
+                if (ts != null) answer.setFirstChoiceStartTime(ts.toLocalDateTime());
+
+                ts = rs.getTimestamp("first_choice_end_time");
+                if (ts != null) answer.setFirstChoiceEndTime(ts.toLocalDateTime());
+
+                ts = rs.getTimestamp("second_choice_start_time");
+                if (ts != null) answer.setSecondChoiceStartTime(ts.toLocalDateTime());
+
+                ts = rs.getTimestamp("second_choice_end_time");
+                if (ts != null) answer.setSecondChoiceEndTime(ts.toLocalDateTime());
+
+                ts = rs.getTimestamp("third_choice_start_time");
+                if (ts != null) answer.setThirdChoiceStartTime(ts.toLocalDateTime());
+
+                ts = rs.getTimestamp("third_choice_end_time");
+                if (ts != null) answer.setThirdChoiceEndTime(ts.toLocalDateTime());
+
+                list.add(answer);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 
 }
