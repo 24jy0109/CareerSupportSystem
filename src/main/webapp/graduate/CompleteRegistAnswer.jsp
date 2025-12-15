@@ -16,6 +16,9 @@ DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="./css/header.css">
+<link rel="stylesheet" href="./css/companylist.css">
+<link rel="stylesheet" href="./css/layout.css">
 <title>Submission Complete</title>
 <style>
 body {
@@ -37,6 +40,21 @@ body {
 </style>
 </head>
 <body>
+	<header>
+		<div class="head-part">
+			<div id="h-left">
+				<img src="img/rogo.png" alt="アイコン">
+			</div>
+
+			<div class="header-title"
+				onclick="location.href='mypage?command=AppointmentMenu'">
+				<div class="title-jp">就活サポート</div>
+				<div class="title-en">Career Support</div>
+			</div>
+
+			<div class="header-user">ようこそ 24jy0119 さん</div>
+		</div>
+	</header>
 
 	<h1>Submission Complete</h1>
 
