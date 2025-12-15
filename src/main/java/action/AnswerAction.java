@@ -51,6 +51,10 @@ public class AnswerAction {
 		case "ScheduleAnswerCheck":
 			answers = answerDBA.getAllAnswers();
 			break;
+		case "yesAnswer":
+			answers.add(answerDBA.searchAnswerById(Integer.parseInt(data[1]), Integer.parseInt(data[2])));
+			
+			break;
 		}
 		return answers;
 	}

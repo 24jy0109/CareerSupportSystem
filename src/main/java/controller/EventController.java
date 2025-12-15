@@ -12,9 +12,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import action.AnswerAction;
 import action.EventAction;
 import action.GraduateAction;
 import dto.EventDTO;
+import model.Answer;
 
 @WebServlet("/event")
 public class EventController extends HttpServlet {
@@ -34,6 +36,7 @@ public class EventController extends HttpServlet {
 
 		// 戻り値用のArrayList<Company>
 		List<EventDTO> events = new ArrayList<EventDTO>();
+		List<Answer> answers = new ArrayList<Answer>();
 
 		// sessionから値を取得
 		HttpSession session = request.getSession();
@@ -41,6 +44,8 @@ public class EventController extends HttpServlet {
 		String role = (String) session.getAttribute("role");
 		
 		String data[];
+		
+		String companyId;
 		
 		// Test
 		System.out.println(studentNumber);
@@ -64,7 +69,7 @@ public class EventController extends HttpServlet {
 			switch (command) {
 			case "RegistEventForm":
 				nextPage = "staff/RegistEventInfo.jsp";
-				String companyId = (String) request.getParameter("companyId");
+				companyId = (String) request.getParameter("companyId");
 				try {
 					events = eventAction.execute(new String[] { command, "",  companyId});
 				} catch (Exception e) {
@@ -131,6 +136,28 @@ public class EventController extends HttpServlet {
 				return;
 			case "EventList":
 				nextPage = "staff/EventList.jsp";
+				break;
+			case "yesAnswer":
+				nextPage = "staff/RegistEventInfo.jsp";
+				data = new String[3];
+				data[0] = command;
+				data[1] = request.getParameter("answerId");
+				data[2] = request.getParameter("choice");
+				
+				try {
+					answers = new AnswerAction().execute(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				Answer answer = answers.getFirst();
+				request.setAttribute("answer", answer);
+				
+				companyId = String.valueOf(answer.getGraduate().getCompany().getCompanyId());
+				try {
+					events = eventAction.execute(new String[] { "RegistEventForm", "",  companyId});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				break;
 			}
 		} else {

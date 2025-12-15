@@ -41,6 +41,7 @@ public class AnswerController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String studentNumber = (String) session.getAttribute("studentNumber");
 		String role = (String) session.getAttribute("role");
+		String[] data;
 
 		// Test
 		System.out.println(studentNumber);
@@ -60,7 +61,7 @@ public class AnswerController extends HttpServlet {
 			break;
 		case "registAnswer":
 			nextPage = "graduate/CompleteRegistAnswer.jsp";
-			String[] data = new String[9];
+			data = new String[9];
 			data[0] = command;
 			data[1] = request.getParameter("answerId");
 			data[2] = request.getParameter("eventAvailability");
@@ -92,6 +93,8 @@ public class AnswerController extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			break;
+		case "noAnswer":
 			break;
 		default:
 			response.sendRedirect("login");

@@ -20,7 +20,7 @@
 
         <p>
             <label>
-                <input type="radio" name="decisionChoice" value="1" required>
+                <input type="radio" name="choice" value="1" required>
                 第1希望：
                 ${a.firstChoiceStartTime} ～ ${a.firstChoiceEndTime}
             </label>
@@ -28,7 +28,7 @@
 
         <p>
             <label>
-                <input type="radio" name="decisionChoice" value="2">
+                <input type="radio" name="choice" value="2">
                 第2希望：
                 ${a.secondChoiceStartTime} ～ ${a.secondChoiceEndTime}
             </label>
@@ -36,13 +36,13 @@
 
         <p>
             <label>
-                <input type="radio" name="decisionChoice" value="3">
+                <input type="radio" name="choice" value="3">
                 第3希望：
                 ${a.thirdChoiceStartTime} ～ ${a.thirdChoiceEndTime}
             </label>
         </p>
 
-        <input type="hidden" name="command" value="decideAnswer">
+        <input type="hidden" name="command" value="yesAnswer">
         <input type="hidden" name="answerId" value="${a.answerId}">
 
         <input type="submit" value="決定">
@@ -50,7 +50,7 @@
 
     <!-- 拒否 -->
     <form action="AnswerController" method="post">
-        <input type="hidden" name="command" value="rejectAnswer">
+        <input type="hidden" name="command" value="noAnswer">
         <input type="hidden" name="answerId" value="${a.answerId}">
         <input type="submit" value="拒否">
     </form>
