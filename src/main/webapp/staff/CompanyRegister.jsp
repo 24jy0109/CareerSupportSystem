@@ -32,10 +32,10 @@ s
 		<form action="company" method="post">
 			<div class="left-screen">
 				<span class="leftscreen-title">企業登録</span>
-				<div class="company-register-flame">
 					<c:if test="${not empty error}">
 						<p style="color: red">${error}</p>
 					</c:if>
+				<div class="company-register-flame">
 					<table class="registscreen-table">
 						<tr>
 							<td>
