@@ -81,6 +81,7 @@ public class AnswerController extends HttpServlet {
 			}
 			break;
 		case "ScheduleAnswerCheck":
+			nextPage = "staff/ScheduleAnswerCheck.jsp";
 			// セッションがstaffではない
 			if (role != "staff") {
 				response.sendRedirect("login");
@@ -91,7 +92,6 @@ public class AnswerController extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 			break;
 		default:
 			response.sendRedirect("login");
