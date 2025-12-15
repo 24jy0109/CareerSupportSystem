@@ -39,6 +39,9 @@ public class CompanyAction {
 			List<Staff> staffs = new StaffDBAcess().getAllStaffs();
 			companies.getFirst().setStaffs(staffs);
 			break;
+		case "CompanyName":
+			companies.add(companyDBA.SearchCompanById(Integer.parseInt(data[2])));
+			break;
 		}
 		return companies;
 	}

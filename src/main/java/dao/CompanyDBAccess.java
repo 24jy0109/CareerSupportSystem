@@ -348,4 +348,34 @@ public class CompanyDBAccess extends DBAccess {
 
 		return companyName;
 	}
+	public CompanyDTO SearchCompanById(int companyId) throws Exception {
+
+		    String sql =
+		        "SELECT company_id, company_name " +
+		        "FROM company " +
+		        "WHERE company_id = ?";
+
+		    try (
+		        Connection con = createConnection();
+		        PreparedStatement ps = con.prepareStatement(sql)
+		    ) {
+		        ps.setInt(1, companyId);
+
+		        try (ResultSet rs = ps.executeQuery()) {
+		            if (rs.next()) {
+
+		                Company company = new Company();
+		                company.setCompanyId(rs.getInt("company_id"));
+		                company.setCompanyName(rs.getString("company_name"));
+
+		                CompanyDTO dto = new CompanyDTO();
+		                dto.setCompany(company);
+
+		                return dto;
+		            }
+		        }
+		    }
+		    // 見つからなかった場合
+		    return null;
+	}
 }

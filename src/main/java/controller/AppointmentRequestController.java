@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.RequestDispatcher;
@@ -12,6 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.AppointmentRequestAction;
+import action.CompanyAction;
+import dto.CompanyDTO;
 import model.Request;
 
 @WebServlet("/appointment_request")
@@ -39,6 +42,8 @@ public class AppointmentRequestController extends HttpServlet {
 		String studentNumber = (String) session.getAttribute("studentNumber");
 		String role = (String) session.getAttribute("role");
 		
+		List<Request> list = new ArrayList<>();
+		
 		// Test
 		System.out.println(studentNumber);
 		System.out.println(role);
@@ -63,11 +68,20 @@ public class AppointmentRequestController extends HttpServlet {
 				nextPage = "staff/RequestList.jsp";
 				String companyId = (String) request.getParameter("companyId");
 				try {
-					List<Request> list = appointmentRequestAction.execute(new String[] { command, "", companyId});
-					request.setAttribute("requests", list);
+					list = appointmentRequestAction.execute(new String[] { command, "", companyId});
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				if (list == null || list.isEmpty()) {
+					try {
+						List<CompanyDTO> companies = new CompanyAction().execute(new String[] { "CompanyName", "", companyId });
+						request.setAttribute("company", companies.getFirst());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
 				break;
 			}
 		} else {
@@ -85,6 +99,8 @@ public class AppointmentRequestController extends HttpServlet {
 				return;
 			}
 		}
+		
+		request.setAttribute("requests", list);
 		// 次のページへの転送
 		RequestDispatcher rd = request.getRequestDispatcher(nextPage);
 		rd.forward(request, response);
