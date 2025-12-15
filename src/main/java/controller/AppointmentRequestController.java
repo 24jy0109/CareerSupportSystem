@@ -76,7 +76,7 @@ public class AppointmentRequestController extends HttpServlet {
 				if (list == null || list.isEmpty()) {
 					try {
 						List<CompanyDTO> companies = new CompanyAction().execute(new String[] { "CompanyName", "", companyId });
-						request.setAttribute("company", companies.getFirst());
+						request.setAttribute("showCompany", companies.getFirst());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
