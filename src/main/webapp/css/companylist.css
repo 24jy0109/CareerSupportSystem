@@ -297,6 +297,10 @@
     gap: 20px;
 }
 
+.errormsg{
+	color: red;
+}
+
 /* 列幅の指定 */
 /* 名前 */
 .request-h:nth-child(1),

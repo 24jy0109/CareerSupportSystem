@@ -26,7 +26,37 @@
 		</div>
 	</header>
 
-	<main></main>
+	<main>
+		<div class="wrapper">
+			<main class="content">
+				<div class="request-top">
+					<div class="company">
+						<div class="field-name">企業名</div>
+						<div class="company-name">
+							アイティフォー
+							<div>
+								<a
+									href="CompanyRegisterConfirm?companyName=${companyDTO.company.companyName}">企業名編集</a>
+							</div>
+						</div>
+						<
+					</div>
+
+					<div class="event">
+						<div class="event-info">12月16日(水)17時～18時 172教室(本館７階)</div>
+					</div>
+				</div>
+
+				<p class="errormsg">申請者がいません</p>
+
+				<div class="bottom-btn-left">
+					<!-- 戻るボタン　左側 -->
+					<button type="button" onclick="location.href='./CompanyList.html'">企業一覧に戻る</button>
+				</div>
+
+			</main>
+		</div>
+	</main>
 
 	<footer>
 		<p>

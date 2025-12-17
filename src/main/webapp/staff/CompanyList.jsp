@@ -91,7 +91,7 @@
 					<td>${companyDTO.company.companyName}</td>
 					<td>
 						<!-- 仮リンク --> <a
-						href="editCompany.jsp?companyId=${companyDTO.company.companyId}">情報編集</a>
+						href="./EditInfo.jsp?companyId=${companyDTO.company.companyId}">情報編集</a>
 					</td>
 
 					<c:choose>
