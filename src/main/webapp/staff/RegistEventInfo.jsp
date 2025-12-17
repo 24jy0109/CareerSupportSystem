@@ -147,6 +147,7 @@ th {
 						<th>氏名</th>
 						<th>コース</th>
 						<th>学年</th>
+						<th>担当スタッフ</th>
 					</tr>
 
 					<c:forEach var="g" items="${dto.graduates}">
@@ -161,6 +162,11 @@ th {
 							<td>${g.graduateName}</td>
 							<td>${g.course.courseName}</td>
 							<td>${g.course.courseTerm}</td>
+							<td>
+								<p>${empty g.staff ? '未割当' : g.staff.staffName}</p> <a
+								href="event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}">
+									開催相談 </a>
+							</td>
 						</tr>
 					</c:forEach>
 				</table>

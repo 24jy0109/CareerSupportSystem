@@ -49,7 +49,7 @@
     </form>
 
     <!-- 拒否 -->
-    <form action="AnswerController" method="post">
+    <form action="answer" method="post">
         <input type="hidden" name="command" value="noAnswer">
         <input type="hidden" name="answerId" value="${a.answerId}">
         <input type="submit" value="拒否">
