@@ -27,7 +27,7 @@
 	</header>
 	
 <!--	<h1>アポイントメント画面</h1>-->
-	<a href="company?command=CompanyList">企業一覧</a>
+<!--	<a href="company?command=CompanyList">企業一覧</a>-->
 	
 	<main>
 
@@ -36,17 +36,17 @@
         <div class="apo-menu">
 
             <div class="menu-item" onclick="location.href='company?command=CompanyList'">
-                <img src="../img/company.png" alt="企業一覧">
+                <img src="img/company.png" alt="企業一覧">
                 <span>企業一覧</span>
             </div>
 
             <div class="menu-item" onclick="location.href='event?command=JoinStudent'">
-                <img src="../img/history.png" alt="参加一覧/履歴">
+                <img src="img/history.png" alt="参加一覧/履歴">
                 <span>参加一覧/履歴</span>
             </div>
 
             <div class="menu-item" onclick="location.href='event?command=EventList'">
-                <img src="../img/event.png" alt="開催一覧">
+                <img src="img/event.png" alt="開催一覧">
                 <span>開催一覧</span>
             </div>
 
