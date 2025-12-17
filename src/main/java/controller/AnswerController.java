@@ -95,7 +95,19 @@ public class AnswerController extends HttpServlet {
 			}
 			break;
 		case "noAnswer":
-			break;
+			// セッションがstaffではない
+			if (role != "staff") {
+				response.sendRedirect("login");
+				return;
+			}
+			String answerId = request.getParameter("answerId");
+			try {
+				answers = answerAction.execute(new String[] { command, answerId });
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			response.sendRedirect("answer?command=ScheduleAnswerCheck");
+			return;
 		default:
 			response.sendRedirect("login");
 			return;

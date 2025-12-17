@@ -53,8 +53,10 @@ public class AnswerAction {
 			break;
 		case "yesAnswer":
 			answers.add(answerDBA.searchAnswerById(Integer.parseInt(data[1]), Integer.parseInt(data[2])));
-			
 			break;
+		case "noAnswer":
+			// data[1] answerId
+			answerDBA.deleteAnswer(Integer.parseInt(data[1]));
 		}
 		return answers;
 	}
