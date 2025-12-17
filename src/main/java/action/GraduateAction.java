@@ -137,6 +137,7 @@ public class GraduateAction {
 			list.add(graduate);
 			break;
 			
+			
 		case "findStudentNumber":
 			 exists = GraduateDBA.findGraduateStudentNumber(data[1]);
 
