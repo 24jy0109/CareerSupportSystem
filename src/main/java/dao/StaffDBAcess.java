@@ -72,4 +72,28 @@ public class StaffDBAcess extends DBAccess {
 		return staffList;
 	}
 
+	public Staff searchStaffById(int staffId) throws Exception {
+
+	    Staff staff = null;
+	    String sql = "SELECT staff_id, staff_name, staff_email FROM staff WHERE staff_id = ?";
+
+	    try (
+	        Connection con = createConnection();
+	        PreparedStatement ps = con.prepareStatement(sql)
+	    ) {
+	        ps.setInt(1, staffId);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                staff = new Staff();
+	                staff.setStaffId(rs.getInt("staff_id"));
+	                staff.setStaffName(rs.getString("staff_name"));
+	                staff.setStaffEmail(rs.getString("staff_email"));
+	            }
+	        }
+	    }
+
+	    return staff; // 見つからなければ null
+	}
+
 }

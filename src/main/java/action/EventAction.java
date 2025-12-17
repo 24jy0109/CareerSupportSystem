@@ -1,6 +1,7 @@
 package action;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +31,20 @@ public class EventAction {
 		// data[6] = eventEndTime
 		// data[7] = eventCapacity
 		// data[8] = eventOtherInfo
+		// data[9] = graduates
+		// data[10] = eventId
+		// data[11] = answerId
 
 		String action = data[0];
 		EventDTO eventDTO = new EventDTO();
 		List<EventDTO> list = new ArrayList<EventDTO>();
-		ArrayList<Graduate> graduates = new ArrayList<>();
+		List<Graduate> graduates = new ArrayList<>();
 		
 		EventDBAccess eventDBA = new EventDBAccess();
 		CompanyDBAccess companyDBA = new CompanyDBAccess();
+		AnswerDBAccess answerDBA = new AnswerDBAccess();
+		StaffDBAcess staffDBA = new StaffDBAcess();
+		GraduateDBAccess graduateDBA = new GraduateDBAccess();
 
 		Event event = new Event();
 		Company company = new Company();
@@ -62,7 +69,7 @@ public class EventAction {
 			company.setCompanyId(Integer.parseInt(data[2]));
 			event.setCompany(company);
 
-			staff.setStaffId(Integer.parseInt(data[3]));
+			staff = staffDBA.searchStaffById(Integer.parseInt(data[3]));
 			event.setStaff(staff);
 
 			// Event の基本情報をセット
@@ -74,28 +81,95 @@ public class EventAction {
 
 			// 参加させる卒業生をセット
 			if (!data[9].isEmpty()) {
-				String[] graduateNumbers = data[9].split(",");
-				for (String num : graduateNumbers) {
-					Graduate g = new Graduate();
-					g.setGraduateStudentNumber(num);
-					graduates.add(g);
-				}
+				graduates = graduateDBA.searchGraduatesByGraduateStudentNumbers(data[9].split(","));
 			}
 			event.setJoinGraduates(graduates);
 
 			// eventProgress は登録時は2(開催)
 			event.setEventProgress(2);
 
-			eventDBA.insertEvent(event);
+			
+			if (data[10] == null || data[10].isEmpty()) {
+				// 回答から遷移していない
+				try {
+					eventDBA.insertEvent(event);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				// 回答から遷移している
+				try {
+					event.setEventId(Integer.parseInt(data[10]));
+					eventDBA.updateEvent(event);
+					answerDBA.deleteAnswer(Integer.parseInt(data[11]));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
 			RequestDBAccess requestDBA = new RequestDBAccess();
-			List<String> emails = requestDBA.searchEmailsByCompanyId(Integer.parseInt(data[2]));
+			List<String> studentEmails = requestDBA.searchEmailsByCompanyId(Integer.parseInt(data[2]));
+			
+			List<String> graduateEmails = new ArrayList<String>();
+			for (Graduate g : event.getJoinGraduates()) {
+				graduateEmails.add(g.getGraduateEmail());
+			}
 
 			// メールの件名・本文はあなたのデータに合わせて
 			title = "【イベント通知】";
-			body = "イベントに関するお知らせです。";
+			DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm");
 
-			for (String toEmail : emails) {
+			StringBuilder sb = new StringBuilder();
+
+			sb.append(event.getCompany().getCompanyName())
+			  .append(" のイベントが開催されます。\n\n");
+
+			sb.append("■ 開催日時\n");
+			sb.append("  ")
+			  .append(event.getEventStartTime().format(fmt))
+			  .append(" ～ ")
+			  .append(event.getEventEndTime().format(fmt))
+			  .append("\n\n");
+
+			sb.append("■ 開催場所\n");
+			sb.append("  ").append(event.getEventPlace()).append("\n\n");
+
+			sb.append("■ 定員\n");
+			sb.append("  ").append(event.getEventCapacity()).append(" 名\n\n");
+
+			if (event.getEventOtherInfo() != null && !event.getEventOtherInfo().isEmpty()) {
+			    sb.append("■ 備考\n");
+			    sb.append("  ").append(event.getEventOtherInfo()).append("\n\n");
+			}
+
+			sb.append("■ 担当スタッフ\n");
+			sb.append("  ").append(event.getStaff().getStaffName()).append("\n\n");
+			sb.append("  ").append(event.getStaff().getStaffEmail());
+			
+			sb.append("詳細はシステムをご確認ください。\n");
+			sb.append("※本メールは自動送信です。");
+
+			body = sb.toString();
+
+			// 申請者にメール
+			for (String toEmail : studentEmails) {
+
+				Email mail = new Email(); // 1通ずつ新しく作る
+				mail.setTo("24jy0109@jec.ac.jp");
+				mail.setSubject(title);
+				mail.setBody(body + toEmail);
+
+				boolean result = mail.send();
+
+				if (!result) {
+					System.out.println("送信失敗: " + toEmail);
+				} else {
+					System.out.println("送信成功: " + toEmail);
+				}
+			}
+			
+			// 参加卒業生にメール
+			for (String toEmail : graduateEmails) {
 
 				Email mail = new Email(); // 1通ずつ新しく作る
 				mail.setTo("24jy0109@jec.ac.jp");
@@ -140,7 +214,6 @@ public class EventAction {
 			event.setStaff(staff);
 			event = eventDBA.insertEvent(event);
 			
-			AnswerDBAccess answerDBA = new AnswerDBAccess();
 			Answer answer = new Answer();
 			graduate.setGraduateStudentNumber(data[2]);
 			answer.setGraduate(graduate);

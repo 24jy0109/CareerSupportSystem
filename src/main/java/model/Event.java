@@ -1,14 +1,14 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Event {
 	private int eventId;
 	private Company company;
 	private Staff staff;
-	private ArrayList<Graduate> joinGraduates;
-	private ArrayList<Student> joinstudents;
+	private List<Graduate> joinGraduates;
+	private List<Student> joinstudents;
 	private LocalDateTime eventStartTime;
 	private LocalDateTime eventEndTime;
 	private String eventPlace;
@@ -20,7 +20,7 @@ public class Event {
 
 	}
 
-	public Event(int eventId, Company company, Staff staff, ArrayList<Graduate> joinGraduates, ArrayList<Student> joinStudents,
+	public Event(int eventId, Company company, Staff staff, List<Graduate> joinGraduates, List<Student> joinStudents,
 			LocalDateTime eventStartTime, LocalDateTime eventEndTime, String eventPlace, int eventCapacity, int eventProgress,
 			String eventOtherInfo) {
 		this.eventId = eventId;
@@ -60,19 +60,19 @@ public class Event {
 		this.staff = staff;
 	}
 
-	public ArrayList<Graduate> getJoinGraduates() {
+	public List<Graduate> getJoinGraduates() {
 		return joinGraduates;
 	}
 
-	public void setJoinGraduates(ArrayList<Graduate> joinGraduates) {
+	public void setJoinGraduates(List<Graduate> joinGraduates) {
 		this.joinGraduates = joinGraduates;
 	}
 
-	public ArrayList<Student> getJoinstudents() {
+	public List<Student> getJoinstudents() {
 		return joinstudents;
 	}
 
-	public void setJoinstudents(ArrayList<Student> joinstudents) {
+	public void setJoinstudents(List<Student> joinstudents) {
 		this.joinstudents = joinstudents;
 	}
 

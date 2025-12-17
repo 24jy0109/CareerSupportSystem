@@ -200,7 +200,7 @@ public class AnswerDBAccess extends DBAccess {
 			throw new IllegalArgumentException("choice は 1〜3 を指定してください");
 		}
 
-		String sql = "SELECT a.answer_id, a.graduate_student_number, " +
+		String sql = "SELECT a.answer_id, a.graduate_student_number, a.event_id, " +
 				timeSelect + ", " +
 				"c.company_id, c.company_name " +
 				"FROM answer a " +
@@ -221,6 +221,7 @@ public class AnswerDBAccess extends DBAccess {
 					grad.setGraduateStudentNumber(rs.getString("graduate_student_number"));
 					answer.setGraduate(grad);
 
+
 					// 企業
 					Company company = new Company();
 					company.setCompanyId(rs.getInt("company_id"));
@@ -228,6 +229,11 @@ public class AnswerDBAccess extends DBAccess {
 
 					// Graduate に Company をセット
 					grad.setCompany(company);
+					
+					// イベント
+					Event event = new Event();
+					event.setEventId(rs.getInt("event_id"));
+					answer.setEvent(event);
 
 					// 希望時間（choice に応じて）
 					Timestamp st;
@@ -265,6 +271,21 @@ public class AnswerDBAccess extends DBAccess {
 		}
 
 		return answer;
+	}
+
+	public void deleteAnswer(int answerId) {
+	    String sql = "DELETE FROM answer WHERE answer_id = ?";
+
+	    try (
+	        Connection con = createConnection();
+	        PreparedStatement ps = con.prepareStatement(sql)
+	    ) {
+	        ps.setInt(1, answerId);
+	        ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
 }

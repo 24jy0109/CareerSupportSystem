@@ -85,6 +85,55 @@ public class GraduateDBAccess extends DBAccess {
 
 		return null;
 	}
+	
+	public List<Graduate> searchGraduatesByGraduateStudentNumbers(String[] graduateStudentNumbers) throws Exception {
+
+	    List<Graduate> list = new ArrayList<>();
+
+	    // 空チェック（重要：IN () エラー防止）
+	    if (graduateStudentNumbers == null || graduateStudentNumbers.length == 0) {
+	        return list;
+	    }
+
+	    // ?,?,? を学籍番号の数だけ作る
+	    StringBuilder sb = new StringBuilder();
+	    for (int i = 0; i < graduateStudentNumbers.length; i++) {
+	        sb.append("?");
+	        if (i < graduateStudentNumbers.length - 1) {
+	            sb.append(",");
+	        }
+	    }
+
+	    String sql =
+	        "SELECT graduate_student_number, graduate_name, graduate_email " +
+	        "FROM graduate " +
+	        "WHERE graduate_student_number IN (" + sb.toString() + ")";
+
+	    try (
+	        Connection con = createConnection();
+	        PreparedStatement ps = con.prepareStatement(sql)
+	    ) {
+
+	        // パラメータ設定
+	        for (int i = 0; i < graduateStudentNumbers.length; i++) {
+	            ps.setString(i + 1, graduateStudentNumbers[i]);
+	        }
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                Graduate g = new Graduate();
+	                g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+	                g.setGraduateName(rs.getString("graduate_name"));
+	                g.setGraduateEmail(rs.getString("graduate_email"));
+
+	                list.add(g);
+	            }
+	        }
+	    }
+
+	    return list;
+	}
+
 
 	public List<Graduate> findAll() throws Exception {
 

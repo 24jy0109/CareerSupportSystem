@@ -42,11 +42,11 @@ public class EventController extends HttpServlet {
 		HttpSession session = request.getSession();
 		String studentNumber = (String) session.getAttribute("studentNumber");
 		String role = (String) session.getAttribute("role");
-		
+
 		String data[];
-		
+
 		String companyId;
-		
+
 		// Test
 		System.out.println(studentNumber);
 		System.out.println(role);
@@ -58,9 +58,9 @@ public class EventController extends HttpServlet {
 			response.sendRedirect("login");
 			return;
 		}
-		
+
 		EventAction eventAction = new EventAction();
-		
+
 		// 次画面用の変数
 		String nextPage = null;
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
@@ -71,17 +71,17 @@ public class EventController extends HttpServlet {
 				nextPage = "staff/RegistEventInfo.jsp";
 				companyId = (String) request.getParameter("companyId");
 				try {
-					events = eventAction.execute(new String[] { command, "",  companyId});
+					events = eventAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				break;
 			case "RegistEvent":
 				// 配列を作成（必要な項目分のサイズを確保）
-				data = new String[10];
+				data = new String[12];
 
-				data[0] = command;  // "RegistEvent"
-				data[1] = "";				
+				data[0] = command; // "RegistEvent"
+				data[1] = "";
 				data[2] = request.getParameter("companyId");
 				data[3] = request.getParameter("staffId");
 				data[4] = request.getParameter("eventPlace");
@@ -93,19 +93,22 @@ public class EventController extends HttpServlet {
 				// チェックボックスで選択された参加卒業生
 				String[] selectedGraduates = request.getParameterValues("graduateStudents");
 				data[9] = (selectedGraduates != null) ? String.join(",", selectedGraduates) : "";
-				
+
+				data[10] = request.getParameter("eventId");
+				data[11] = request.getParameter("answerId");
 				try {
 					events = eventAction.execute(data);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+
 				response.sendRedirect("event?command=EventList");
 				return;
 			case "ScheduleArrangeSendForm":
 				nextPage = "staff/ScheduleArrangeSend.jsp";
 				String graduateStudentNumber = request.getParameter("graduateStudentNumber");
 				try {
-					events = eventAction.execute(new String[] { command, "",  graduateStudentNumber});
+					events = eventAction.execute(new String[] { command, "", graduateStudentNumber });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -122,7 +125,7 @@ public class EventController extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 				data[4] = (String) request.getParameter("mailTitle");
 				data[5] = (String) request.getParameter("mailBody");
 				data[6] = (String) request.getParameter("companyId");
@@ -143,7 +146,7 @@ public class EventController extends HttpServlet {
 				data[0] = command;
 				data[1] = request.getParameter("answerId");
 				data[2] = request.getParameter("choice");
-				
+
 				try {
 					answers = new AnswerAction().execute(data);
 				} catch (Exception e) {
@@ -151,38 +154,40 @@ public class EventController extends HttpServlet {
 				}
 				Answer answer = answers.getFirst();
 				request.setAttribute("answer", answer);
-				
+
 				companyId = String.valueOf(answer.getGraduate().getCompany().getCompanyId());
 				try {
-					events = eventAction.execute(new String[] { "RegistEventForm", "",  companyId});
+					events = eventAction.execute(new String[] { "RegistEventForm", "", companyId });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				break;
 			}
-		} else {
+		} else
+
+		{
 			// 学生の遷移
-//			switch (command) {
-//			case "CompanyList":
-//				nextPage = "student/CompanyList.jsp";
-//				String companyName = (String) request.getParameter("companyName");
-//				if (companyName == null) companyName = "";
-//				try {
-//					companies = companyAction.execute(new String[] { "CompanyList", studentNumber, companyName});
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//				break;
-//			case "CompanyDetail":
-//				nextPage = "student/CompanyDetail.jsp";
-//				String companyId = (String) request.getParameter("companyId");
-//				try {
-//					companies = companyAction.execute(new String[] { "CompanyDetail", studentNumber, companyId});
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//				break;
-//			}
+			//			switch (command) {
+			//			case "CompanyList":
+			//				nextPage = "student/CompanyList.jsp";
+			//				String companyName = (String) request.getParameter("companyName");
+			//				if (companyName == null) companyName = "";
+			//				try {
+			//					companies = companyAction.execute(new String[] { "CompanyList", studentNumber, companyName});
+			//				} catch (Exception e) {
+			//					e.printStackTrace();
+			//				}
+			//				break;
+			//			case "CompanyDetail":
+			//				nextPage = "student/CompanyDetail.jsp";
+			//				String companyId = (String) request.getParameter("companyId");
+			//				try {
+			//					companies = companyAction.execute(new String[] { "CompanyDetail", studentNumber, companyId});
+			//				} catch (Exception e) {
+			//					e.printStackTrace();
+			//				}
+			//				break;
+			//			}
 		}
 		request.setAttribute("events", events);
 		// 次のページへの転送
