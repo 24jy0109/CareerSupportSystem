@@ -58,6 +58,11 @@ public class EventAction {
 		case "EventList":
 			list = eventDBA.getAllEvents();
 			break;
+		case "EventDetail":
+			// data[1] eventId
+			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[1]));
+			list.add(eventDTO);
+			break;
 		case "RegistEventForm":
 			List<CompanyDTO> companies = companyDBA.SearchCompanyWithGraduates(Integer.parseInt(data[2]));
 			List<Staff> staffs = new StaffDBAcess().getAllStaffs();

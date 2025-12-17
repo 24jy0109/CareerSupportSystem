@@ -145,6 +145,16 @@ public class EventController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
+			case "EventDetail":
+				nextPage = "staff/EventDetail.jsp";
+				String eventId =request.getParameter("eventId"); 
+				try {
+					events = eventAction.execute(new String[] { command, eventId });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("event", events.getFirst());
+				break;
 			case "yesAnswer":
 				nextPage = "staff/RegistEventInfo.jsp";
 				data = new String[3];
