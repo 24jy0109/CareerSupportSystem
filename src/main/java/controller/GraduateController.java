@@ -283,60 +283,84 @@ public class GraduateController extends HttpServlet {
 				List<Graduate> list = null;
 				
 				try {
-					list = graduateAction.execute(new String[] {"findStudenNumber",studentNumber});
+					list = graduateAction.execute(new String[] {"findStudentNumber",studentNumber});
 				} catch (Exception e) {
 					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
 				}
 				
+				String backCompanyId = null;
+				String backCourseCode = null;
+				String job = null;
+				String name = null;
+				String sn = null;
+				String mail = null;
+				String info = null;
 				if (list != null && !list.isEmpty()) {
 			        // 登録済み
 			        nextPage = "common/RegistEmailConfirm.jsp";
+			        try {
+						list = graduateAction.execute(new String[] {"findGraduateInfo",studentNumber});
+						Graduate graduateInfo = list.get(0);
+						//データベースから値を取得
+						companyId = String.valueOf(graduateInfo.getCompany().getCompanyId());
+						job = graduateInfo.getGraduateJobCategory();
+						name = graduateInfo.getGraduateName();
+						courseCode = graduateInfo.getCourse().getCourseCode();
+						sn = graduateInfo.getGraduateStudentNumber();
+						mail = graduateInfo.getGraduateEmail();
+						info = graduateInfo.getOtherInfo();
+						
+					} catch (Exception e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+			        
 			    } else {
 			        // 未登録
 			        nextPage = "common/RegistEmail.jsp";
+			        // Back の場合、入力値が送られてくる
+			        backCompanyId = request.getParameter("companyId");
+			        backCourseCode = request.getParameter("courseCode");
+			        job = request.getParameter("jobType");
+			        name = request.getParameter("graduateName");
+			        sn = request.getParameter("graduateStudentNumber");
+			        mail = request.getParameter("graduateEmail"); // hidden名に合わせる
+			        info = request.getParameter("otherInfo");
+			        // 会社IDと会社名を設定
+			        if (backCompanyId != null && !backCompanyId.isEmpty()) {
+			        	companyId = backCompanyId; // 登録用ID
+			        	try {
+			        		graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
+			        		companyName = graduate.get(0).getCompany().getCompanyName();
+			        	} catch (Exception e) {
+			        		e.printStackTrace();
+			        		companyName = ""; // 念のため初期化
+			        	}
+			        } else {
+			        	// 初回表示
+			        	companyId = "";
+			        	companyName = "";
+			        }
+			        
+			        // 学科コードと学科を設定
+			        if (backCourseCode != null && !backCourseCode.isEmpty()) {
+			        	courseCode = backCourseCode; // 登録用ID
+			        	try {
+			        		graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
+			        		courseName = graduate.get(0).getCourse().getCourseName();
+			        	} catch (Exception e) {
+			        		e.printStackTrace();
+			        		courseName = ""; // 念のため初期化
+			        	}
+			        } else {
+			        	// 初回表示
+			        	courseCode = "";
+			        	courseName = "";
+			        }
 			    }
 
-				// Back の場合、入力値が送られてくる
-				String backCompanyId = request.getParameter("companyId");
-				String backCourseCode = request.getParameter("courseCode");
-				String job = request.getParameter("jobType");
-				String name = request.getParameter("graduateName");
-				String sn = request.getParameter("graduateStudentNumber");
-				String mail = request.getParameter("graduateEmail"); // hidden名に合わせる
-				String info = request.getParameter("otherInfo");
 
-				// 会社IDと会社名を設定
-				if (backCompanyId != null && !backCompanyId.isEmpty()) {
-					companyId = backCompanyId; // 登録用ID
-					try {
-						graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
-						companyName = graduate.get(0).getCompany().getCompanyName();
-					} catch (Exception e) {
-						e.printStackTrace();
-						companyName = ""; // 念のため初期化
-					}
-				} else {
-					// 初回表示
-					companyId = "";
-					companyName = "";
-				}
-
-				// 学科コードと学科を設定
-				if (backCourseCode != null && !backCourseCode.isEmpty()) {
-					courseCode = backCourseCode; // 登録用ID
-					try {
-						graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
-						courseName = graduate.get(0).getCourse().getCourseName();
-					} catch (Exception e) {
-						e.printStackTrace();
-						courseName = ""; // 念のため初期化
-					}
-				} else {
-					// 初回表示
-					courseCode = "";
-					courseName = "";
-				}
 
 				// 企業一覧読み込み
 				try {

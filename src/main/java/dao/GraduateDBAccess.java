@@ -206,10 +206,13 @@ public class GraduateDBAccess extends DBAccess {
 
 	}
 
+	//学籍番号からGraduateテーブルの卒業生学籍番号があるか確認
 	public boolean findGraduateStudentNumber(String graduateStudentNumber)throws Exception {
 
 		Graduate g = searchGraduateByGraduateStudentNumber(graduateStudentNumber);
 		return g != null;
 	}
+	
+	
 
 }

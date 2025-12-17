@@ -23,7 +23,7 @@ public class GraduateAction {
 		GraduateDBAccess GraduateDBA = new GraduateDBAccess();
 		CompanyDBAccess CompanyDBA = new CompanyDBAccess();
 		CourseDBAccess CourseDBA = new CourseDBAccess();
-		
+
 		Graduate graduate = new Graduate();
 		Company company = new Company();
 		Course course = new Course();
@@ -136,16 +136,22 @@ public class GraduateAction {
 			graduate.setCourse(course);
 			list.add(graduate);
 			break;
-			
-			
-		case "findStudentNumber":
-			 exists = GraduateDBA.findGraduateStudentNumber(data[1]);
 
-			    if (exists) {
-			        // 登録済み → ダミー1件返す
-			        list.add(new Graduate());
-			    }
-			    break;
+		case "findStudentNumber":
+			exists = GraduateDBA.findGraduateStudentNumber(data[1]);
+
+			if (exists) {
+				// 登録済み → ダミー1件返す
+				list.add(new Graduate());
+			}
+			break;
+		case "findGraduateInfo":
+			gdb = new GraduateDBAccess();
+			String studentNumber = data[1];
+			graduate = gdb.searchGraduateByGraduateStudentNumber(studentNumber);
+			list.add(graduate);
+			
+			break; 
 		}
 		return list;
 	}
