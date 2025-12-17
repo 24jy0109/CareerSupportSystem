@@ -23,7 +23,7 @@ public class GraduateAction {
 		GraduateDBAccess GraduateDBA = new GraduateDBAccess();
 		CompanyDBAccess CompanyDBA = new CompanyDBAccess();
 		CourseDBAccess CourseDBA = new CourseDBAccess();
-
+		
 		Graduate graduate = new Graduate();
 		Company company = new Company();
 		Course course = new Course();
@@ -63,35 +63,40 @@ public class GraduateAction {
 			int companyId = Integer.parseInt(data[1]);
 			company.setCompanyId(companyId);
 			graduate.setCompany(company);
-
+			//企業名を取得
+			String companyName = data[2];
 			// jobType
-			graduate.setGraduateJobCategory(data[2]);
-			String jobType = data[2];
+			graduate.setGraduateJobCategory(data[3]);
+			String jobType = data[3];
 
 			// 氏名
-			graduate.setGraduateName(data[3]);
-			String name = data[3];
+			graduate.setGraduateName(data[4]);
+			String name = data[4];
 
 			// 学科CODE
-			course.setCourseCode(data[4]);
+			course.setCourseCode(data[5]);
 			graduate.setCourse(course);
+			//学科名取得
+			String courseName = data[6];
 
 			// 学籍番号
-			graduate.setGraduateStudentNumber(data[5]);
-			String graduateStudentNumber = data[5];
+			graduate.setGraduateStudentNumber(data[7]);
+			String graduateStudentNumber = data[7];
 
 			// メール
-			graduate.setGraduateEmail(data[6]);
-			String email = data[6];
+			graduate.setGraduateEmail(data[8]);
+			String email = data[8];
 
 			// その他
-			graduate.setOtherInfo(data[7]);
-			String otherInfo = data[7];
+			graduate.setOtherInfo(data[9]);
+			String otherInfo = data[9];
 
 			//メール送信
 			title = "【連絡先登録完了】";
 			body = "内容をご確認ください。";
+			body += "\n企業名：" + companyName;
 			body += "\n職種：" + jobType;
+			body += "\n学科:" + courseName;
 			body += "\n氏名：" + name;
 			body += "\n学籍番号：" + graduateStudentNumber;
 			body += "\nその他：" + otherInfo;
@@ -116,7 +121,7 @@ public class GraduateAction {
 			companyId = Integer.parseInt(data[1]);
 			graduate.setCompany(company);
 
-			String companyName = CompanyDBA.searchCompanyNameById(String.valueOf(companyId));
+			companyName = CompanyDBA.searchCompanyNameById(String.valueOf(companyId));
 			company.setCompanyName(companyName);
 			graduate.setCompany(company);
 			list.add(graduate);
@@ -126,11 +131,20 @@ public class GraduateAction {
 			String courseCode = data[1];
 			graduate.setCourse(course);
 
-			String courseName = CourseDBA.findCourseNameById(String.valueOf(courseCode));
+			courseName = CourseDBA.findCourseNameById(String.valueOf(courseCode));
 			course.setCourseName(courseName);
 			graduate.setCourse(course);
 			list.add(graduate);
 			break;
+			
+		case "findStudentNumber":
+			 exists = GraduateDBA.findGraduateStudentNumber(data[1]);
+
+			    if (exists) {
+			        // 登録済み → ダミー1件返す
+			        list.add(new Graduate());
+			    }
+			    break;
 		}
 		return list;
 	}

@@ -50,10 +50,9 @@
                 <span>開催一覧</span>
             </div>
 
-            <div class="menu-item" onclick="location.href='graduate?command='">
-                <img src="../img/user_add.png" alt="連絡先登録">
-                <span>連絡先登録</span>
-            </div>
+			<div class="menu-item" onclick="location.href='graduate?command=RegistEmail'">
+				<img src="img/user_add.png" alt="連絡先登録"> <span>連絡先登録</span>
+			</div>
 
         </div>
         </div>

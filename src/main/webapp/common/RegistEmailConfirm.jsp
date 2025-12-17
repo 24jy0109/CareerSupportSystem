@@ -11,6 +11,8 @@
 
 		<p>会社名：${companyName}</p>
 		<input type="hidden" name="companyId" value="${companyId}">
+		<input type="hidden" name="companyName" value="${companyName}">
+		
 
 		<p>職種：${jobType}</p>
 		<input type="hidden" name="jobType" value="${jobType}">
@@ -20,6 +22,7 @@
 
 		<p>学科：${courseName}</p>
 		<input type="hidden" name="courseCode" value="${courseCode}">
+		<input type="hidden" name="courseName" value="${courseName}">
 
 		<p>学籍番号：${graduateStudentNumber}</p>
 		<input type="hidden" name="graduateStudentNumber"
