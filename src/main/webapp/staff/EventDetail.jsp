@@ -26,7 +26,9 @@
 		</div>
 	</header>
 
-	<main></main>
+	<main>
+		イベント詳細ぺージ
+	</main>
 
 	<footer>
 		<p>

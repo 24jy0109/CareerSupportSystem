@@ -55,6 +55,9 @@ public class EventAction {
 		String body;
 
 		switch (action) {
+		case "EventList":
+			list = eventDBA.getAllEvents();
+			break;
 		case "RegistEventForm":
 			List<CompanyDTO> companies = companyDBA.SearchCompanyWithGraduates(Integer.parseInt(data[2]));
 			List<Staff> staffs = new StaffDBAcess().getAllStaffs();

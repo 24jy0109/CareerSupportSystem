@@ -10,7 +10,8 @@ public class EventDTO {
 	private Event event;
 	private List<Staff> staffs;
 	private List<Graduate> graduates;
-	
+	private int joinStudentCount;
+
 	public EventDTO() {
 	}
 
@@ -44,5 +45,11 @@ public class EventDTO {
 		this.graduates = graduates;
 	}
 
+	public int getJoinStudentCount() {
+		return joinStudentCount;
+	}
 
+	public void setJoinStudentCount(int joinStudentCount) {
+		this.joinStudentCount = joinStudentCount;
+	}
 }
