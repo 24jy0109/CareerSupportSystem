@@ -147,7 +147,7 @@ public class EventController extends HttpServlet {
 				break;
 			case "EventDetail":
 				nextPage = "staff/EventDetail.jsp";
-				String eventId =request.getParameter("eventId"); 
+				String eventId = request.getParameter("eventId");
 				try {
 					events = eventAction.execute(new String[] { command, eventId });
 				} catch (Exception e) {
@@ -178,7 +178,7 @@ public class EventController extends HttpServlet {
 				}
 				break;
 			case "EventEnd":
-				eventId =request.getParameter("eventId");
+				eventId = request.getParameter("eventId");
 				try {
 					eventAction.execute(new String[] { command, eventId });
 				} catch (Exception e) {
@@ -187,7 +187,7 @@ public class EventController extends HttpServlet {
 				response.sendRedirect("event?command=EventList");
 				return;
 			case "EventCancel":
-				eventId =request.getParameter("eventId");
+				eventId = request.getParameter("eventId");
 				try {
 					eventAction.execute(new String[] { command, eventId });
 				} catch (Exception e) {
@@ -196,31 +196,28 @@ public class EventController extends HttpServlet {
 				response.sendRedirect("event?command=EventList");
 				return;
 			}
-		} else
-
-		{
+		} else {
 			// 学生の遷移
-			//			switch (command) {
-			//			case "CompanyList":
-			//				nextPage = "student/CompanyList.jsp";
-			//				String companyName = (String) request.getParameter("companyName");
-			//				if (companyName == null) companyName = "";
-			//				try {
-			//					companies = companyAction.execute(new String[] { "CompanyList", studentNumber, companyName});
-			//				} catch (Exception e) {
-			//					e.printStackTrace();
-			//				}
-			//				break;
-			//			case "CompanyDetail":
-			//				nextPage = "student/CompanyDetail.jsp";
-			//				String companyId = (String) request.getParameter("companyId");
-			//				try {
-			//					companies = companyAction.execute(new String[] { "CompanyDetail", studentNumber, companyId});
-			//				} catch (Exception e) {
-			//					e.printStackTrace();
-			//				}
-			//				break;
-			//			}
+			switch (command) {
+			case "EventList":
+				nextPage = "student/EventList.jsp";
+				try {
+					events = eventAction.execute(new String[] { command });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case "EventDetail":
+				nextPage = "student/EventDetail.jsp";
+				String eventId = request.getParameter("eventId");
+				try {
+					events = eventAction.execute(new String[] { command, eventId });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("event", events.getFirst());
+				break;
+			}
 		}
 		request.setAttribute("events", events);
 		// 次のページへの転送

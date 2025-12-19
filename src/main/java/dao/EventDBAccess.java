@@ -197,6 +197,7 @@ public class EventDBAccess extends DBAccess {
 		String sql = "SELECT " +
 				"  e.event_id, " +
 				"  e.event_progress, " +
+				"  e.event_capacity, " +
 				"  c.company_id, " +
 				"  c.company_name, " +
 				"  COUNT(js.student_number) AS join_count " +
@@ -223,6 +224,7 @@ public class EventDBAccess extends DBAccess {
 				Event event = new Event();
 				event.setEventId(rs.getInt("event_id"));
 				event.setEventProgress(rs.getInt("event_progress"));
+				event.setEventCapacity(rs.getInt("event_capacity"));
 
 				// -------- Company --------
 				Company company = new Company();
@@ -256,7 +258,7 @@ public class EventDBAccess extends DBAccess {
 			// ============================================
 			String sql = "SELECT "
 					+ " e.event_id, e.event_place, e.event_start_time, e.event_end_time, "
-					+ " e.event_capacity, e.event_progress, "
+					+ " e.event_capacity, e.event_progress, e.event_other_info, "
 					+ " c.company_id, c.company_name, "
 					+ " s.staff_id, s.staff_name, s.staff_email, "
 					+ " COUNT(js.student_number) AS join_student_count "
@@ -288,6 +290,7 @@ public class EventDBAccess extends DBAccess {
 					event.setEventEndTime(rs.getTimestamp("event_end_time").toLocalDateTime());
 					event.setEventCapacity(rs.getInt("event_capacity"));
 					event.setEventProgress(rs.getInt("event_progress"));
+					event.setEventOtherInfo(rs.getString("event_other_info"));
 
 					// Company
 					Company company = new Company();
