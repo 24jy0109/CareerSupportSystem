@@ -34,6 +34,7 @@
 		<p>その他：${otherInfo}</p>
 		<input type="hidden" name="otherInfo" value="${otherInfo}">
 
+		<input type="hidden" name="fromConfirm" value="${fromConfirm}">
 		<button type="submit" name="command" value="RegistEmail">編集する</button>
 		<button type="submit" name="command" value="RegistEmailConfirm">登録する</button>
 	</form>

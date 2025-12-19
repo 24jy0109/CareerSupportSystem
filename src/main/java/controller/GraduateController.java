@@ -280,15 +280,8 @@ public class GraduateController extends HttpServlet {
 				break;
 
 			case "RegistEmail":
-				List<Graduate> list = null;
-				
-				try {
-					list = graduateAction.execute(new String[] {"findStudentNumber",studentNumber});
-				} catch (Exception e) {
-					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
-				}
-				
+				String fromConfirm = request.getParameter("fromConfirm");
+
 				String backCompanyId = null;
 				String backCourseCode = null;
 				String job = null;
@@ -296,11 +289,69 @@ public class GraduateController extends HttpServlet {
 				String sn = null;
 				String mail = null;
 				String info = null;
+				// ★ 編集ボタンから戻ってきた場合
+				if ("true".equals(fromConfirm)) {
+					nextPage = "common/RegistEmail.jsp";
+
+					// Confirm から送られてきた値をそのまま使う
+					companyId = request.getParameter("companyId");
+					job = request.getParameter("jobType");
+					name = request.getParameter("graduateName");
+					courseCode = request.getParameter("courseCode");
+					sn = request.getParameter("graduateStudentNumber");
+					mail = request.getParameter("graduateEmail");
+					info = request.getParameter("otherInfo");
+
+					// 会社名
+					try {
+						graduate = graduateAction.execute(
+								new String[] { "findCompanyName", companyId });
+					} catch (Exception e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+					companyName = graduate.get(0).getCompany().getCompanyName();
+
+					// 学科名
+					try {
+						graduate = graduateAction.execute(
+								new String[] { "findCourseName", courseCode });
+					} catch (Exception e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+					courseName = graduate.get(0).getCourse().getCourseName();
+
+					request.setAttribute("companyId", companyId); // 登録処理用
+					request.setAttribute("companyName", companyName); // 表示用
+					request.setAttribute("backCompany", backCompanyId); // Back 判定用（必要なら）
+					request.setAttribute("jobType", job);
+					request.setAttribute("graduateName", name);
+					request.setAttribute("courseCode", courseCode);
+					request.setAttribute("courseName", courseName);
+					request.setAttribute("graduateStudentNumber", sn);
+					request.setAttribute("graduateEmail", mail);
+					request.setAttribute("otherInfo", info);
+					
+					request.setAttribute("fromConfirm", fromConfirm);
+
+					break;
+				}
+				List<Graduate> list = null;
+
+				try {
+					list = graduateAction.execute(new String[] { "findStudentNumber", studentNumber });
+				} catch (Exception e) {
+					// TODO 自動生成された catch ブロック
+					e.printStackTrace();
+				}
+
+				//				String check;
 				if (list != null && !list.isEmpty()) {
-			        // 登録済み
-			        nextPage = "common/RegistEmailConfirm.jsp";
-			        try {
-						list = graduateAction.execute(new String[] {"findGraduateInfo",studentNumber});
+					// 登録済み
+					nextPage = "common/RegistEmailConfirm.jsp";
+					try {
+						list = graduateAction.execute(new String[] { "findGraduateInfo", studentNumber });
 						Graduate graduateInfo = list.get(0);
 						//データベースから値を取得
 						companyId = String.valueOf(graduateInfo.getCompany().getCompanyId());
@@ -310,57 +361,73 @@ public class GraduateController extends HttpServlet {
 						sn = graduateInfo.getGraduateStudentNumber();
 						mail = graduateInfo.getGraduateEmail();
 						info = graduateInfo.getOtherInfo();
-						
+						fromConfirm = "true";
+						request.setAttribute("fromConfirm", fromConfirm);
+
 					} catch (Exception e) {
 						// TODO 自動生成された catch ブロック
 						e.printStackTrace();
 					}
-			        
-			    } else {
-			        // 未登録
-			        nextPage = "common/RegistEmail.jsp";
-			        // Back の場合、入力値が送られてくる
-			        backCompanyId = request.getParameter("companyId");
-			        backCourseCode = request.getParameter("courseCode");
-			        job = request.getParameter("jobType");
-			        name = request.getParameter("graduateName");
-			        sn = request.getParameter("graduateStudentNumber");
-			        mail = request.getParameter("graduateEmail"); // hidden名に合わせる
-			        info = request.getParameter("otherInfo");
-			        // 会社IDと会社名を設定
-			        if (backCompanyId != null && !backCompanyId.isEmpty()) {
-			        	companyId = backCompanyId; // 登録用ID
-			        	try {
-			        		graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
-			        		companyName = graduate.get(0).getCompany().getCompanyName();
-			        	} catch (Exception e) {
-			        		e.printStackTrace();
-			        		companyName = ""; // 念のため初期化
-			        	}
-			        } else {
-			        	// 初回表示
-			        	companyId = "";
-			        	companyName = "";
-			        }
-			        
-			        // 学科コードと学科を設定
-			        if (backCourseCode != null && !backCourseCode.isEmpty()) {
-			        	courseCode = backCourseCode; // 登録用ID
-			        	try {
-			        		graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
-			        		courseName = graduate.get(0).getCourse().getCourseName();
-			        	} catch (Exception e) {
-			        		e.printStackTrace();
-			        		courseName = ""; // 念のため初期化
-			        	}
-			        } else {
-			        	// 初回表示
-			        	courseCode = "";
-			        	courseName = "";
-			        }
-			    }
 
+					try {
+						graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
+						companyName = graduate.get(0).getCompany().getCompanyName();
+					} catch (Exception e) {
+						e.printStackTrace();
+						companyName = ""; // 念のため初期化
+					}
 
+					try {
+						graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
+						courseName = graduate.get(0).getCourse().getCourseName();
+					} catch (Exception e) {
+						e.printStackTrace();
+						courseName = ""; // 念のため初期化
+					}
+
+				} else {
+					// 未登録
+					nextPage = "common/RegistEmail.jsp";
+					// Back の場合、入力値が送られてくる
+					backCompanyId = request.getParameter("companyId");
+					backCourseCode = request.getParameter("courseCode");
+					job = request.getParameter("jobType");
+					name = request.getParameter("graduateName");
+					sn = request.getParameter("graduateStudentNumber");
+					mail = request.getParameter("graduateEmail"); // hidden名に合わせる
+					info = request.getParameter("otherInfo");
+					// 会社IDと会社名を設定
+					if (backCompanyId != null && !backCompanyId.isEmpty()) {
+						companyId = backCompanyId; // 登録用ID
+						try {
+							graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
+							companyName = graduate.get(0).getCompany().getCompanyName();
+						} catch (Exception e) {
+							e.printStackTrace();
+							companyName = ""; // 念のため初期化
+						}
+					} else {
+						// 初回表示
+						companyId = "";
+						companyName = "";
+					}
+
+					// 学科コードと学科を設定
+					if (backCourseCode != null && !backCourseCode.isEmpty()) {
+						courseCode = backCourseCode; // 登録用ID
+						try {
+							graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
+							courseName = graduate.get(0).getCourse().getCourseName();
+						} catch (Exception e) {
+							e.printStackTrace();
+							courseName = ""; // 念のため初期化
+						}
+					} else {
+						// 初回表示
+						courseCode = "";
+						courseName = "";
+					}
+				}
 
 				// 企業一覧読み込み
 				try {
@@ -395,7 +462,9 @@ public class GraduateController extends HttpServlet {
 				// RegistEmailNext の冒頭付近に追加
 				courseCode = request.getParameter("courseCode");
 				System.out.println("DEBUG: RegistEmailNext - received courseCode -> '" + courseCode + "'");
-
+				//確認画面からきてるかチェック
+				fromConfirm = request.getParameter("fromConfirm");
+				if(fromConfirm == "") fromConfirm = "false"; // 初期化
 				// 入力値取得
 				companyId = request.getParameter("companyId");
 
@@ -417,27 +486,38 @@ public class GraduateController extends HttpServlet {
 				}
 				try {
 					graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
-					courseName = graduate.get(0).getCourse().getCourseName();
-				} catch (Exception e) {
-					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
-				}
-
-				//学籍番号が既にあるかチェック！
-				List<Graduate> exists = null;
-				try {
-					exists = graduateAction.execute(
-							new String[] { "findGraduateStudentNumber", graduateStudentNumber });
+					if (graduate != null && !graduate.isEmpty()) {
+						if (graduate.get(0).getCourse() != null) {
+							courseName = graduate.get(0).getCourse().getCourseName();
+						} else {
+							courseName = ""; // Course が null の場合
+						}
+					} else {
+						courseName = ""; // graduate が空リストの場合
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
+					courseName = ""; // 例外時も初期化
 				}
 
-				if (exists != null && !exists.isEmpty()) {
-					request.setAttribute("error",
-							"この学籍番号はすでに登録されています");
-					nextPage = "/common/RegistEmail.jsp";
+				System.err.println(fromConfirm);
+				if("true".equals(fromConfirm)) {
+				    nextPage = "/common/RegistEmailConfirm.jsp";
 				} else {
-					nextPage = "/common/RegistEmailConfirm.jsp";
+				    // 学籍番号の重複チェック
+				    List<Graduate> exists = null;
+				    try {
+				        exists = graduateAction.execute(new String[] { "findGraduateStudentNumber", graduateStudentNumber });
+				    } catch(Exception e) {
+				        e.printStackTrace();
+				    }
+
+				    if(exists != null && !exists.isEmpty()) {
+				        request.setAttribute("error", "この学籍番号はすでに登録されています");
+				        nextPage = "/common/RegistEmail.jsp";
+				    } else {
+				        nextPage = "/common/RegistEmailConfirm.jsp";
+				    }
 				}
 
 				// JSPへ渡す値
@@ -454,6 +534,8 @@ public class GraduateController extends HttpServlet {
 				request.setAttribute("graduateEmail", graduateEmail);
 				request.setAttribute("otherInfo", otherInfo);
 
+				request.setAttribute("fromConfirm", fromConfirm);
+
 				break;
 
 			//				連絡先情報をデータベースに登録
@@ -461,7 +543,7 @@ public class GraduateController extends HttpServlet {
 				nextPage = "common/CompleteRegistEmail.jsp";
 				//				配列に挿入！
 				String[] registEmailInfo = new String[10];
-				registEmailInfo[0] = "RegisterGraduate";
+				//				registEmailInfo[0] = "RegisterGraduate";
 				registEmailInfo[1] = request.getParameter("companyId");
 				registEmailInfo[2] = request.getParameter("companyName");
 				registEmailInfo[3] = request.getParameter("jobType");
@@ -472,6 +554,21 @@ public class GraduateController extends HttpServlet {
 				registEmailInfo[8] = request.getParameter("graduateEmail");
 				registEmailInfo[9] = request.getParameter("otherInfo");
 
+				fromConfirm = request.getParameter("fromConfirm");
+
+				// 学籍番号が既にあるかで分岐
+				//			    List<Graduate> exists = null;
+				//			    try {
+				//			        exists = graduateAction.execute(new String[] { "findGraduateStudentNumber", registEmailInfo[7] });
+				//			    } catch (Exception e) {
+				//			        e.printStackTrace();
+				//			    }
+
+				if ("true".equals(fromConfirm)) {
+					registEmailInfo[0] = "UpdateGraduate";
+				} else {
+					registEmailInfo[0] = "RegisterGraduate";
+				}
 				try {
 					graduateAction.execute(registEmailInfo);
 				} catch (Exception e) {

@@ -116,6 +116,64 @@ public class GraduateAction {
 			GraduateDBAccess gdb = new GraduateDBAccess();
 			gdb.insertGraduate(graduate);
 			break;
+			
+		case "UpdateGraduate":
+		    // ① 会社ID
+		    companyId = Integer.parseInt(data[1]);
+		    company.setCompanyId(companyId);
+		    graduate.setCompany(company);
+		    companyName = data[2];
+
+		    // 職種
+		    graduate.setGraduateJobCategory(data[3]);
+		    jobType = data[3];
+
+		    // 氏名
+		    graduate.setGraduateName(data[4]);
+		    name = data[4];
+
+		    // 学科CODE
+		    course.setCourseCode(data[5]);
+		    graduate.setCourse(course);
+		    courseName = data[6];
+
+		    // 学籍番号
+		    graduate.setGraduateStudentNumber(data[7]);
+		    graduateStudentNumber = data[7];
+
+		    // メール
+		    graduate.setGraduateEmail(data[8]);
+		    email = data[8];
+
+		    // その他
+		    graduate.setOtherInfo(data[9]);
+		    otherInfo = data[9];
+
+		    // メール送信
+		    title = "【連絡先情報更新完了】";
+		    body = "内容をご確認ください。";
+		    body += "\n企業名：" + companyName;
+		    body += "\n職種：" + jobType;
+		    body += "\n学科:" + courseName;
+		    body += "\n氏名：" + name;
+		    body += "\n学籍番号：" + graduateStudentNumber;
+		    body += "\nその他：" + otherInfo;
+
+		    mail.setTo(email);
+		    mail.setSubject(title);
+		    mail.setBody(body);
+
+		    result = mail.send();
+		    if (!result) {
+		        System.out.println("送信失敗: " + graduate.getGraduateEmail());
+		    } else {
+		        System.out.println("送信成功: " + graduate.getGraduateEmail());
+		    }
+
+		    // DB更新
+		    gdb = new GraduateDBAccess();
+		    gdb.updateGraduate(graduate);  // ← insertじゃなくupdateを呼ぶ
+			break;
 
 		case "findCompanyName":
 			companyId = Integer.parseInt(data[1]);

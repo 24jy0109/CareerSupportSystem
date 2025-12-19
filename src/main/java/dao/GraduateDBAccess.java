@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Company;
+import model.Course;
 import model.Graduate;
 import model.Staff;
 
@@ -37,10 +38,12 @@ public class GraduateDBAccess extends DBAccess {
 		String sql = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_email, " +
 				"g.graduate_other_info, g.graduate_job_category, " +
 				"g.company_id, c.company_name, " +
-				"g.staff_id, s.staff_name, s.staff_email " +
+				"g.staff_id, s.staff_name, s.staff_email, " +
+				"g.course_code, co.course_name " +
 				"FROM graduate g " +
 				"LEFT JOIN company c ON g.company_id = c.company_id " +
 				"LEFT JOIN staff s ON g.staff_id = s.staff_id " +
+				"LEFT JOIN course co ON g.course_code = co.course_code " +
 				"WHERE g.graduate_student_number = ?";
 
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -75,6 +78,15 @@ public class GraduateDBAccess extends DBAccess {
 					g.setStaff(s);
 				}
 
+				// --- Course セット ---
+				String courseCode = rs.getString("course_code");
+				if (courseCode != null) {
+					Course co = new Course();
+					co.setCourseCode(courseCode);
+					co.setCourseName(rs.getString("course_name"));
+					g.setCourse(co);
+				}
+
 				return g;
 			}
 
@@ -85,55 +97,52 @@ public class GraduateDBAccess extends DBAccess {
 
 		return null;
 	}
-	
+
 	public List<Graduate> searchGraduatesByGraduateStudentNumbers(String[] graduateStudentNumbers) throws Exception {
 
-	    List<Graduate> list = new ArrayList<>();
+		List<Graduate> list = new ArrayList<>();
 
-	    // 空チェック（重要：IN () エラー防止）
-	    if (graduateStudentNumbers == null || graduateStudentNumbers.length == 0) {
-	        return list;
-	    }
+		// 空チェック（重要：IN () エラー防止）
+		if (graduateStudentNumbers == null || graduateStudentNumbers.length == 0) {
+			return list;
+		}
 
-	    // ?,?,? を学籍番号の数だけ作る
-	    StringBuilder sb = new StringBuilder();
-	    for (int i = 0; i < graduateStudentNumbers.length; i++) {
-	        sb.append("?");
-	        if (i < graduateStudentNumbers.length - 1) {
-	            sb.append(",");
-	        }
-	    }
+		// ?,?,? を学籍番号の数だけ作る
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < graduateStudentNumbers.length; i++) {
+			sb.append("?");
+			if (i < graduateStudentNumbers.length - 1) {
+				sb.append(",");
+			}
+		}
 
-	    String sql =
-	        "SELECT graduate_student_number, graduate_name, graduate_email " +
-	        "FROM graduate " +
-	        "WHERE graduate_student_number IN (" + sb.toString() + ")";
+		String sql = "SELECT graduate_student_number, graduate_name, graduate_email " +
+				"FROM graduate " +
+				"WHERE graduate_student_number IN (" + sb.toString() + ")";
 
-	    try (
-	        Connection con = createConnection();
-	        PreparedStatement ps = con.prepareStatement(sql)
-	    ) {
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
-	        // パラメータ設定
-	        for (int i = 0; i < graduateStudentNumbers.length; i++) {
-	            ps.setString(i + 1, graduateStudentNumbers[i]);
-	        }
+			// パラメータ設定
+			for (int i = 0; i < graduateStudentNumbers.length; i++) {
+				ps.setString(i + 1, graduateStudentNumbers[i]);
+			}
 
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                Graduate g = new Graduate();
-	                g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
-	                g.setGraduateName(rs.getString("graduate_name"));
-	                g.setGraduateEmail(rs.getString("graduate_email"));
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Graduate g = new Graduate();
+					g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+					g.setGraduateName(rs.getString("graduate_name"));
+					g.setGraduateEmail(rs.getString("graduate_email"));
 
-	                list.add(g);
-	            }
-	        }
-	    }
+					list.add(g);
+				}
+			}
+		}
 
-	    return list;
+		return list;
 	}
-
 
 	public List<Graduate> findAll() throws Exception {
 
@@ -194,8 +203,29 @@ public class GraduateDBAccess extends DBAccess {
 		}
 	}
 
-	public void updateGraduate(Graduate graduate) {
+	public boolean updateGraduate(Graduate graduate) {
+		String sql = "UPDATE graduate SET company_id = ?, course_code = ?, graduate_name = ?, graduate_email = ?, "
+				+ "graduate_other_info = ?, graduate_job_category = ? "
+				+ "WHERE graduate_student_number = ?";
 
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, graduate.getCompany().getCompanyId());
+			ps.setString(2, graduate.getCourse().getCourseCode());
+			ps.setString(3, graduate.getGraduateName());
+			ps.setString(4, graduate.getGraduateEmail());
+			ps.setString(5, graduate.getOtherInfo());
+			ps.setString(6, graduate.getGraduateJobCategory());
+			ps.setString(7, graduate.getGraduateStudentNumber());
+
+			int count = ps.executeUpdate();
+			return count > 0; // 更新件数が0より大きければ成功
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public void deleteGraduate(int graduateId) {
@@ -207,12 +237,10 @@ public class GraduateDBAccess extends DBAccess {
 	}
 
 	//学籍番号からGraduateテーブルの卒業生学籍番号があるか確認
-	public boolean findGraduateStudentNumber(String graduateStudentNumber)throws Exception {
+	public boolean findGraduateStudentNumber(String graduateStudentNumber) throws Exception {
 
 		Graduate g = searchGraduateByGraduateStudentNumber(graduateStudentNumber);
 		return g != null;
 	}
-	
-	
 
 }

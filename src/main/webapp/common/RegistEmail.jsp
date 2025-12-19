@@ -38,6 +38,8 @@
 		</c:if>
 
 		<form action="graduate" method="post">
+			<input type="hidden" name="fromConfirm" value="${fromConfirm}">
+
 			<input type="hidden" name="command" value="RegistEmailNext">
 			<div class="split-screen">
 				<div class="left-screen">
@@ -52,7 +54,7 @@
 										<c:choose>
 											<%-- 新規登録の時だけ「企業選択」を出す --%>
 											<c:when test="${empty companyId}">
-												<option value="">企業選択</option>
+												<option value="">企業選択< /option>
 											</c:when>
 
 											<%-- 戻ってきたとき（Back 時）は companyName を見出しに表示 --%>
@@ -180,10 +182,10 @@
 				</div>
 			</div>
 
-			
-				<div class="bottom-btn-right">
-					<button type="submit">確認</button>
-				</div>
+
+			<div class="bottom-btn-right">
+				<button type="submit">確認</button>
+			</div>
 		</form>
 
 
