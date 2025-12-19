@@ -144,7 +144,7 @@
 										<!-- 企業一覧 -->
 										<c:forEach var="course" items="${courses}">
 											<option value="${course.courseCode}">
-												<c:if test="${courseCode == course.courseCode}">selected</c:if>
+												<c:if test="${courseCode == course.courseCode}"></c:if>
 												${course.courseName}
 											</option>
 										</c:forEach>

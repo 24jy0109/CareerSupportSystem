@@ -217,6 +217,15 @@ public class EventController extends HttpServlet {
 				}
 				request.setAttribute("event", events.getFirst());
 				break;
+			case "EventJoin":
+				eventId = request.getParameter("eventId");
+				try {
+					events = eventAction.execute(new String[] { command, studentNumber, eventId });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				response.sendRedirect("event?command=JoinEventList");
+				return;
 			}
 		}
 		request.setAttribute("events", events);
