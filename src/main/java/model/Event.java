@@ -8,7 +8,7 @@ public class Event {
 	private Company company;
 	private Staff staff;
 	private List<Graduate> joinGraduates;
-	private List<Student> joinstudents;
+	private List<Student> joinStudents;
 	private LocalDateTime eventStartTime;
 	private LocalDateTime eventEndTime;
 	private String eventPlace;
@@ -27,7 +27,7 @@ public class Event {
 		this.company = company;
 		this.staff = staff;
 		this.joinGraduates = joinGraduates;
-		this.joinstudents = joinStudents;
+		this.joinStudents = joinStudents;
 		this.eventStartTime = eventStartTime;
 		this.eventEndTime = eventEndTime;
 		this.eventPlace = eventPlace;
@@ -69,11 +69,11 @@ public class Event {
 	}
 
 	public List<Student> getJoinstudents() {
-		return joinstudents;
+		return joinStudents;
 	}
 
-	public void setJoinstudents(List<Student> joinstudents) {
-		this.joinstudents = joinstudents;
+	public void setJoinStudents(List<Student> joinStudents) {
+		this.joinStudents = joinStudents;
 	}
 
 	public LocalDateTime getEventStartTime() {

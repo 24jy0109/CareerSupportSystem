@@ -5,11 +5,13 @@ import java.util.List;
 import model.Event;
 import model.Graduate;
 import model.Staff;
+import model.Student;
 
 public class EventDTO {
 	private Event event;
 	private List<Staff> staffs;
 	private List<Graduate> graduates;
+	private List<Student> students;
 	private int joinStudentCount;
 
 	public EventDTO() {
@@ -43,6 +45,14 @@ public class EventDTO {
 
 	public void setGraduates(List<Graduate> graduates) {
 		this.graduates = graduates;
+	}
+	
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
 	}
 
 	public int getJoinStudentCount() {

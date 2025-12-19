@@ -177,6 +177,24 @@ public class EventController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
+			case "EventEnd":
+				eventId =request.getParameter("eventId");
+				try {
+					eventAction.execute(new String[] { command, eventId });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				response.sendRedirect("event?command=EventList");
+				return;
+			case "EventCancel":
+				eventId =request.getParameter("eventId");
+				try {
+					eventAction.execute(new String[] { command, eventId });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				response.sendRedirect("event?command=EventList");
+				return;
 			}
 		} else
 

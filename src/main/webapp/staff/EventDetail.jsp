@@ -139,6 +139,8 @@ h2 {
 			</c:otherwise>
 		</c:choose>
 		<a href="join_student?command=JoinStudentList&eventId=${event.event.eventId}">在校生参加者確認確認</a>
+		<a href="event?command=EventEnd&eventId=${event.event.eventId}">開催終了</a>
+		<a href="event?command=EventCancel&eventId=${event.event.eventId}">開催中止</a>
 	</main>
 
 	<footer>

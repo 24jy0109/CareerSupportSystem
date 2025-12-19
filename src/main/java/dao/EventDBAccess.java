@@ -14,6 +14,7 @@ import model.Course;
 import model.Event;
 import model.Graduate;
 import model.Staff;
+import model.Student;
 
 public class EventDBAccess extends DBAccess {
 
@@ -193,23 +194,25 @@ public class EventDBAccess extends DBAccess {
 		List<EventDTO> list = new ArrayList<>();
 		Connection con = createConnection();
 
-		String sql = "SELECT "
-				+ " e.event_id, "
-				+ " e.event_progress, "
-				+ " c.company_id, "
-				+ " c.company_name, "
-				+ " COUNT(js.student_number) AS join_count "
-				+ "FROM event e "
-				+ "JOIN company c ON e.company_id = c.company_id "
-				+ "LEFT JOIN join_student js "
-				+ "  ON e.event_id = js.event_id "
-				+ " AND js.join_availability = 1 "
-				+ "GROUP BY "
-				+ " e.event_id, "
-				+ " e.event_progress, "
-				+ " c.company_id, "
-				+ " c.company_name "
-				+ "ORDER BY e.event_id";
+		String sql = "SELECT " +
+				"  e.event_id, " +
+				"  e.event_progress, " +
+				"  c.company_id, " +
+				"  c.company_name, " +
+				"  COUNT(js.student_number) AS join_count " +
+				"FROM event e " +
+				"JOIN company c " +
+				"  ON e.company_id = c.company_id " +
+				"LEFT JOIN join_student js " +
+				"  ON e.event_id = js.event_id " +
+				" AND js.join_availability = 1 " +
+				"WHERE e.event_progress <> 0 " +
+				"GROUP BY " +
+				"  e.event_id, " +
+				"  e.event_progress, " +
+				"  c.company_id, " +
+				"  c.company_name " +
+				"ORDER BY e.event_id";
 
 		try (PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
@@ -244,112 +247,228 @@ public class EventDBAccess extends DBAccess {
 
 	public EventDTO searchEventById(int eventId) throws Exception {
 
-	    Connection con = createConnection();
-	    EventDTO dto = null;
+		Connection con = createConnection();
+		EventDTO dto = null;
 
-	    try {
-	        // ============================================
-	        // 1. Event / Company / Staff / 参加学生数
-	        // ============================================
-	        String sql =
-	            "SELECT "
-	          + " e.event_id, e.event_place, e.event_start_time, e.event_end_time, "
-	          + " e.event_capacity, e.event_progress, "
-	          + " c.company_id, c.company_name, "
-	          + " s.staff_id, s.staff_name, s.staff_email, "
-	          + " COUNT(js.student_number) AS join_student_count "
-	          + "FROM event e "
-	          + "JOIN company c ON e.company_id = c.company_id "
-	          + "JOIN staff s ON e.staff_id = s.staff_id "
-	          + "LEFT JOIN join_student js "
-	          + "  ON e.event_id = js.event_id AND js.join_availability = true "
-	          + "WHERE e.event_id = ? "
-	          + "GROUP BY "
-	          + " e.event_id, e.event_place, e.event_start_time, e.event_end_time, "
-	          + " e.event_capacity, e.event_progress, "
-	          + " c.company_id, c.company_name, "
-	          + " s.staff_id, s.staff_name, s.staff_email";
+		try {
+			// ============================================
+			// 1. Event / Company / Staff / 参加学生数
+			// ============================================
+			String sql = "SELECT "
+					+ " e.event_id, e.event_place, e.event_start_time, e.event_end_time, "
+					+ " e.event_capacity, e.event_progress, "
+					+ " c.company_id, c.company_name, "
+					+ " s.staff_id, s.staff_name, s.staff_email, "
+					+ " COUNT(js.student_number) AS join_student_count "
+					+ "FROM event e "
+					+ "JOIN company c ON e.company_id = c.company_id "
+					+ "JOIN staff s ON e.staff_id = s.staff_id "
+					+ "LEFT JOIN join_student js "
+					+ "  ON e.event_id = js.event_id AND js.join_availability = true "
+					+ "WHERE e.event_id = ? "
+					+ "GROUP BY "
+					+ " e.event_id, e.event_place, e.event_start_time, e.event_end_time, "
+					+ " e.event_capacity, e.event_progress, "
+					+ " c.company_id, c.company_name, "
+					+ " s.staff_id, s.staff_name, s.staff_email";
 
-	        try (PreparedStatement ps = con.prepareStatement(sql)) {
-	            ps.setInt(1, eventId);
+			try (PreparedStatement ps = con.prepareStatement(sql)) {
+				ps.setInt(1, eventId);
 
-	            try (ResultSet rs = ps.executeQuery()) {
-	                if (!rs.next()) {
-	                    return null; // 存在しない
-	                }
+				try (ResultSet rs = ps.executeQuery()) {
+					if (!rs.next()) {
+						return null; // 存在しない
+					}
 
-	                // Event
-	                Event event = new Event();
-	                event.setEventId(rs.getInt("event_id"));
-	                event.setEventPlace(rs.getString("event_place"));
-	                event.setEventStartTime(rs.getTimestamp("event_start_time").toLocalDateTime());
-	                event.setEventEndTime(rs.getTimestamp("event_end_time").toLocalDateTime());
-	                event.setEventCapacity(rs.getInt("event_capacity"));
-	                event.setEventProgress(rs.getInt("event_progress"));
+					// Event
+					Event event = new Event();
+					event.setEventId(rs.getInt("event_id"));
+					event.setEventPlace(rs.getString("event_place"));
+					event.setEventStartTime(rs.getTimestamp("event_start_time").toLocalDateTime());
+					event.setEventEndTime(rs.getTimestamp("event_end_time").toLocalDateTime());
+					event.setEventCapacity(rs.getInt("event_capacity"));
+					event.setEventProgress(rs.getInt("event_progress"));
 
-	                // Company
-	                Company company = new Company();
-	                company.setCompanyId(rs.getInt("company_id"));
-	                company.setCompanyName(rs.getString("company_name"));
-	                event.setCompany(company);
+					// Company
+					Company company = new Company();
+					company.setCompanyId(rs.getInt("company_id"));
+					company.setCompanyName(rs.getString("company_name"));
+					event.setCompany(company);
 
-	                // Staff
-	                Staff staff = new Staff();
-	                staff.setStaffId(rs.getInt("staff_id"));
-	                staff.setStaffName(rs.getString("staff_name"));
-	                staff.setStaffEmail(rs.getString("staff_email"));
-	                event.setStaff(staff);
+					// Staff
+					Staff staff = new Staff();
+					staff.setStaffId(rs.getInt("staff_id"));
+					staff.setStaffName(rs.getString("staff_name"));
+					staff.setStaffEmail(rs.getString("staff_email"));
+					event.setStaff(staff);
 
-	                dto = new EventDTO();
-	                dto.setEvent(event);
-	                dto.setJoinStudentCount(rs.getInt("join_student_count"));
-	            }
-	        }
+					dto = new EventDTO();
+					dto.setEvent(event);
+					dto.setJoinStudentCount(rs.getInt("join_student_count"));
+				}
+			}
 
-	        // ============================================
-	        // 2. 参加卒業生一覧
-	        // ============================================
-	        String sqlGraduate =
-	            "SELECT "
-	          + " g.graduate_student_number, g.graduate_name, g.graduate_job_category, "
-	          + " g.graduate_other_info, "
-	          + " co.course_name, co.course_term "
-	          + "FROM join_graduate jg "
-	          + "JOIN graduate g ON jg.graduate_student_number = g.graduate_student_number "
-	          + "JOIN course co ON g.course_code = co.course_code "
-	          + "WHERE jg.event_id = ?";
+			// ============================================
+			// 2. 参加卒業生一覧
+			// ============================================
+			String sqlGraduate = "SELECT "
+					+ " g.graduate_student_number, g.graduate_name, g.graduate_job_category, "
+					+ " g.graduate_other_info, "
+					+ " co.course_name, co.course_term "
+					+ "FROM join_graduate jg "
+					+ "JOIN graduate g ON jg.graduate_student_number = g.graduate_student_number "
+					+ "JOIN course co ON g.course_code = co.course_code "
+					+ "WHERE jg.event_id = ?";
 
-	        List<Graduate> graduates = new ArrayList<>();
+			List<Graduate> graduates = new ArrayList<>();
 
-	        try (PreparedStatement ps = con.prepareStatement(sqlGraduate)) {
-	            ps.setInt(1, eventId);
+			try (PreparedStatement ps = con.prepareStatement(sqlGraduate)) {
+				ps.setInt(1, eventId);
 
-	            try (ResultSet rs = ps.executeQuery()) {
-	                while (rs.next()) {
-	                    Graduate g = new Graduate();
-	                    g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
-	                    g.setGraduateName(rs.getString("graduate_name"));
-	                    g.setGraduateJobCategory(rs.getString("graduate_job_category"));
-	                    g.setOtherInfo(rs.getString("graduate_other_info"));
+				try (ResultSet rs = ps.executeQuery()) {
+					while (rs.next()) {
+						Graduate g = new Graduate();
+						g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+						g.setGraduateName(rs.getString("graduate_name"));
+						g.setGraduateJobCategory(rs.getString("graduate_job_category"));
+						g.setOtherInfo(rs.getString("graduate_other_info"));
 
-	                    Course course = new Course();
-	                    course.setCourseName(rs.getString("course_name"));
-	                    course.setCourseTerm(rs.getInt("course_term"));
-	                    g.setCourse(course);
+						Course course = new Course();
+						course.setCourseName(rs.getString("course_name"));
+						course.setCourseTerm(rs.getInt("course_term"));
+						g.setCourse(course);
 
-	                    graduates.add(g);
-	                }
-	            }
-	        }
+						graduates.add(g);
+					}
+				}
+			}
 
-	        dto.setGraduates(graduates);
+			dto.setGraduates(graduates);
 
-	        return dto;
+			return dto;
 
-	    } finally {
-	        if (con != null) con.close();
-	    }
+		} finally {
+			if (con != null)
+				con.close();
+		}
 	}
 
+	public void eventEnd(int eventId) throws Exception {
+		String sql = "UPDATE event SET event_progress = 3 WHERE event_id = ?";
+
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, eventId);
+			ps.executeUpdate();
+		}
+	}
+
+	public EventDTO eventCancel(int eventId) throws Exception {
+
+		// ① イベントをキャンセル状態に更新
+		String updateSql = "UPDATE event SET event_progress = 4 WHERE event_id = ?";
+
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(updateSql)) {
+			ps.setInt(1, eventId);
+			ps.executeUpdate();
+		}
+
+		// ② イベント基本情報 + 企業 + 担当職員を取得
+		String eventSql = "SELECT e.event_start_time, e.event_end_time, " +
+				"       c.company_name, " +
+				"       s.staff_name, s.staff_email " +
+				"FROM event e " +
+				"JOIN company c ON e.company_id = c.company_id " +
+				"JOIN staff s ON e.staff_id = s.staff_id " +
+				"WHERE e.event_id = ?";
+
+		Event event = null;
+		Staff staff = null;
+
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(eventSql)) {
+			ps.setInt(1, eventId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					event = new Event();
+					event.setEventStartTime(rs.getTimestamp("event_start_time").toLocalDateTime());
+					event.setEventEndTime(rs.getTimestamp("event_end_time").toLocalDateTime());
+
+					Company company = new Company();
+					company.setCompanyName(rs.getString("company_name"));
+					event.setCompany(company);
+
+					staff = new Staff();
+					staff.setStaffName(rs.getString("staff_name"));
+					staff.setStaffEmail(rs.getString("staff_email"));
+				}
+			}
+		}
+
+		// ③ 参加卒業生を取得
+		String graduateSql = "SELECT g.graduate_name, g.graduate_email, " +
+				"       g.graduate_job_category " +
+				"FROM join_graduate jg " +
+				"JOIN graduate g ON jg.graduate_student_number = g.graduate_student_number " +
+				"WHERE jg.event_id = ?";
+
+		List<Graduate> graduates = new ArrayList<>();
+
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(graduateSql)) {
+			ps.setInt(1, eventId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Graduate g = new Graduate();
+					g.setGraduateName(rs.getString("graduate_name"));
+					g.setGraduateEmail(rs.getString("graduate_email"));
+					g.setGraduateJobCategory(rs.getString("graduate_job_category"));
+					graduates.add(g);
+				}
+			}
+		}
+
+		// ④ 参加在校生を取得
+		String joinStudentSql = "SELECT s.student_number, s.student_name, s.student_email " +
+				"FROM join_student js " +
+				"JOIN student s ON js.student_number = s.student_number " +
+				"WHERE js.event_id = ? " +
+				"AND js.join_availability = 1";
+
+		List<Student> students = new ArrayList<>();
+
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(joinStudentSql)) {
+			ps.setInt(1, eventId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Student student = new Student();
+					student.setStudentNumber(rs.getString("student_number"));
+					student.setStudentName(rs.getString("student_name"));
+					student.setStudentEmail(rs.getString("student_email"));
+
+					students.add(student);
+				}
+			}
+		}
+
+		// ⑤ EventDTO にまとめて返却
+		EventDTO dto = new EventDTO();
+		dto.setEvent(event);
+		dto.setStaffs(List.of(staff)); // 単一だが DTO 定義に合わせる
+		dto.setGraduates(graduates);
+		dto.setStudents(students);
+
+		return dto;
+	}
 
 }

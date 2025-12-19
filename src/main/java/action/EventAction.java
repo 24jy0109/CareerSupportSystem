@@ -19,6 +19,7 @@ import model.Email;
 import model.Event;
 import model.Graduate;
 import model.Staff;
+import model.Student;
 
 public class EventAction {
 	public List<EventDTO> execute(String[] data) throws Exception {
@@ -39,7 +40,7 @@ public class EventAction {
 		EventDTO eventDTO = new EventDTO();
 		List<EventDTO> list = new ArrayList<EventDTO>();
 		List<Graduate> graduates = new ArrayList<>();
-		
+
 		EventDBAccess eventDBA = new EventDBAccess();
 		CompanyDBAccess companyDBA = new CompanyDBAccess();
 		AnswerDBAccess answerDBA = new AnswerDBAccess();
@@ -50,9 +51,12 @@ public class EventAction {
 		Company company = new Company();
 		Staff staff = new Staff();
 		Graduate graduate = new Graduate();
-		
+
+		Email mail = new Email();
+		boolean result;
 		String title;
 		String body;
+		StringBuilder sb = new StringBuilder();
 
 		switch (action) {
 		case "EventList":
@@ -96,7 +100,6 @@ public class EventAction {
 			// eventProgress は登録時は2(開催)
 			event.setEventProgress(2);
 
-			
 			if (data[10] == null || data[10].isEmpty()) {
 				// 回答から遷移していない
 				try {
@@ -117,7 +120,7 @@ public class EventAction {
 
 			RequestDBAccess requestDBA = new RequestDBAccess();
 			List<String> studentEmails = requestDBA.searchEmailsByCompanyId(Integer.parseInt(data[2]));
-			
+
 			List<String> graduateEmails = new ArrayList<String>();
 			for (Graduate g : event.getJoinGraduates()) {
 				graduateEmails.add(g.getGraduateEmail());
@@ -127,17 +130,15 @@ public class EventAction {
 			title = "【イベント通知】";
 			DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm");
 
-			StringBuilder sb = new StringBuilder();
-
 			sb.append(event.getCompany().getCompanyName())
-			  .append(" のイベントが開催されます。\n\n");
+					.append(" のイベントが開催されます。\n\n");
 
 			sb.append("■ 開催日時\n");
 			sb.append("  ")
-			  .append(event.getEventStartTime().format(fmt))
-			  .append(" ～ ")
-			  .append(event.getEventEndTime().format(fmt))
-			  .append("\n\n");
+					.append(event.getEventStartTime().format(fmt))
+					.append(" ～ ")
+					.append(event.getEventEndTime().format(fmt))
+					.append("\n\n");
 
 			sb.append("■ 開催場所\n");
 			sb.append("  ").append(event.getEventPlace()).append("\n\n");
@@ -146,14 +147,14 @@ public class EventAction {
 			sb.append("  ").append(event.getEventCapacity()).append(" 名\n\n");
 
 			if (event.getEventOtherInfo() != null && !event.getEventOtherInfo().isEmpty()) {
-			    sb.append("■ 備考\n");
-			    sb.append("  ").append(event.getEventOtherInfo()).append("\n\n");
+				sb.append("■ 備考\n");
+				sb.append("  ").append(event.getEventOtherInfo()).append("\n\n");
 			}
 
 			sb.append("■ 担当スタッフ\n");
 			sb.append("  ").append(event.getStaff().getStaffName()).append("\n\n");
 			sb.append("  ").append(event.getStaff().getStaffEmail());
-			
+
 			sb.append("詳細はシステムをご確認ください。\n");
 			sb.append("※本メールは自動送信です。");
 
@@ -162,12 +163,12 @@ public class EventAction {
 			// 申請者にメール
 			for (String toEmail : studentEmails) {
 
-				Email mail = new Email(); // 1通ずつ新しく作る
+				mail = new Email(); // 1通ずつ新しく作る
 				mail.setTo("24jy0109@jec.ac.jp");
 				mail.setSubject(title);
 				mail.setBody(body + toEmail);
 
-				boolean result = mail.send();
+				result = mail.send();
 
 				if (!result) {
 					System.out.println("送信失敗: " + toEmail);
@@ -175,16 +176,16 @@ public class EventAction {
 					System.out.println("送信成功: " + toEmail);
 				}
 			}
-			
+
 			// 参加卒業生にメール
 			for (String toEmail : graduateEmails) {
 
-				Email mail = new Email(); // 1通ずつ新しく作る
+				mail = new Email(); // 1通ずつ新しく作る
 				mail.setTo("24jy0109@jec.ac.jp");
 				mail.setSubject(title);
 				mail.setBody(body + toEmail);
 
-				boolean result = mail.send();
+				result = mail.send();
 
 				if (!result) {
 					System.out.println("送信失敗: " + toEmail);
@@ -214,14 +215,14 @@ public class EventAction {
 			//			data[4]=件名
 			//			data[5]=本文
 			//			data[6]=companyId
-			
+
 			// 空のイベント作成
 			company.setCompanyId(Integer.parseInt(data[6]));
 			staff.setStaffId(Integer.parseInt(data[3]));
 			event.setCompany(company);
 			event.setStaff(staff);
 			event = eventDBA.insertEvent(event);
-			
+
 			Answer answer = new Answer();
 			graduate.setGraduateStudentNumber(data[2]);
 			answer.setGraduate(graduate);
@@ -233,18 +234,18 @@ public class EventAction {
 			body = data[5];
 			body += "\n\n回答URL:" + "http://localhost:8080/CareerSupportSystem/answer?command=AnswerForm&answerId="
 					+ answer.getAnswerId();
-			
-			Email mail = new Email();
+
+			mail = new Email();
 			graduate = new GraduateDBAccess().searchGraduateByGraduateStudentNumber(data[2]);
-			
+
 			body += "\n\n担当者名" + graduate.getStaff().getStaffName();
 			body += "\n\n担当者メールアドレス" + graduate.getStaff().getStaffEmail();
-			
+
 			mail.setTo("24jy0109@jec.ac.jp");
 			mail.setSubject(title);
 			mail.setBody(body + "\nテスト用：" + graduate.getGraduateEmail());
 
-			boolean result = mail.send();
+			result = mail.send();
 
 			if (!result) {
 				System.out.println("送信失敗: " + graduate.getGraduateEmail());
@@ -255,6 +256,84 @@ public class EventAction {
 			eventDTO.setGraduates(graduates);
 			list.add(eventDTO);
 			break;
+		case "EventEnd":
+			// data[1] eventId
+			eventDBA.eventEnd(Integer.parseInt(data[1]));
+			break;
+		case "EventCancel":
+			// data[1] eventId
+			eventDTO = eventDBA.eventCancel(Integer.parseInt(data[1]));
+			event = eventDTO.getEvent();
+			staff = eventDTO.getStaffs().getFirst();
+			
+			sb.append("関係者各位\n\n");
+			sb.append("以下のイベントにつきまして、誠に勝手ながら開催を中止（キャンセル）とさせていただきます。\n\n");
+
+			// イベント情報
+			sb.append("【イベント情報】\n");
+			sb.append("企業名：").append(event.getCompany().getCompanyName()).append("\n");
+			sb.append("開催日時：")
+					.append(event.getEventStartTime().toString().replace("T", " "))
+					.append(" ～ ")
+					.append(event.getEventEndTime().toString().replace("T", " "))
+					.append("\n");
+			sb.append("担当職員：")
+					.append(staff.getStaffName())
+					.append("（")
+					.append(staff.getStaffEmail())
+					.append("）\n\n");
+
+			// 参加卒業生
+			sb.append("【参加予定だった卒業生】\n");
+
+			for (Graduate gra : eventDTO.getGraduates()) {
+				sb.append("・")
+						.append(gra.getGraduateName())
+						.append("（")
+						.append(gra.getGraduateJobCategory())
+						.append("）\n");
+
+				sb.append("\n");
+				sb.append("ご不明な点がございましたら、上記担当職員までお問い合わせください。\n\n");
+				sb.append("何卒ご理解のほど、よろしくお願いいたします。\n");
+
+				body = sb.toString();
+
+				// 申請者にメール
+				for (Student student : eventDTO.getStudents()) {
+
+					mail = new Email(); // 1通ずつ新しく作る
+					mail.setTo("24jy0109@jec.ac.jp");
+					mail.setSubject("イベント中止のお知らせ");
+					mail.setBody(student.getStudentName() + "様\n\n" + body + student.getStudentEmail());
+
+					result = mail.send();
+
+					if (!result) {
+						System.out.println("送信失敗: " + student.getStudentEmail());
+					} else {
+						System.out.println("送信成功: " + student.getStudentEmail());
+					}
+				}
+
+				// 参加卒業生にメール
+				for (Graduate grad : eventDTO.getGraduates()) {
+
+					mail = new Email(); // 1通ずつ新しく作る
+					mail.setTo("24jy0109@jec.ac.jp");
+					mail.setSubject("イベント中止のお知らせ");
+					mail.setBody(grad.getGraduateName() + "様\n\n" + body + grad.getGraduateEmail());
+
+					result = mail.send();
+
+					if (!result) {
+						System.out.println("送信失敗: " + grad.getGraduateEmail());
+					} else {
+						System.out.println("送信成功: " + grad.getGraduateEmail());
+					}
+				}
+				break;
+			}
 		}
 
 		return list;
