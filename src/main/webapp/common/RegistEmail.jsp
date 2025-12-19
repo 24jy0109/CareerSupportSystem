@@ -54,7 +54,7 @@
 										<c:choose>
 											<%-- 新規登録の時だけ「企業選択」を出す --%>
 											<c:when test="${empty companyId}">
-												<option value="">企業選択< /option>
+												<option value="">企業選択
 											</c:when>
 
 											<%-- 戻ってきたとき（Back 時）は companyName を見出しに表示 --%>

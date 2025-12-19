@@ -579,7 +579,7 @@ public class GraduateController extends HttpServlet {
 				break;
 
 			case "AppointMenu":
-				nextPage = "staff/AppointMenu.jsp";
+				nextPage = "student/AppointMenu.jsp";
 				break;
 			}
 
