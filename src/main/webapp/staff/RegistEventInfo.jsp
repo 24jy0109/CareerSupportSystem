@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html>
@@ -115,7 +116,7 @@
 				<!--項目名と企業名・input・selectを横並びにするdiv -->
 				<div class="registevent-row">
 					<div class="field-name">企業名</div>
-					<div class=companyname>${event.company.companyName}</div>
+					<div class=company-name>${event.company.companyName}</div>
 				</div>
 				<form action="event?command=RegistEvent" method="post">
 
@@ -212,36 +213,36 @@
  卒業生選択
  ========================= -->
 
-<!--					<table>-->
-<!--						<tr>-->
-<!--							<th>選択</th>-->
-<!--							<th>学籍番号</th>-->
-<!--							<th>氏名</th>-->
-<!--							<th>コース</th>-->
-<!--							<th>学年</th>-->
-<!--							<th>担当スタッフ</th>-->
-<!--						</tr>-->
+					<!--					<table>-->
+					<!--						<tr>-->
+					<!--							<th>選択</th>-->
+					<!--							<th>学籍番号</th>-->
+					<!--							<th>氏名</th>-->
+					<!--							<th>コース</th>-->
+					<!--							<th>学年</th>-->
+					<!--							<th>担当スタッフ</th>-->
+					<!--						</tr>-->
 
-<!--						<c:forEach var="g" items="${dto.graduates}">-->
-<!--							<tr>-->
-<!--								<td><input type="checkbox" name="graduateStudents"-->
-<!--									value="${g.graduateStudentNumber}"-->
-<!--									<c:if test="${g.graduateStudentNumber == selectedStudentNumber}">-->
-<!--						       	checked-->
-<!--						       </c:if> />-->
-<!--								</td>-->
-<!--								<td>${g.graduateStudentNumber}</td>-->
-<!--								<td>${g.graduateName}</td>-->
-<!--								<td>${g.course.courseName}</td>-->
-<!--								<td>${g.course.courseTerm}</td>-->
-<!--								<td>-->
-<!--									<p>${empty g.staff ? '未割当' : g.staff.staffName}</p> <a-->
-<!--									href="event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}">-->
-<!--										開催相談 </a>-->
-<!--								</td>-->
-<!--							</tr>-->
-<!--						</c:forEach>-->
-<!--					</table>-->
+					<!--						<c:forEach var="g" items="${dto.graduates}">-->
+					<!--							<tr>-->
+					<!--								<td><input type="checkbox" name="graduateStudents"-->
+					<!--									value="${g.graduateStudentNumber}"-->
+					<!--									<c:if test="${g.graduateStudentNumber == selectedStudentNumber}">-->
+					<!--						       	checked-->
+					<!--						       </c:if> />-->
+					<!--								</td>-->
+					<!--								<td>${g.graduateStudentNumber}</td>-->
+					<!--								<td>${g.graduateName}</td>-->
+					<!--								<td>${g.course.courseName}</td>-->
+					<!--								<td>${g.course.courseTerm}</td>-->
+					<!--								<td>-->
+					<!--									<p>${empty g.staff ? '未割当' : g.staff.staffName}</p> <a-->
+					<!--									href="event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}">-->
+					<!--										開催相談 </a>-->
+					<!--								</td>-->
+					<!--							</tr>-->
+					<!--						</c:forEach>-->
+					<!--					</table>-->
 
 					<table class="registevent-table">
 						<tr class="registevent-r">
@@ -257,36 +258,50 @@
 						<c:forEach var="g" items="${dto.graduates}">
 							<tr class="registevent-r">
 								<td><input type="checkbox" name="graduateStudents"
-									value="${g.graduateStudentNumber}"
+									value="${g.graduateStudentNumber}" name="join-graduate"
 									<c:if test="${g.graduateStudentNumber == selectedStudentNumber}">
 						       	checked
 						       </c:if> />
 								</td>
-								<td>${g.course.courseTerm}</td>
+								<td><c:if test="${not empty g.graduateStudentNumber}">
+										<c:set var="enterYear2"
+											value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
+										<c:set var="graduateYear"
+											value="${enterYear2 + g.course.courseTerm}" />
+							        ${graduateYear}年卒
+							    </c:if></td>
 								<td>${g.graduateName}</td>
 								<td>${g.course.courseName}</td>
 								<td>${g.graduateJobCategory}</td>
-								<td>土屋玲奈</td>
+								<td>
+									<p>${empty g.staff ? '未割当' : g.staff.staffName}</p>
+								</td>
 
 								<td>
 									<button type="button"
-										onclick="location.href='./ScheduleArrangeSend.html'">開催相談</button>
+										onclick="location.href='event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}'">開催相談</button>
 								</td>
 							</tr>
 						</c:forEach>
 					</table>
 
-					<br />
-					<button type="submit" class="btn">イベント登録</button>
+					<div class="bottom-btn-split">
+						<button type="button"
+							onclick="location.href='company?command=CompanyList'">企業一覧に戻る</button>
+						<button type="submit">開催</button>
+					</div>
+
 				</form>
 			</div>
-
-
-
 
 		</c:forEach>
 
 	</main>
+	<footer>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
+	</footer>
 
 </body>
 </html>

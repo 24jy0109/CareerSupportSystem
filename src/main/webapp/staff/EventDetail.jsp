@@ -3,7 +3,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <!DOCTYPE html>
 <html>
@@ -14,27 +14,27 @@
 <link rel="stylesheet" href="./css/layout.css">
 <title>開催詳細(職員)</title>
 
-<style>
-table {
-	border-collapse: collapse;
-	width: 80%;
-	margin: 20px auto;
-}
+<!--<style>-->
+<!--table {-->
+<!--	border-collapse: collapse;-->
+<!--	width: 80%;-->
+<!--	margin: 20px auto;-->
+<!--}-->
 
-th, td {
-	border: 1px solid #333;
-	padding: 8px;
-}
+<!--th, td {-->
+<!--	border: 1px solid #333;-->
+<!--	padding: 8px;-->
+<!--}-->
 
-th {
-	background-color: #eee;
-	width: 30%;
-}
+<!--th {-->
+<!--	background-color: #eee;-->
+<!--	width: 30%;-->
+<!--}-->
 
-h2 {
-	text-align: center;
-}
-</style>
+<!--h2 {-->
+<!--	text-align: center;-->
+<!--}-->
+<!--</style>-->
 </head>
 <body>
 	<header>
@@ -54,94 +54,106 @@ h2 {
 	</header>
 
 	<main>
-		<h2>イベント詳細</h2>
 
-		<c:choose>
-			<c:when test="${empty event}">
-				<p style="text-align: center;">イベント情報が存在しません。</p>
-			</c:when>
+		<div class="detail">
+			<c:choose>
+				<c:when test="${empty event}">
+					<div class="errormsg">イベント情報が存在しません。</div>
+				</c:when>
 
-			<c:otherwise>
+				<c:otherwise>
+					<div class="detail-row">
+						<div class="field-name">企業名</div>
+						<div class="detail-company">${event.event.company.companyName}</div>
+					</div>
 
-				<!-- 基本情報 -->
-				<table>
-					<tr>
-						<th>企業名</th>
-						<td>${event.event.company.companyName}</td>
-					</tr>
+					<div class="detail-row">
+						<div class="field-name">担当職員</div>
+						<div class="detail-data">${event.event.staff.staffName}</div>
 
-					<tr>
-						<th>担当職員</th>
-						<td>${event.event.staff.staffName}<br>
-							(${event.event.staff.staffEmail})
-						</td>
-					</tr>
+						<div class="field-name">連絡先</div>
+						<div class="detail-data">${event.event.staff.staffEmail}</div>
+					</div>
 
-					<tr>
-						<th>開催日時</th>
-						<td>${event.event.eventStartTime} ～
-							${event.event.eventEndTime}</td>
-					</tr>
+					<div class="detail-row">
+						<div class="field-name">日時</div>
+						<div class="detail-data">
+							${event.event.eventStartTime.year}/${event.event.eventStartTime.monthValue}/${event.event.eventStartTime.dayOfMonth}
+							${event.event.eventStartTime.hour < 10 ? '0' : ''}${event.event.eventStartTime.hour}:${event.event.eventStartTime.minute < 10 ? '0' : ''}${event.event.eventStartTime.minute}～
+							${event.event.eventEndTime.year}/${event.event.eventEndTime.monthValue}/${event.event.eventEndTime.dayOfMonth}
+							${event.event.eventEndTime.hour < 10 ? '0' : ''}${event.event.eventEndTime.hour}:${event.event.eventEndTime.minute < 10 ? '0' : ''}${event.event.eventEndTime.minute}
+						</div>
+					</div>
 
-					<tr>
-						<th>場所</th>
-						<td>${event.event.eventPlace}</td>
-					</tr>
+					<div class="detail-row">
+						<div class="field-name">場所</div>
+						<div class="detail-data">${event.event.eventPlace}</div>
+					</div>
 
-					<tr>
-						<th>定員</th>
-						<td>${event.event.eventCapacity}名</td>
-					</tr>
+					<div class="detail-row">
+						<div class="field-name">参加卒業生</div>
 
-					<tr>
-						<th>現在の参加学生数</th>
-						<td>${event.joinStudentCount}名</td>
-					</tr>
-				</table>
-
-				<!-- 参加卒業生 -->
-				<h2>参加卒業生一覧</h2>
-
-				<c:choose>
-					<c:when test="${empty event.graduates}">
-						<p style="text-align: center;">参加卒業生はいません。</p>
-					</c:when>
-
-					<c:otherwise>
-						<table>
-							<tr>
-								<th>卒業年</th>
-								<th>学科名</th>
-								<th>職種</th>
-								<th>氏名</th>
-								<th>その他</th>
-							</tr>
-
-							<c:forEach var="g" items="${event.graduates}">
-								<tr>
-									<td><c:if test="${not empty g.graduateStudentNumber}">
+						<c:choose>
+							<c:when test="${empty event.graduates}">
+								<div class="errormsg">参加卒業生はいません。</div>
+							</c:when>
+							<c:otherwise>
+								<div class="detail-data">
+									<c:forEach var="g" items="${event.graduates}">
+										<c:if test="${not empty g.graduateStudentNumber}">
 											<c:set var="enterYear2"
 												value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
 											<c:set var="graduateYear"
 												value="${enterYear2 + g.course.courseTerm}" />
-							        ${graduateYear}年卒
-							    </c:if></td>
-									<td>${g.course.courseName}</td>
-									<td>${g.graduateJobCategory}</td>
-									<td>${g.graduateName}</td>
-									<td>${g.otherInfo}</td>
-								</tr>
-							</c:forEach>
-						</table>
-					</c:otherwise>
-				</c:choose>
+							        		${graduateYear}年卒
+							    		</c:if>
+								</div>
+								<div class="detail-data">${g.graduateName}</div>
+								<div class="detail-data">${g.course.courseName}</div>
+								<div class="detail-data">${g.graduateJobCategory}</div>
 
-			</c:otherwise>
+								</c:forEach>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</div>
+
+		<div class="detail-row">
+			<div class="field-name">定員</div>
+			<div class="detail-data">${event.event.eventCapacity}名</div>
+
+			<div class="field-name">参加</div>
+			<div class="detail-data">${event.joinStudentCount}名</div>
+
+			<!--						<div class="field-name">不参加</div>-->
+			<!--						<div class="detail-data">19人</div>-->
+
+			<div class="detail-data">
+				<a
+					href="join_student?command=JoinStudentList&eventId=${event.event.eventId}">在校生参加者確認</a>
+			</div>
+		</div>
+		<div class="detail-row">
+			<div class="field-name">その他</div>
+			<div class="detail-data">
+				<td>${g.otherInfo}
+			</div>
+		</div>
+		</div>
+
+		<div class="bottom-btn-right">
+			<div class="event-btn">
+				<button type="button"
+					onclick="location.href='.event?command=EventEnd&eventId=${event.event.eventId}'">開催終了</button>
+				<button type="button"
+					onclick="location.href='event?command=EventCancel&eventId=${event.event.eventId}'"
+					class="yellow-btn">開催中止</button>
+			</div>
+		</div>
+		</c:otherwise>
 		</c:choose>
-		<a href="join_student?command=JoinStudentList&eventId=${event.event.eventId}">在校生参加者確認確認</a>
-		<a href="event?command=EventEnd&eventId=${event.event.eventId}">開催終了</a>
-		<a href="event?command=EventCancel&eventId=${event.event.eventId}">開催中止</a>
 	</main>
+
 
 	<footer>
 		<p>

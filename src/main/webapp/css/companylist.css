@@ -191,7 +191,7 @@
 }
 
 /* 参加・不参加ボタン */
-.entry-btn {
+.entry-btn .event-btn{
     display: flex;
     gap: 50px;
 }
@@ -369,7 +369,10 @@
 
 /* ーーー開催詳細画面（職員）ーーー*/
 /* 生徒画面と同じcssを使用css*/
-
+.yellow-btn{
+	background-color: yellow;
+	color: black;
+}
 
 /*ーーー参加者一覧画面（職員）ーーー */
 /* 列幅の指定 */
@@ -467,6 +470,7 @@
     grid-template-columns: 80px 1fr 1fr;
     gap: 20px;
     margin-bottom: 10px;
+	align-items: center;
 }
 
 /* 1行に2つの項目・inputを並べる場合 */
@@ -614,6 +618,10 @@
 }
 
 /* 日程回答確認画面（職員） */  
+.answer-errormsg{
+	text-align: center;
+}
+
 .schedule-check-r2, .schedule-check-r3{
     border-bottom: none;
 }

@@ -10,23 +10,7 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <title>開催一覧/履歴（職員）</title>
-<style>
-table {
-	border-collapse: collapse;
-	width: 90%;
-	margin: 20px auto;
-}
 
-th, td {
-	border: 1px solid #333;
-	padding: 8px;
-	text-align: center;
-}
-
-th {
-	background-color: #eee;
-}
-</style>
 </head>
 <body>
 	<header>
@@ -45,34 +29,41 @@ th {
 		</div>
 	</header>
 
-	<h2 style="text-align: center;">イベント一覧</h2>
+	<div class="wrapper">
+		<main class="content">
+			<div class="eventlist">
+				<div class="eventlist-title">開催一覧・履歴</div>
+			</div>
 
-	<c:choose>
-		<c:when test="${empty requestScope.events}">
-			<p style="text-align: center;">イベントは存在しません。</p>
-		</c:when>
+			<c:choose>
+				<c:when test="${empty requestScope.events}">
+					<div class="errormsg">
+						イベントは存在しません。
+						<div>
+				</c:when>
+				<c:otherwise>
+					<table class="eventlist-table">
+						<tr class="eventlist-tr">
+							<th>企業名</th>
+							<th></th>
+							<th>開催状況</th>
+							<th>参加人数</th>
+						</tr>
 
-		<c:otherwise>
-			<table>
-				<tr>
-					<th>企業名</th>
-					<th>開催詳細</th>
-					<th>進行状況</th>
-					<th>参加学生数</th>
-				</tr>
-
-				<c:forEach var="dto" items="${requestScope.events}">
-					<tr>
-						<td>${dto.event.company.companyName}</td>
-						<td><a href="event?command=EventDetail&eventId=${dto.event.eventId}">開催詳細</a></td>
-						<td>${dto.event.eventProgress}</td>
-						<td>${dto.joinStudentCount}</td>
-					</tr>
-				</c:forEach>
-			</table>
-		</c:otherwise>
-	</c:choose>
-
+						<c:forEach var="dto" items="${requestScope.events}">
+							<tr class="eventlist-tr">
+								<td>${dto.event.company.companyName}</td>
+								<td><a
+									href="event?command=EventDetail&eventId=${dto.event.eventId}">開催詳細</a></td>
+								<td>${dto.event.eventProgress}</td>
+								<td>${dto.joinStudentCount}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</c:otherwise>
+			</c:choose>
+		</main>
+	</div>
 
 	<footer>
 		<p>
