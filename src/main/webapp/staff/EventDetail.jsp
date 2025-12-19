@@ -138,7 +138,7 @@ h2 {
 
 			</c:otherwise>
 		</c:choose>
-
+		<a href="join_student?command=JoinStudentList&eventId=${event.event.eventId}">在校生参加者確認確認</a>
 	</main>
 
 	<footer>

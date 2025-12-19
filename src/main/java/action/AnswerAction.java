@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.AnswerDBAccess;
-import dao.GraduateDBAccess;
 import model.Answer;
 import model.Graduate;
 
@@ -16,7 +15,6 @@ public class AnswerAction {
 		
 		List<Answer> answers = new ArrayList<>();
 		
-		GraduateDBAccess GraduateDBA = new GraduateDBAccess();
 		Graduate graduate = new Graduate();
 		
 		AnswerDBAccess answerDBA = new AnswerDBAccess();
