@@ -474,4 +474,74 @@ public class EventDBAccess extends DBAccess {
 		return dto;
 	}
 
+		public void eventJoin(String studentNumber, int eventId) throws Exception {
+			String countSql =
+				"SELECT e.event_capacity, COUNT(js.student_number) AS join_count " +
+				"FROM event e " +
+				"LEFT JOIN join_student js " +
+				"  ON e.event_id = js.event_id " +
+				" AND js.join_availability = 1 " +
+				"WHERE e.event_id = ? " +
+				"GROUP BY e.event_capacity";
+
+			String existsSql =
+				"SELECT 1 FROM join_student " +
+				"WHERE event_id = ? AND student_number = ?";
+
+			String insertSql =
+				"INSERT INTO join_student (event_id, student_number, join_availability) " +
+				"VALUES (?, ?, 1)";
+
+			try (Connection con = createConnection()) {
+
+				con.setAutoCommit(false);
+
+				int capacity = 0;
+				int joinCount = 0;
+
+				/* ① 定員 & 現在の参加人数を取得 */
+				try (PreparedStatement ps = con.prepareStatement(countSql)) {
+					ps.setInt(1, eventId);
+
+					try (ResultSet rs = ps.executeQuery()) {
+						if (rs.next()) {
+							capacity = rs.getInt("event_capacity");
+							joinCount = rs.getInt("join_count");
+						} else {
+							throw new Exception("イベントが存在しません");
+						}
+					}
+				}
+
+				/* ② 定員チェック */
+				if (joinCount >= capacity) {
+					con.rollback();
+					throw new Exception("定員に達しています");
+				}
+
+				/* ③ 二重参加チェック */
+				try (PreparedStatement ps = con.prepareStatement(existsSql)) {
+					ps.setInt(1, eventId);
+					ps.setString(2, studentNumber);
+
+					try (ResultSet rs = ps.executeQuery()) {
+						if (rs.next()) {
+							con.rollback();
+							throw new Exception("すでに参加済みです");
+						}
+					}
+				}
+
+				/* ④ 参加登録 */
+				try (PreparedStatement ps = con.prepareStatement(insertSql)) {
+					ps.setInt(1, eventId);
+					ps.setString(2, studentNumber);
+					ps.executeUpdate();
+				}
+
+				con.commit();
+			}
+
+	}
+
 }

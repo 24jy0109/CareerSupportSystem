@@ -265,7 +265,7 @@ public class EventAction {
 			eventDTO = eventDBA.eventCancel(Integer.parseInt(data[1]));
 			event = eventDTO.getEvent();
 			staff = eventDTO.getStaffs().getFirst();
-			
+
 			sb.append("関係者各位\n\n");
 			sb.append("以下のイベントにつきまして、誠に勝手ながら開催を中止（キャンセル）とさせていただきます。\n\n");
 
@@ -332,8 +332,64 @@ public class EventAction {
 						System.out.println("送信成功: " + grad.getGraduateEmail());
 					}
 				}
-				break;
 			}
+			break;
+		case "EventJoin":
+			// data[1] studentNumber
+			// data[2] eventId
+			eventDBA.eventJoin(data[1], Integer.parseInt(data[2]));
+			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[2]));
+			event = eventDTO.getEvent();
+			
+			// メールの件名・本文はあなたのデータに合わせて
+			title = "【イベント通知】";
+			fmt = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm");
+
+			sb.append(event.getCompany().getCompanyName())
+					.append(" のイベントに参加登録が完了しました。\n\n");
+
+			sb.append("■ 開催日時\n");
+			sb.append("  ")
+					.append(event.getEventStartTime().format(fmt))
+					.append(" ～ ")
+					.append(event.getEventEndTime().format(fmt))
+					.append("\n\n");
+
+			sb.append("■ 開催場所\n");
+			sb.append("  ").append(event.getEventPlace()).append("\n\n");
+
+			sb.append("■ 定員\n");
+			sb.append("  ").append(event.getEventCapacity()).append(" 名\n\n");
+
+			if (event.getEventOtherInfo() != null && !event.getEventOtherInfo().isEmpty()) {
+				sb.append("■ 備考\n");
+				sb.append("  ").append(event.getEventOtherInfo()).append("\n\n");
+			}
+
+			sb.append("■ 担当スタッフ\n");
+			sb.append("  ").append(event.getStaff().getStaffName()).append("\n\n");
+			sb.append("  ").append(event.getStaff().getStaffEmail());
+
+			sb.append("詳細はシステムをご確認ください。\n");
+			sb.append("※本メールは自動送信です。");
+
+			body = sb.toString();
+
+			// 参加者にメール
+				mail = new Email(); // 1通ずつ新しく作る
+				mail.setTo(data[1] + "@jec.ac.jp");
+				mail.setSubject(title);
+				mail.setBody(body);
+
+				result = mail.send();
+
+				if (!result) {
+					System.out.println("送信失敗: " + data[1] + "@jec.ac.jp");
+				} else {
+					System.out.println("送信成功: " + data[1] + "@jec.ac.jp");
+				}
+			break;
+
 		}
 
 		return list;
