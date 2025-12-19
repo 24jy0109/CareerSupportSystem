@@ -272,6 +272,11 @@ public class GraduateController extends HttpServlet {
 			case "AppointMenu":
 				nextPage = "staff/AppointMenu.jsp";
 				break;
+				
+			case "editInfo":
+				nextPage="EditInfo.jsp";
+				break;
+				
 			}
 		} else {
 			// 学生の遷移
