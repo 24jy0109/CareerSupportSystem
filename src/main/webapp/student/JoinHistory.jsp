@@ -22,8 +22,68 @@
 		</div>
 
 		<div class="header-user">ようこそ 24jy0119 さん</div>
-
 	</header>
 
+	<main>
+		<h3>参加中のイベント</h3>
+
+		<table>
+			<tr>
+				<th>イベントID</th>
+				<th>状態</th>
+			</tr>
+
+			<c:forEach var="dto" items="${events}">
+				<c:if test="${dto.event.eventProgress == 2}">
+					<tr>
+						<td>${dto.event.eventId}</td>
+						<td><c:choose>
+								<c:when test="${dto.joinAvailability}">
+							参加
+						</c:when>
+								<c:otherwise>
+							不参加
+						</c:otherwise>
+							</c:choose></td>
+					</tr>
+				</c:if>
+			</c:forEach>
+		</table>
+
+		<h3>参加履歴</h3>
+
+		<table>
+			<tr>
+				<th>イベントID</th>
+				<th>結果</th>
+			</tr>
+
+			<c:forEach var="dto" items="${events}">
+				<c:if
+					test="${dto.event.eventProgress == 3 || dto.event.eventProgress == 4}">
+					<tr>
+						<td>${dto.event.eventId}</td>
+						<td><c:choose>
+
+								<!-- 中止が最優先 -->
+								<c:when test="${dto.event.eventProgress == 4}">
+							中止
+						</c:when>
+
+								<!-- 終了イベント -->
+								<c:when test="${dto.joinAvailability}">
+							参加済み
+						</c:when>
+
+								<c:otherwise>
+							不参加
+						</c:otherwise>
+
+							</c:choose></td>
+					</tr>
+				</c:if>
+			</c:forEach>
+		</table>
+	</main>
 </body>
 </html>

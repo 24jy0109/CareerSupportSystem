@@ -3,16 +3,16 @@ package model;
 public class JoinStudent {
 	private Student student;
 	private Event event;
-	private boolean join_availability;
+	private boolean joinAvailability;
 
 	public JoinStudent() {
 
 	}
 
-	public JoinStudent(Student student, Event event, boolean join_availability) {
+	public JoinStudent(Student student, Event event, boolean joinAvailability) {
 		this.student = student;
 		this.event = event;
-		this.join_availability = join_availability;
+		this.joinAvailability = joinAvailability;
 	}
 
 	public Student getStudent() {
@@ -31,12 +31,12 @@ public class JoinStudent {
 		this.event = event;
 	}
 
-	public boolean isJoin_availability() {
-		return join_availability;
+	public boolean isJoinAvailability() {
+		return joinAvailability;
 	}
 
-	public void setJoin_availability(boolean join_availability) {
-		this.join_availability = join_availability;
+	public void setJoin_availability(boolean joinAvailability) {
+		this.joinAvailability = joinAvailability;
 	}
 
 }

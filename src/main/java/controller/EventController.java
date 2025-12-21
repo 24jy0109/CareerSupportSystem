@@ -224,8 +224,25 @@ public class EventController extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				response.sendRedirect("event?command=JoinEventList");
+				response.sendRedirect("event?command=JoinHistory");
 				return;
+			case "EventNotJoin":
+				eventId = request.getParameter("eventId");
+				try {
+					eventAction.execute(new String[] { command, studentNumber, eventId });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				response.sendRedirect("event?command=JoinHistory");
+				return;
+			case "JoinHistory":
+				nextPage = "student/JoinHistory.jsp";
+				try {
+					events = eventAction.execute(new String[] { command, studentNumber });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			}
 		}
 		request.setAttribute("events", events);

@@ -389,7 +389,15 @@ public class EventAction {
 					System.out.println("送信成功: " + data[1] + "@jec.ac.jp");
 				}
 			break;
-
+		case "EventNotJoin":
+			// data[1] studentNumber
+			// data[2] eventId
+			eventDBA.eventNotJoin(data[1], Integer.parseInt(data[2]));
+			break;
+		case "JoinHistory":
+			// data[1] studentNumber
+			list = eventDBA.joinHistoryList(data[1]);
+			break;
 		}
 
 		return list;

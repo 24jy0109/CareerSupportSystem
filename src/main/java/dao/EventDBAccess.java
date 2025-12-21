@@ -474,9 +474,8 @@ public class EventDBAccess extends DBAccess {
 		return dto;
 	}
 
-		public void eventJoin(String studentNumber, int eventId) throws Exception {
-			String countSql =
-				"SELECT e.event_capacity, COUNT(js.student_number) AS join_count " +
+	public void eventJoin(String studentNumber, int eventId) throws Exception {
+		String countSql = "SELECT e.event_capacity, COUNT(js.student_number) AS join_count " +
 				"FROM event e " +
 				"LEFT JOIN join_student js " +
 				"  ON e.event_id = js.event_id " +
@@ -484,64 +483,127 @@ public class EventDBAccess extends DBAccess {
 				"WHERE e.event_id = ? " +
 				"GROUP BY e.event_capacity";
 
-			String existsSql =
-				"SELECT 1 FROM join_student " +
+		String existsSql = "SELECT 1 FROM join_student " +
 				"WHERE event_id = ? AND student_number = ?";
 
-			String insertSql =
-				"INSERT INTO join_student (event_id, student_number, join_availability) " +
+		String insertSql = "INSERT INTO join_student (event_id, student_number, join_availability) " +
 				"VALUES (?, ?, 1)";
 
-			try (Connection con = createConnection()) {
+		try (Connection con = createConnection()) {
 
-				con.setAutoCommit(false);
+			con.setAutoCommit(false);
 
-				int capacity = 0;
-				int joinCount = 0;
+			int capacity = 0;
+			int joinCount = 0;
 
-				/* ① 定員 & 現在の参加人数を取得 */
-				try (PreparedStatement ps = con.prepareStatement(countSql)) {
-					ps.setInt(1, eventId);
+			/* ① 定員 & 現在の参加人数を取得 */
+			try (PreparedStatement ps = con.prepareStatement(countSql)) {
+				ps.setInt(1, eventId);
 
-					try (ResultSet rs = ps.executeQuery()) {
-						if (rs.next()) {
-							capacity = rs.getInt("event_capacity");
-							joinCount = rs.getInt("join_count");
-						} else {
-							throw new Exception("イベントが存在しません");
-						}
+				try (ResultSet rs = ps.executeQuery()) {
+					if (rs.next()) {
+						capacity = rs.getInt("event_capacity");
+						joinCount = rs.getInt("join_count");
+					} else {
+						throw new Exception("イベントが存在しません");
 					}
 				}
-
-				/* ② 定員チェック */
-				if (joinCount >= capacity) {
-					con.rollback();
-					throw new Exception("定員に達しています");
-				}
-
-				/* ③ 二重参加チェック */
-				try (PreparedStatement ps = con.prepareStatement(existsSql)) {
-					ps.setInt(1, eventId);
-					ps.setString(2, studentNumber);
-
-					try (ResultSet rs = ps.executeQuery()) {
-						if (rs.next()) {
-							con.rollback();
-							throw new Exception("すでに参加済みです");
-						}
-					}
-				}
-
-				/* ④ 参加登録 */
-				try (PreparedStatement ps = con.prepareStatement(insertSql)) {
-					ps.setInt(1, eventId);
-					ps.setString(2, studentNumber);
-					ps.executeUpdate();
-				}
-
-				con.commit();
 			}
+
+			/* ② 定員チェック */
+			if (joinCount >= capacity) {
+				con.rollback();
+				throw new Exception("定員に達しています");
+			}
+
+			/* ③ 二重参加チェック */
+			try (PreparedStatement ps = con.prepareStatement(existsSql)) {
+				ps.setInt(1, eventId);
+				ps.setString(2, studentNumber);
+
+				try (ResultSet rs = ps.executeQuery()) {
+					if (rs.next()) {
+						con.rollback();
+						throw new Exception("すでに参加済みです");
+					}
+				}
+			}
+
+			/* ④ 参加登録 */
+			try (PreparedStatement ps = con.prepareStatement(insertSql)) {
+				ps.setInt(1, eventId);
+				ps.setString(2, studentNumber);
+				ps.executeUpdate();
+			}
+
+			con.commit();
+		}
 
 	}
 
+	public void eventNotJoin(String studentNumber, int eventId) throws Exception {
+		String insertSql =
+			"INSERT INTO join_student (event_id, student_number, join_availability) " +
+			"VALUES (?, ?, 0)";
+
+		try (
+			Connection con = createConnection();
+			PreparedStatement ps = con.prepareStatement(insertSql)
+		) {
+			ps.setInt(1, eventId);
+			ps.setString(2, studentNumber);
+			ps.executeUpdate();
+		}
+	}
+
+	public List<EventDTO> joinHistoryList(String studentNumber) throws Exception {
+		List<EventDTO> list = new ArrayList<>();
+		String sql =
+			"SELECT " +
+			" js.event_id, " +
+			" js.join_availability, " +
+			" e.event_progress, " +
+			" c.company_id, " +
+			" c.company_name " +
+			"FROM join_student js " +
+			"JOIN event e ON js.event_id = e.event_id " +
+			"JOIN company c ON e.company_id = c.company_id " +
+			"WHERE js.student_number = ? " +
+			"ORDER BY js.event_id";
+
+		try (
+			Connection con = createConnection();
+			PreparedStatement ps = con.prepareStatement(sql)
+		) {
+			ps.setString(1, studentNumber);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+
+					// Event
+					Event event = new Event();
+					event.setEventId(rs.getInt("event_id"));
+					event.setEventProgress(rs.getInt("event_progress"));
+
+					// Company
+					Company company = new Company();
+					company.setCompanyId(rs.getInt("company_id"));
+					company.setCompanyName(rs.getString("company_name"));
+					event.setCompany(company);
+
+					// DTO
+					EventDTO dto = new EventDTO();
+					dto.setEvent(event);
+
+					// join_availability（int → boolean）
+					dto.setJoinAvailability(
+						rs.getInt("join_availability") == 1
+					);
+
+					list.add(dto);
+				}
+			}
+		}
+		return list;
+	}
 }
