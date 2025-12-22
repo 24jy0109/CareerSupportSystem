@@ -13,7 +13,7 @@ public class Event {
 	private LocalDateTime eventEndTime;
 	private String eventPlace;
 	private int eventCapacity;
-	private int eventProgress;
+	private EventProgress eventProgress;
 	private String eventOtherInfo;
 
 	public Event() {
@@ -21,7 +21,7 @@ public class Event {
 	}
 
 	public Event(int eventId, Company company, Staff staff, List<Graduate> joinGraduates, List<Student> joinStudents,
-			LocalDateTime eventStartTime, LocalDateTime eventEndTime, String eventPlace, int eventCapacity, int eventProgress,
+			LocalDateTime eventStartTime, LocalDateTime eventEndTime, String eventPlace, int eventCapacity, EventProgress eventProgress,
 			String eventOtherInfo) {
 		this.eventId = eventId;
 		this.company = company;
@@ -108,13 +108,18 @@ public class Event {
 		this.eventCapacity = eventCapacity;
 	}
 	
-	public int getEventProgress() {
+	public EventProgress getEventProgress() {
 		return eventProgress;
 	}
 
-	public void setEventProgress(int eventProgress) {
+	public void setEventProgress(EventProgress eventProgress) {
 		this.eventProgress = eventProgress;
 	}
+
+	public void setEventProgress(int code) {
+		this.eventProgress = EventProgress.fromCode(code);
+	}
+
 
 	public String getEventOtherInfo() {
 		return eventOtherInfo;
