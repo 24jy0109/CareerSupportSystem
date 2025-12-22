@@ -30,20 +30,22 @@ public class CompanyDBAccess extends DBAccess {
 				con.close();
 		}
 	}
-	public boolean existsCompanyName(String companyName) throws Exception {
-	    String sql = "SELECT COUNT(*) FROM company WHERE company_name = ?";
-	    Connection con = createConnection();
 
-	    try (PreparedStatement ps = con.prepareStatement(sql)) {
-	        ps.setString(1, companyName);
-	        ResultSet rs = ps.executeQuery();
-	        if (rs.next()) {
-	            return rs.getInt(1) > 0;
-	        }
-	    } finally {
-	        if (con != null) con.close();
-	    }
-	    return false;
+	public boolean existsCompanyName(String companyName) throws Exception {
+		String sql = "SELECT COUNT(*) FROM company WHERE company_name = ?";
+		Connection con = createConnection();
+
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, companyName);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				return rs.getInt(1) > 0;
+			}
+		} finally {
+			if (con != null)
+				con.close();
+		}
+		return false;
 	}
 
 	public List<CompanyDTO> searchStudentCompanies(String companyName, String studentNumber)
@@ -111,25 +113,45 @@ public class CompanyDBAccess extends DBAccess {
 		List<CompanyDTO> list = new ArrayList<>();
 
 		try {
+			// 採用ここから
 			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT c.company_id, c.company_name, ");
-			sql.append("CASE e.event_progress ");
-			sql.append(" WHEN 1 THEN '企画中' ");
-			sql.append(" WHEN 2 THEN '開催' ");
+			sql.append("SELECT ");
+			sql.append(" c.company_id, ");
+			sql.append(" c.company_name, ");
+
+			sql.append(" CASE ");
+			sql.append("   WHEN MAX(CASE WHEN e.event_progress = 2 THEN 1 ELSE 0 END) = 1 ");
+			sql.append("     THEN '開催' ");
+			sql.append("   WHEN MAX(CASE WHEN g.staff_id IS NOT NULL THEN 1 ELSE 0 END) = 1 ");
+			sql.append("     THEN '企画中' ");
+			sql.append("   ELSE '' ");
 			sql.append(" END AS eventProgress, ");
-			sql.append("COUNT(DISTINCT r.student_number) AS requestCount ");
+
+			sql.append(" COUNT(DISTINCT r.student_number) AS requestCount, ");
+
+			sql.append(" CASE ");
+			sql.append("   WHEN MAX(CASE WHEN e.event_progress = 2 THEN 1 ELSE 0 END) = 1 THEN 0 ");
+			sql.append("   WHEN MAX(CASE WHEN g.staff_id IS NOT NULL THEN 1 ELSE 0 END) = 1 THEN 1 ");
+			sql.append("   ELSE 2 ");
+			sql.append(" END AS sortOrder ");
+
 			sql.append("FROM company c ");
-			sql.append("LEFT JOIN event e ON c.company_id = e.company_id ");
-			sql.append("LEFT JOIN request r ON c.company_id = r.company_id ");
+
+			sql.append("LEFT JOIN event e ");
+			sql.append("  ON c.company_id = e.company_id ");
+
+			sql.append("LEFT JOIN graduate g ");
+			sql.append("  ON c.company_id = g.company_id ");
+
+			sql.append("LEFT JOIN request r ");
+			sql.append("  ON c.company_id = r.company_id ");
+
 			sql.append("WHERE c.company_name LIKE ? ");
-			sql.append("GROUP BY c.company_id, c.company_name, e.event_progress ");
-			// 開催がある会社を上に、さらに会社名で昇順ソート
-			sql.append("ORDER BY CASE ");
-			sql.append(" WHEN e.event_progress = 2 THEN 0 ");
-			sql.append(" WHEN e.event_progress = 1 THEN 1 ");
-			sql.append(" WHEN e.event_progress = 0 THEN 2 ");
-			sql.append(" END ASC, ");
-			sql.append(" c.company_name ASC ");
+
+			sql.append("GROUP BY c.company_id, c.company_name ");
+
+			sql.append("ORDER BY sortOrder ASC, c.company_name ASC ");
+			// 採用ここまで
 
 			try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
 				ps.setString(1, "%" + companyName + "%");
@@ -348,34 +370,33 @@ public class CompanyDBAccess extends DBAccess {
 
 		return companyName;
 	}
+
 	public CompanyDTO SearchCompanById(int companyId) throws Exception {
 
-		    String sql =
-		        "SELECT company_id, company_name " +
-		        "FROM company " +
-		        "WHERE company_id = ?";
+		String sql = "SELECT company_id, company_name " +
+				"FROM company " +
+				"WHERE company_id = ?";
 
-		    try (
-		        Connection con = createConnection();
-		        PreparedStatement ps = con.prepareStatement(sql)
-		    ) {
-		        ps.setInt(1, companyId);
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, companyId);
 
-		        try (ResultSet rs = ps.executeQuery()) {
-		            if (rs.next()) {
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
 
-		                Company company = new Company();
-		                company.setCompanyId(rs.getInt("company_id"));
-		                company.setCompanyName(rs.getString("company_name"));
+					Company company = new Company();
+					company.setCompanyId(rs.getInt("company_id"));
+					company.setCompanyName(rs.getString("company_name"));
 
-		                CompanyDTO dto = new CompanyDTO();
-		                dto.setCompany(company);
+					CompanyDTO dto = new CompanyDTO();
+					dto.setCompany(company);
 
-		                return dto;
-		            }
-		        }
-		    }
-		    // 見つからなかった場合
-		    return null;
+					return dto;
+				}
+			}
+		}
+		// 見つからなかった場合
+		return null;
 	}
 }
