@@ -8,27 +8,7 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <title>参加者一覧（職員）</title>
-<style>
-table {
-	border-collapse: collapse;
-	width: 90%;
-	margin: 20px auto;
-}
 
-th, td {
-	border: 1px solid #333;
-	padding: 8px;
-	text-align: center;
-}
-
-th {
-	background-color: #eee;
-}
-
-h2 {
-	text-align: center;
-}
-</style>
 </head>
 <body>
 	<header>
@@ -47,37 +27,49 @@ h2 {
 		</div>
 	</header>
 
-	<main>
-		<h2>イベント参加学生一覧</h2>
-		<h2>企業名${joinStudents[0].event.company.companyName}</h2>
 
-		<c:choose>
-			<%-- joinStudents が空 or null --%>
-			<c:when test="${empty joinStudents}">
-				<p style="text-align: center;">参加予定の学生はいません。</p>
-			</c:when>
 
-			<%-- データあり --%>
-			<c:otherwise>
-				<table>
-					<tr>
-						<th>学生番号</th>
-						<th>学生名</th>
-						<th>学科名</th>
-					</tr>
+	<div class="wrapper">
+		<main class="content">
+			<div class="top-info">
+				<div class="company">
+					<div class="field-name">企業名</div>
+					<div class="company-name">${joinStudents[0].event.company.companyName}</div>
+				</div>
+			</div>
 
-					<c:forEach var="js" items="${joinStudents}">
+			<c:choose>
+				<%-- joinStudents が空 or null --%>
+				<c:when test="${empty joinStudents}">
+					<p class="errormsg">参加予定の学生はいません。</p>
+				</c:when>
+
+				<%-- データあり --%>
+				<c:otherwise>
+					<table class="joinlist-table">
 						<tr>
-							<td>${js.student.studentNumber}</td>
-							<td>${js.student.studentName}</td>
-							<td>${js.student.course.courseName}</td>
+							<th class="joinlist-h">名前</th>
+							<th class="joinlist-h">学科</th>
+							<th class="joinlist-h">学籍番号</th>
 						</tr>
-					</c:forEach>
-				</table>
-			</c:otherwise>
-		</c:choose>
-	</main>
 
+						<c:forEach var="js" items="${joinStudents}">
+							<tr>
+								<td class="joinlist-td">${js.student.studentNumber}</td>
+								<td class="joinlist-td">${js.student.course.courseName}</td>
+								<td class="joinlist-td">${js.student.studentNumber}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</c:otherwise>
+			</c:choose>
+			
+			<div class="bottom-btn-right">
+				<button type="button" onclick="location.href='event?command=EventDetail&eventId=${joinStudents[0].event.eventId}'">開催詳細</button>
+			</div>
+		</main>
+	</div>
+	
 	<footer>
 		<p>
 			<small>&copy; 2024 Example Inc.</small>

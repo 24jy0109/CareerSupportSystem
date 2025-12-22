@@ -55,7 +55,17 @@
 								<td>${dto.event.company.companyName}</td>
 								<td><a
 									href="event?command=EventDetail&eventId=${dto.event.eventId}">開催詳細</a></td>
-								<td>${dto.event.eventProgress}</td>
+								<c:choose>
+									<c:when test="${dto.event.eventProgress.label == '中止'}">
+										<td class="event-cancel">${dto.event.eventProgress.label}</td>
+									</c:when>
+									<c:otherwise>
+										<td>${dto.event.eventProgress.label}</td>
+									</c:otherwise>
+								</c:choose>
+
+
+
 								<td>${dto.joinStudentCount}</td>
 							</tr>
 						</c:forEach>

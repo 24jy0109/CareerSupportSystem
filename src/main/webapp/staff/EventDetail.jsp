@@ -144,7 +144,7 @@
 		<div class="bottom-btn-right">
 			<div class="event-btn">
 				<button type="button"
-					onclick="location.href='.event?command=EventEnd&eventId=${event.event.eventId}'">開催終了</button>
+					onclick="location.href='event?command=EventEnd&eventId=${event.event.eventId}'">開催終了</button>
 				<button type="button"
 					onclick="location.href='event?command=EventCancel&eventId=${event.event.eventId}'"
 					class="yellow-btn">開催中止</button>
