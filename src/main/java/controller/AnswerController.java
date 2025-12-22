@@ -78,7 +78,8 @@ public class AnswerController extends HttpServlet {
 			try {
 				answers = answerAction.execute(data);
 			} catch (Exception e) {
-				e.printStackTrace();
+				nextPage = "graduate/Answer.jsp";
+				request.setAttribute("error", e.getMessage());
 			}
 			break;
 		case "ScheduleAnswerCheck":
