@@ -17,6 +17,7 @@ import model.Answer;
 import model.Company;
 import model.Email;
 import model.Event;
+import model.EventProgress;
 import model.Graduate;
 import model.Staff;
 import model.Student;
@@ -78,7 +79,7 @@ public class EventAction {
 			list.add(eventDTO);
 			break;
 		case "RegistEvent":
-			company.setCompanyId(Integer.parseInt(data[2]));
+			company = companyDBA.SearchCompanById(Integer.parseInt(data[2])).getCompany();
 			event.setCompany(company);
 
 			staff = staffDBA.searchStaffById(Integer.parseInt(data[3]));
@@ -98,7 +99,7 @@ public class EventAction {
 			event.setJoinGraduates(graduates);
 
 			// eventProgress は登録時は2(開催)
-			event.setEventProgress(2);
+			event.setEventProgress(EventProgress.ONGOING);
 
 			if (data[10] == null || data[10].isEmpty()) {
 				// 回答から遷移していない
@@ -153,10 +154,10 @@ public class EventAction {
 
 			sb.append("■ 担当スタッフ\n");
 			sb.append("  ").append(event.getStaff().getStaffName()).append("\n\n");
-			sb.append("  ").append(event.getStaff().getStaffEmail());
+			sb.append("  ").append(event.getStaff().getStaffEmail()).append("\n\n");
 
 			sb.append("詳細はシステムをご確認ください。\n");
-			sb.append("※本メールは自動送信です。");
+			sb.append("※本メールは自動送信です。").append("\n\n");
 
 			body = sb.toString();
 

@@ -61,7 +61,7 @@ public class EventDBAccess extends DBAccess {
 				setNullable(ps, 6, event.getEventCapacity(), Types.INTEGER);
 
 				// ⑦ event_progress
-				setNullable(ps, 7, event.getEventProgress(), Types.INTEGER);
+				setNullable(ps, 7, event.getEventProgress().getCode(), Types.INTEGER);
 
 				// ⑧ event_other_info
 				setNullable(ps, 8, event.getEventOtherInfo(), Types.VARCHAR);
