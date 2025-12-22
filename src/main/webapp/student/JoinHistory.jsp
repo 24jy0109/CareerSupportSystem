@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,14 +31,18 @@
 
 		<table>
 			<tr>
+				<th>企業名</th>
 				<th>イベントID</th>
 				<th>状態</th>
 			</tr>
 
 			<c:forEach var="dto" items="${events}">
-				<c:if test="${dto.event.eventProgress == 2}">
+				<c:if test="${dto.event.eventProgress == \"ONGOING\"}">
 					<tr>
-						<td>${dto.event.eventId}</td>
+						<td>${dto.event.company.companyName}</td>
+						<td><a
+							href="event?command=EventDetail&eventId=${dto.event.eventId}">
+								開催詳細 </a></td>
 						<td><c:choose>
 								<c:when test="${dto.joinAvailability}">
 							参加
@@ -50,40 +56,39 @@
 			</c:forEach>
 		</table>
 
-		<h3>参加履歴</h3>
 
+		<h3>参加履歴</h3>
 		<table>
 			<tr>
+				<th>企業名</th>
 				<th>イベントID</th>
 				<th>結果</th>
 			</tr>
 
 			<c:forEach var="dto" items="${events}">
 				<c:if
-					test="${dto.event.eventProgress == 3 || dto.event.eventProgress == 4}">
+					test="${dto.event.eventProgress == \"FINISHED\" || dto.event.eventProgress == \"CANCELED\"}">
 					<tr>
-						<td>${dto.event.eventId}</td>
+						<td>${dto.event.company.companyName}</td>
+						<td><a
+							href="event?command=EventDetail&eventId=${dto.event.eventId}">
+								開催詳細 </a></td>
 						<td><c:choose>
-
-								<!-- 中止が最優先 -->
-								<c:when test="${dto.event.eventProgress == 4}">
+								<c:when test="${dto.event.eventProgress == \"CANCELED\"}">
 							中止
 						</c:when>
-
-								<!-- 終了イベント -->
 								<c:when test="${dto.joinAvailability}">
 							参加済み
 						</c:when>
-
 								<c:otherwise>
 							不参加
 						</c:otherwise>
-
 							</c:choose></td>
 					</tr>
 				</c:if>
 			</c:forEach>
 		</table>
+
 	</main>
 </body>
 </html>

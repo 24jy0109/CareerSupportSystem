@@ -58,45 +58,50 @@
 				+ "よろしくお願いいたします。\n\n";
 		%>
 
-		<h2>日程調整メール作成</h2>
+		<!--		<h2>日程調整メール作成</h2>-->
 
 		<form action="event" method="post">
 
 			<input type="hidden" name="command" value="SendScheduleArrangeEmail">
+			<div class="schedulearrange-row">
+				<div class="field-name">宛先</div>
+				<div>
+                <div class="toname-toemail">
+                    <div>川原田こうき</div>
+                    <div>24jy0000@gmail.com</div>
+                </div>
+            </div>
+				<p>
+					<%=grad.getGraduateName()%>
+					（学籍番号：<%=grad.getGraduateStudentNumber()%>）
+				</p>
+				<input type="hidden" name="graduateStudentNumber"
+					value="<%=grad.getGraduateStudentNumber()%>"> <input
+					type="hidden" name="companyId"
+					value="<%=grad.getCompany().getCompanyId()%>"> <br>
 
-			<label>宛先</label><br>
-			<p>
-				<%=grad.getGraduateName()%>
-				（学籍番号：<%=grad.getGraduateStudentNumber()%>）
-			</p>
-			<input type="hidden" name="graduateStudentNumber"
-				value="<%=grad.getGraduateStudentNumber()%>"> <input
-				type="hidden" name="companyId"
-				value="<%=grad.getCompany().getCompanyId()%>"> <br>
+				<!-- 担当スタッフ -->
+				<label>担当スタッフ</label><br> <select name="staffId">
+					<%
+					for (Staff s : staffs) {
+					%>
+					<option value="<%=s.getStaffId()%>">
+						<%=s.getStaffName()%>
+					</option>
+					<%
+					}
+					%>
+				</select> <br> <br>
 
-			<!-- 担当スタッフ -->
-			<label>担当スタッフ</label><br> <select name="staffId">
-				<%
-				for (Staff s : staffs) {
-				%>
-				<option value="<%=s.getStaffId()%>">
-					<%=s.getStaffName()%>
-				</option>
-				<%
-				}
-				%>
-			</select> <br> <br>
+				<!-- 件名（デフォルト値入り） -->
+				<label>件名</label><br> <input type="text" name="mailTitle"
+					size="60" value="<%=defaultTitle%>" required> <br> <br>
 
-			<!-- 件名（デフォルト値入り） -->
-			<label>件名</label><br> <input type="text" name="mailTitle"
-				size="60" value="<%=defaultTitle%>" required> <br> <br>
+				<!-- 本文（デフォルト値入り） -->
+				<label>本文</label><br>
+				<textarea name="mailBody" rows="14" cols="60" required><%=defaultBody%></textarea>
 
-			<!-- 本文（デフォルト値入り） -->
-			<label>本文</label><br>
-			<textarea name="mailBody" rows="14" cols="60" required><%=defaultBody%></textarea>
-
-			<br> <br> <input type="submit" value="メールを送信する">
-
+				<br> <br> <input type="submit" value="メールを送信する">
 		</form>
 
 	</main>

@@ -40,7 +40,7 @@
                 <span>企業一覧</span>
             </div>
 
-            <div class="menu-item" onclick="location.href='event?command=JoinStudent'">
+            <div class="menu-item" onclick="location.href='event?command=JoinHistory'">
                 <img src="img/history.png" alt="参加一覧/履歴">
                 <span>参加一覧/履歴</span>
             </div>

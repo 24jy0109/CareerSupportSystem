@@ -4,39 +4,147 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="./css/header.css">
+<link rel="stylesheet" href="./css/companylist.css">
+<link rel="stylesheet" href="./css/layout.css">
 <title>連絡先登録確認画面（在校生/職員）</title>
 </head>
+<!--<body>-->
+<!--	<form action="graduate" method="post">-->
+
+<!--		<p>会社名：${companyName}</p>-->
+<!--		<input type="hidden" name="companyId" value="${companyId}"> <input-->
+<!--			type="hidden" name="companyName" value="${companyName}">-->
+
+
+<!--		<p>職種：${jobType}</p>-->
+<!--		<input type="hidden" name="jobType" value="${jobType}">-->
+
+<!--		<p>氏名：${graduateName}</p>-->
+<!--		<input type="hidden" name="graduateName" value="${graduateName}">-->
+
+<!--		<p>学科：${courseName}</p>-->
+<!--		<input type="hidden" name="courseCode" value="${courseCode}">-->
+<!--		<input type="hidden" name="courseName" value="${courseName}">-->
+
+<!--		<p>学籍番号：${graduateStudentNumber}</p>-->
+<!--		<input type="hidden" name="graduateStudentNumber"-->
+<!--			value="${graduateStudentNumber}">-->
+
+<!--		<p>メールアドレス：${graduateEmail}</p>-->
+<!--		<input type="hidden" name="graduateEmail" value="${graduateEmail}">-->
+
+<!--		<p>その他：${otherInfo}</p>-->
+<!--		<input type="hidden" name="otherInfo" value="${otherInfo}"> <input-->
+<!--			type="hidden" name="fromConfirm" value="${fromConfirm}">-->
+<!--		<button type="submit" name="command" value="RegistEmail">編集する</button>-->
+<!--		<button type="submit" name="command" value="RegistEmailConfirm">登録する</button>-->
+<!--	</form>-->
+<!--</body>-->
 <body>
-	<form action="graduate" method="post">
+	<header>
+		<div class="head-part">
+			<div id="h-left">
+				<img src="img/rogo.png" alt="アイコン">
+			</div>
 
-		<p>会社名：${companyName}</p>
-		<input type="hidden" name="companyId" value="${companyId}">
-		<input type="hidden" name="companyName" value="${companyName}">
-		
+			<div class="header-title"
+				onclick="location.href='mypage?command=AppointmentMenu'">
+				<div class="title-jp">就活サポート</div>
+				<div class="title-en">Career Support</div>
+			</div>
 
-		<p>職種：${jobType}</p>
-		<input type="hidden" name="jobType" value="${jobType}">
+			<div class="header-user">ようこそ 24jy0119 さん</div>
+		</div>
+	</header>
+	<main>
+		<form action="graduate" method="post">
 
-		<p>氏名：${graduateName}</p>
-		<input type="hidden" name="graduateName" value="${graduateName}">
+			<div class="split-screen">
+				<div class="left-screen">
+					<span class="leftscreen-title">企業選択</span>
+					<div class="flame">
+						<table class="registscreen-table">
+							<tr>
+								<td>
+									<div>企業</div>
+								</td>
+								<td>${companyName}<input type="hidden" name="companyId"
+									value="${companyId}"> <input type="hidden"
+									name="companyName" value="${companyName}"></td>
+							</tr>
+							<tr>
+								<td>
+									<div>職種</div>
+								</td>
+								<td>${jobType}<input type="hidden" name="jobType"
+									value="${jobType}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="right-screen">
+					<span class="rightscreen-title">学生情報</span>
+					<div class="flame">
+						<table class="registscreen-table">
+							<tr>
+								<td>
+									<div>氏名</div>
+								</td>
+								<td>${graduateName}<input type="hidden" name="graduateName"
+									value="${graduateName}"></td>
+							</tr>
 
-		<p>学科：${courseName}</p>
-		<input type="hidden" name="courseCode" value="${courseCode}">
-		<input type="hidden" name="courseName" value="${courseName}">
+							<tr>
+								<td>
+									<div>学科</div>
+								</td>
+								<td>${courseName}<input type="hidden" name="courseCode"
+									value="${courseCode}"> <input type="hidden"
+									name="courseName" value="${courseName}"></td>
+							</tr>
+							<tr>
+								<td>
+									<div>学籍番号</div>
+								</td>
+								<td>${graduateStudentNumber}<input type="hidden"
+									name="graduateStudentNumber" value="${graduateStudentNumber}"></td>
+							</tr>
+							<tr>
+								<td>
+									<div>メールアドレス</div>
+								</td>
+								<td>${graduateEmail}<input type="hidden"
+									name="graduateEmail" value="${graduateEmail}"></td>
+							</tr>
+							<tr>
+								<td>
+									<div>備考（任意）</div>
+								</td>
+								<td>${otherInfo}<input type="hidden" name="otherInfo"
+									value="${otherInfo}"> <input type="hidden"
+									name="fromConfirm" value="${fromConfirm}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="bottom-btn-right">
+				<div class="edit-regist-btn">
+					<button type="submit" name="command" value="RegistEmail">編集</button>
+					<button type="submit" name="command" value="RegistEmailConfirm">登録</button>
+				</div>
+			</div>
 
-		<p>学籍番号：${graduateStudentNumber}</p>
-		<input type="hidden" name="graduateStudentNumber"
-			value="${graduateStudentNumber}">
+		</form>
 
-		<p>メールアドレス：${graduateEmail}</p>
-		<input type="hidden" name="graduateEmail" value="${graduateEmail}">
+	</main>
 
-		<p>その他：${otherInfo}</p>
-		<input type="hidden" name="otherInfo" value="${otherInfo}">
+	<footer>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
+	</footer>
 
-		<input type="hidden" name="fromConfirm" value="${fromConfirm}">
-		<button type="submit" name="command" value="RegistEmail">編集する</button>
-		<button type="submit" name="command" value="RegistEmailConfirm">登録する</button>
-	</form>
 </body>
 </html>

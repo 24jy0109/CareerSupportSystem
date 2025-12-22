@@ -38,17 +38,17 @@ public class GraduateAction {
 		String body;
 		switch (action) {
 		case "SendScheduleArrangeEmail":
-			// data[2] graduateStudentNumber
-			// data[3] staffId
-
-			graduate = GraduateDBA.searchGraduateByGraduateStudentNumber(data[2]);
-
-			//			graduate.setGraduateStudentNumber(data[2]);
-			Staff staff = new Staff();
-			staff.setStaffId(Integer.parseInt(data[3]));
-			graduate.setStaff(staff);
-			GraduateDBA.setStaff(graduate);
-			break;
+					// data[2] graduateStudentNumber
+					// data[3] staffId
+		
+					graduate = GraduateDBA.searchGraduateByGraduateStudentNumber(data[2]);
+		
+					//			graduate.setGraduateStudentNumber(data[2]);
+					Staff staff = new Staff();
+					staff.setStaffId(Integer.parseInt(data[3]));
+					graduate.setStaff(staff);
+					GraduateDBA.setStaff(graduate);
+					break;
 		case "findGraduateStudentNumber":
 			boolean exists = GraduateDBA.findGraduateStudentNumber(data[1]);
 
