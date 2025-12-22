@@ -222,6 +222,7 @@ public class EventAction {
 			staff.setStaffId(Integer.parseInt(data[3]));
 			event.setCompany(company);
 			event.setStaff(staff);
+			event.setEventProgress(EventProgress.NONE);
 			event = eventDBA.insertEvent(event);
 
 			Answer answer = new Answer();
@@ -293,46 +294,46 @@ public class EventAction {
 						.append("（")
 						.append(gra.getGraduateJobCategory())
 						.append("）\n");
+			}
 
-				sb.append("\n");
-				sb.append("ご不明な点がございましたら、上記担当職員までお問い合わせください。\n\n");
-				sb.append("何卒ご理解のほど、よろしくお願いいたします。\n");
+			sb.append("\nご不明な点がございましたら、上記担当職員までお問い合わせください。\n\n");
+			sb.append("何卒ご理解のほど、よろしくお願いいたします。\n");
 
-				body = sb.toString();
+			body = sb.toString();
 
-				// 申請者にメール
-				for (Student student : eventDTO.getStudents()) {
+			// 申請者にメール
+			for (Student student : eventDTO.getStudents()) {
 
-					mail = new Email(); // 1通ずつ新しく作る
-					mail.setTo("24jy0109@jec.ac.jp");
-					mail.setSubject("イベント中止のお知らせ");
-					mail.setBody(student.getStudentName() + "様\n\n" + body + student.getStudentEmail());
+				mail = new Email(); // 1通ずつ新しく作る
+				mail.setTo("24jy0109@jec.ac.jp");
+				mail.setSubject("イベント中止のお知らせ");
+				mail.setBody(student.getStudentName() + "様\n\n" + body + student.getStudentEmail());
 
-					result = mail.send();
+				result = mail.send();
 
-					if (!result) {
-						System.out.println("送信失敗: " + student.getStudentEmail());
-					} else {
-						System.out.println("送信成功: " + student.getStudentEmail());
-					}
+				if (!result) {
+					System.out.println("送信失敗: " + student.getStudentEmail());
+				} else {
+					System.out.println("送信成功: " + student.getStudentEmail());
+				}
+			}
+
+			// 参加卒業生にメール
+			for (Graduate grad : eventDTO.getGraduates()) {
+
+				mail = new Email(); // 1通ずつ新しく作る
+				mail.setTo("24jy0109@jec.ac.jp");
+				mail.setSubject("イベント中止のお知らせ");
+				mail.setBody(grad.getGraduateName() + "様\n\n" + body + grad.getGraduateEmail());
+
+				result = mail.send();
+
+				if (!result) {
+					System.out.println("送信失敗: " + grad.getGraduateEmail());
+				} else {
+					System.out.println("送信成功: " + grad.getGraduateEmail());
 				}
 
-				// 参加卒業生にメール
-				for (Graduate grad : eventDTO.getGraduates()) {
-
-					mail = new Email(); // 1通ずつ新しく作る
-					mail.setTo("24jy0109@jec.ac.jp");
-					mail.setSubject("イベント中止のお知らせ");
-					mail.setBody(grad.getGraduateName() + "様\n\n" + body + grad.getGraduateEmail());
-
-					result = mail.send();
-
-					if (!result) {
-						System.out.println("送信失敗: " + grad.getGraduateEmail());
-					} else {
-						System.out.println("送信成功: " + grad.getGraduateEmail());
-					}
-				}
 			}
 			break;
 		case "EventJoin":
@@ -341,7 +342,7 @@ public class EventAction {
 			eventDBA.eventJoin(data[1], Integer.parseInt(data[2]));
 			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[2]));
 			event = eventDTO.getEvent();
-			
+
 			// メールの件名・本文はあなたのデータに合わせて
 			title = "【イベント通知】";
 			fmt = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm");
@@ -377,18 +378,18 @@ public class EventAction {
 			body = sb.toString();
 
 			// 参加者にメール
-				mail = new Email(); // 1通ずつ新しく作る
-				mail.setTo(data[1] + "@jec.ac.jp");
-				mail.setSubject(title);
-				mail.setBody(body);
+			mail = new Email(); // 1通ずつ新しく作る
+			mail.setTo(data[1] + "@jec.ac.jp");
+			mail.setSubject(title);
+			mail.setBody(body);
 
-				result = mail.send();
+			result = mail.send();
 
-				if (!result) {
-					System.out.println("送信失敗: " + data[1] + "@jec.ac.jp");
-				} else {
-					System.out.println("送信成功: " + data[1] + "@jec.ac.jp");
-				}
+			if (!result) {
+				System.out.println("送信失敗: " + data[1] + "@jec.ac.jp");
+			} else {
+				System.out.println("送信成功: " + data[1] + "@jec.ac.jp");
+			}
 			break;
 		case "EventNotJoin":
 			// data[1] studentNumber

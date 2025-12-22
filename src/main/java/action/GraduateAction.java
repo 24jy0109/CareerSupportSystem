@@ -12,6 +12,7 @@ import model.Company;
 import model.Course;
 import model.Email;
 import model.Graduate;
+import model.Staff;
 
 public class GraduateAction {
 	public List<Graduate> execute(String[] data) throws Exception {
@@ -35,7 +36,8 @@ public class GraduateAction {
 		String title;
 		String body;
 		switch (action) {
-		/*		case "SendScheduleArrangeEmail":
+		// 採用ここから
+		case "SendScheduleArrangeEmail":
 					// data[2] graduateStudentNumber
 					// data[3] staffId
 		
@@ -46,7 +48,8 @@ public class GraduateAction {
 					staff.setStaffId(Integer.parseInt(data[3]));
 					graduate.setStaff(staff);
 					GraduateDBA.setStaff(graduate);
-					break;*/
+					break;
+		// 採用ここまで
 		case "findGraduateStudentNumber":
 			boolean exists = GraduateDBA.findGraduateStudentNumber(data[1]);
 
