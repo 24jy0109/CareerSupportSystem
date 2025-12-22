@@ -91,7 +91,7 @@
 					<td>${companyDTO.company.companyName}</td>
 					<td>
 						<!-- 仮リンク --> <a
-						href="./GraduateController?companyId=${companyDTO.company.companyId}&command=editInfo">情報編集</a>
+						href="./graduate?companyId=${companyDTO.company.companyId}&command=editInfo">情報編集</a>
 					</td>
 
 					<c:choose>

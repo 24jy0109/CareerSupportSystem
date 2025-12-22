@@ -272,11 +272,31 @@ public class GraduateController extends HttpServlet {
 			case "AppointMenu":
 				nextPage = "staff/AppointMenu.jsp";
 				break;
-				
+
 			case "editInfo":
-				nextPage="EditInfo.jsp";
-				break;
-				
+			    nextPage = "staff/EditInfo.jsp";
+
+			    companyId = request.getParameter("companyId");
+
+			    CompanyDTO companyDTO = null;
+			    try {
+			        List<Graduate> list = graduateAction.execute(
+			            new String[] { "graduateSearchBycompanyId", companyId }
+			            
+			        );
+			        if (list != null && !list.isEmpty()) {
+				        companyDTO = new CompanyDTO();
+				        companyDTO.setCompany(list.get(0).getCompany());
+				        request.setAttribute("companyDTO", companyDTO);
+				    }	
+			        
+			        
+			    } catch (Exception e) {
+			        e.printStackTrace();
+			    }
+			    
+			  		    break;
+
 			}
 		} else {
 			// 学生の遷移
@@ -337,7 +357,7 @@ public class GraduateController extends HttpServlet {
 					request.setAttribute("graduateStudentNumber", sn);
 					request.setAttribute("graduateEmail", mail);
 					request.setAttribute("otherInfo", info);
-					
+
 					request.setAttribute("fromConfirm", fromConfirm);
 
 					break;
@@ -469,7 +489,8 @@ public class GraduateController extends HttpServlet {
 				System.out.println("DEBUG: RegistEmailNext - received courseCode -> '" + courseCode + "'");
 				//確認画面からきてるかチェック
 				fromConfirm = request.getParameter("fromConfirm");
-				if(fromConfirm == "") fromConfirm = "false"; // 初期化
+				if (fromConfirm == "")
+					fromConfirm = "false"; // 初期化
 				// 入力値取得
 				companyId = request.getParameter("companyId");
 
@@ -506,23 +527,24 @@ public class GraduateController extends HttpServlet {
 				}
 
 				System.err.println(fromConfirm);
-				if("true".equals(fromConfirm)) {
-				    nextPage = "/common/RegistEmailConfirm.jsp";
+				if ("true".equals(fromConfirm)) {
+					nextPage = "/common/RegistEmailConfirm.jsp";
 				} else {
-				    // 学籍番号の重複チェック
-				    List<Graduate> exists = null;
-				    try {
-				        exists = graduateAction.execute(new String[] { "findGraduateStudentNumber", graduateStudentNumber });
-				    } catch(Exception e) {
-				        e.printStackTrace();
-				    }
+					// 学籍番号の重複チェック
+					List<Graduate> exists = null;
+					try {
+						exists = graduateAction
+								.execute(new String[] { "findGraduateStudentNumber", graduateStudentNumber });
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 
-				    if(exists != null && !exists.isEmpty()) {
-				        request.setAttribute("error", "この学籍番号はすでに登録されています");
-				        nextPage = "/common/RegistEmail.jsp";
-				    } else {
-				        nextPage = "/common/RegistEmailConfirm.jsp";
-				    }
+					if (exists != null && !exists.isEmpty()) {
+						request.setAttribute("error", "この学籍番号はすでに登録されています");
+						nextPage = "/common/RegistEmail.jsp";
+					} else {
+						nextPage = "/common/RegistEmailConfirm.jsp";
+					}
 				}
 
 				// JSPへ渡す値

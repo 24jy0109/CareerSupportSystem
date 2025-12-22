@@ -7,11 +7,13 @@ import dao.AnswerDBAccess;
 import dao.CompanyDBAccess;
 import dao.CourseDBAccess;
 import dao.GraduateDBAccess;
+import dto.CompanyDTO;
 import model.Answer;
 import model.Company;
 import model.Course;
 import model.Email;
 import model.Graduate;
+import model.Staff;
 
 public class GraduateAction {
 	public List<Graduate> execute(String[] data) throws Exception {
@@ -35,7 +37,7 @@ public class GraduateAction {
 		String title;
 		String body;
 		switch (action) {
-		/*		case "SendScheduleArrangeEmail":
+		case "SendScheduleArrangeEmail":
 					// data[2] graduateStudentNumber
 					// data[3] staffId
 		
@@ -46,7 +48,7 @@ public class GraduateAction {
 					staff.setStaffId(Integer.parseInt(data[3]));
 					graduate.setStaff(staff);
 					GraduateDBA.setStaff(graduate);
-					break;*/
+					break;
 		case "findGraduateStudentNumber":
 			boolean exists = GraduateDBA.findGraduateStudentNumber(data[1]);
 
@@ -116,63 +118,63 @@ public class GraduateAction {
 			GraduateDBAccess gdb = new GraduateDBAccess();
 			gdb.insertGraduate(graduate);
 			break;
-			
+
 		case "UpdateGraduate":
-		    // ① 会社ID
-		    companyId = Integer.parseInt(data[1]);
-		    company.setCompanyId(companyId);
-		    graduate.setCompany(company);
-		    companyName = data[2];
+			// ① 会社ID
+			companyId = Integer.parseInt(data[1]);
+			company.setCompanyId(companyId);
+			graduate.setCompany(company);
+			companyName = data[2];
 
-		    // 職種
-		    graduate.setGraduateJobCategory(data[3]);
-		    jobType = data[3];
+			// 職種
+			graduate.setGraduateJobCategory(data[3]);
+			jobType = data[3];
 
-		    // 氏名
-		    graduate.setGraduateName(data[4]);
-		    name = data[4];
+			// 氏名
+			graduate.setGraduateName(data[4]);
+			name = data[4];
 
-		    // 学科CODE
-		    course.setCourseCode(data[5]);
-		    graduate.setCourse(course);
-		    courseName = data[6];
+			// 学科CODE
+			course.setCourseCode(data[5]);
+			graduate.setCourse(course);
+			courseName = data[6];
 
-		    // 学籍番号
-		    graduate.setGraduateStudentNumber(data[7]);
-		    graduateStudentNumber = data[7];
+			// 学籍番号
+			graduate.setGraduateStudentNumber(data[7]);
+			graduateStudentNumber = data[7];
 
-		    // メール
-		    graduate.setGraduateEmail(data[8]);
-		    email = data[8];
+			// メール
+			graduate.setGraduateEmail(data[8]);
+			email = data[8];
 
-		    // その他
-		    graduate.setOtherInfo(data[9]);
-		    otherInfo = data[9];
+			// その他
+			graduate.setOtherInfo(data[9]);
+			otherInfo = data[9];
 
-		    // メール送信
-		    title = "【連絡先情報更新完了】";
-		    body = "内容をご確認ください。";
-		    body += "\n企業名：" + companyName;
-		    body += "\n職種：" + jobType;
-		    body += "\n学科:" + courseName;
-		    body += "\n氏名：" + name;
-		    body += "\n学籍番号：" + graduateStudentNumber;
-		    body += "\nその他：" + otherInfo;
+			// メール送信
+			title = "【連絡先情報更新完了】";
+			body = "内容をご確認ください。";
+			body += "\n企業名：" + companyName;
+			body += "\n職種：" + jobType;
+			body += "\n学科:" + courseName;
+			body += "\n氏名：" + name;
+			body += "\n学籍番号：" + graduateStudentNumber;
+			body += "\nその他：" + otherInfo;
 
-		    mail.setTo(email);
-		    mail.setSubject(title);
-		    mail.setBody(body);
+			mail.setTo(email);
+			mail.setSubject(title);
+			mail.setBody(body);
 
-		    result = mail.send();
-		    if (!result) {
-		        System.out.println("送信失敗: " + graduate.getGraduateEmail());
-		    } else {
-		        System.out.println("送信成功: " + graduate.getGraduateEmail());
-		    }
+			result = mail.send();
+			if (!result) {
+				System.out.println("送信失敗: " + graduate.getGraduateEmail());
+			} else {
+				System.out.println("送信成功: " + graduate.getGraduateEmail());
+			}
 
-		    // DB更新
-		    gdb = new GraduateDBAccess();
-		    gdb.updateGraduate(graduate);  // ← insertじゃなくupdateを呼ぶ
+			// DB更新
+			gdb = new GraduateDBAccess();
+			gdb.updateGraduate(graduate); // ← insertじゃなくupdateを呼ぶ
 			break;
 
 		case "findCompanyName":
@@ -208,9 +210,25 @@ public class GraduateAction {
 			String studentNumber = data[1];
 			graduate = gdb.searchGraduateByGraduateStudentNumber(studentNumber);
 			list.add(graduate);
-			
-			break; 
+
+			break;
+
+		//editInfo
+		case "graduateSearchBycompanyId":
+			companyId = Integer.parseInt(data[1]);
+
+			List<CompanyDTO> companyList = CompanyDBA.SearchCompanyWithGraduates(companyId);
+
+			if (companyList != null && !companyList.isEmpty()) {
+				CompanyDTO dto = companyList.get(0);
+
+				Graduate g = new Graduate();
+				g.setCompany(dto.getCompany()); // ★ここがポイント
+				list.add(g);
+			}
+			break;
 		}
+
 		return list;
 	}
 }

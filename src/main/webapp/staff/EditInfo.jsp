@@ -31,15 +31,17 @@
 			<main class="content">
 				<div class="request-top">
 					<div class="company">
-						<div class="field-name">企業名</div>
+						<div class="field-name"></div>
 						<div class="company-name">
-							アイティフォー
+<!--							<p>${companyDTO}</p>-->
+<!--							<p>${companyDTO.company}</p>-->
+							<p>${companyDTO.company.companyName}</p>
 							<div>
 								<a
-									href="CompanyRegisterConfirm?companyName=${companyDTO.company.companyName}">企業名編集</a>
+									href="company?command=CompanyRegisterConfirm&companyId=${companyDTO.company.companyId}">企業名編集</a>
 							</div>
 						</div>
-						<
+
 					</div>
 
 					<div class="event">

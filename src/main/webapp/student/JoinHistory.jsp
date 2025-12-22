@@ -37,7 +37,7 @@
 			</tr>
 
 			<c:forEach var="dto" items="${events}">
-				<c:if test="${dto.event.eventProgress == 2}">
+				<c:if test="${dto.event.eventProgress == \"ONGOING\"}">
 					<tr>
 						<td>${dto.event.company.companyName}</td>
 						<td><a
@@ -67,14 +67,14 @@
 
 			<c:forEach var="dto" items="${events}">
 				<c:if
-					test="${dto.event.eventProgress == 3 || dto.event.eventProgress == 4}">
+					test="${dto.event.eventProgress == \"FINISHED\" || dto.event.eventProgress == \"CANCELED\"}">
 					<tr>
 						<td>${dto.event.company.companyName}</td>
 						<td><a
 							href="event?command=EventDetail&eventId=${dto.event.eventId}">
 								開催詳細 </a></td>
 						<td><c:choose>
-								<c:when test="${dto.event.eventProgress == 4}">
+								<c:when test="${dto.event.eventProgress == \"CANCELED\"}">
 							中止
 						</c:when>
 								<c:when test="${dto.joinAvailability}">
