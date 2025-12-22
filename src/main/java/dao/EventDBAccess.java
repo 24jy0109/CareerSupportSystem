@@ -542,14 +542,12 @@ public class EventDBAccess extends DBAccess {
 	}
 
 	public void eventNotJoin(String studentNumber, int eventId) throws Exception {
-		String insertSql =
-			"INSERT INTO join_student (event_id, student_number, join_availability) " +
-			"VALUES (?, ?, 0)";
+		String insertSql = "INSERT INTO join_student (event_id, student_number, join_availability) " +
+				"VALUES (?, ?, 0)";
 
 		try (
-			Connection con = createConnection();
-			PreparedStatement ps = con.prepareStatement(insertSql)
-		) {
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(insertSql)) {
 			ps.setInt(1, eventId);
 			ps.setString(2, studentNumber);
 			ps.executeUpdate();
@@ -558,23 +556,22 @@ public class EventDBAccess extends DBAccess {
 
 	public List<EventDTO> joinHistoryList(String studentNumber) throws Exception {
 		List<EventDTO> list = new ArrayList<>();
-		String sql =
-			"SELECT " +
-			" js.event_id, " +
-			" js.join_availability, " +
-			" e.event_progress, " +
-			" c.company_id, " +
-			" c.company_name " +
-			"FROM join_student js " +
-			"JOIN event e ON js.event_id = e.event_id " +
-			"JOIN company c ON e.company_id = c.company_id " +
-			"WHERE js.student_number = ? " +
-			"ORDER BY js.event_id";
+
+		String sql = "SELECT " +
+				" js.event_id, " +
+				" js.join_availability, " +
+				" e.event_progress, " +
+				" c.company_id, " +
+				" c.company_name " +
+				"FROM join_student js " +
+				"JOIN event e ON js.event_id = e.event_id " +
+				"JOIN company c ON e.company_id = c.company_id " +
+				"WHERE js.student_number = ? " +
+				"ORDER BY js.event_id";
 
 		try (
-			Connection con = createConnection();
-			PreparedStatement ps = con.prepareStatement(sql)
-		) {
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setString(1, studentNumber);
 
 			try (ResultSet rs = ps.executeQuery()) {
@@ -597,13 +594,14 @@ public class EventDBAccess extends DBAccess {
 
 					// join_availability（int → boolean）
 					dto.setJoinAvailability(
-						rs.getInt("join_availability") == 1
-					);
+							rs.getInt("join_availability") == 1);
 
 					list.add(dto);
 				}
 			}
 		}
+
 		return list;
 	}
+
 }

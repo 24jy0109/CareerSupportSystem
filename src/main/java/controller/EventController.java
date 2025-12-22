@@ -242,6 +242,7 @@ public class EventController extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
 				break;
 			}
 		}

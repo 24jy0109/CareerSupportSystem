@@ -55,6 +55,7 @@ th {
 		<h2 class="center">企業リスト</h2>
 
 		<!-- ▼検索フォーム -->
+		
 		<form action="company" method="GET">
 			<input type="hidden" name="command" value="CompanyList"> <input
 				type="text" name="companyName" placeholder="企業名で検索"
@@ -74,17 +75,30 @@ th {
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="company" items="${companies}">
-					<tr>
-						<td>${company.company.companyId}</td>
-						<td>${company.company.companyName}</td>
-						<td>${company.eventProgress}</td>
-						<td>${company.isRequest}</td>
-						<td>${company.graduateCount}</td>
-						<td><a
-							href="company?command=CompanyDetail&companyId=${company.company.companyId}">申請/詳細</a></td>
-					</tr>
-				</c:forEach>
+				<c:choose>
+					<%-- 企業が1件もない場合 --%>
+					<c:when test="${empty companies}">
+						<tr>
+							<td colspan="6" class="center">該当する企業はありません</td>
+						</tr>
+					</c:when>
+
+					<%-- 企業が存在する場合 --%>
+					<c:otherwise>
+						<c:forEach var="company" items="${companies}">
+							<tr>
+								<td>${company.company.companyId}</td>
+								<td>${company.company.companyName}</td>
+								<td>${company.eventProgress}</td>
+								<td>${company.isRequest}</td>
+								<td>${company.graduateCount}</td>
+								<td><a
+									href="company?command=CompanyDetail&companyId=${company.company.companyId}">
+										申請/詳細 </a></td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
 			</tbody>
 		</table>
 	</main>
