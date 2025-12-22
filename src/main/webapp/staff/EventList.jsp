@@ -56,8 +56,8 @@
 								<td><a
 									href="event?command=EventDetail&eventId=${dto.event.eventId}">開催詳細</a></td>
 								<c:choose>
-									<c:when test="${dto.event.eventProgress.label == '中止'}">
-										<td class="event-cancel">${dto.event.eventProgress.label}</td>
+									<c:when test="${dto.event.eventProgress.label == '開催'}">
+										<td class="held">${dto.event.eventProgress.label}</td>
 									</c:when>
 									<c:otherwise>
 										<td>${dto.event.eventProgress.label}</td>

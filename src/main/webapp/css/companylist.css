@@ -198,6 +198,15 @@
     gap: 50px;
 }
 
+.eventdetail-table{
+	margin: 0;
+	width: auto;
+}
+
+.eventdetail-table tr{
+	border-bottom: none;
+}
+
 /* ーーー参加一覧/履歴画面（生徒）ーーー */
 
 /* 参加一覧、履歴 */
@@ -344,6 +353,7 @@
     color: red;
 }
 
+	
 /* 列幅の指定 */
 /* 企業名 */
 .eventlist-h:nth-child(1),
@@ -371,9 +381,11 @@
 
 /* ーーー開催詳細画面（職員）ーーー*/
 /* 生徒画面と同じcssを使用css*/
-.yellow-btn{
-	background-color: yellow;
-	color: black;
+.white-btn{
+	background-color: white;
+	color: #009A37;
+	font-weight: 500;
+	border: 2px solid #009A37;
 }
 
 /*ーーー参加者一覧画面（職員）ーーー */
