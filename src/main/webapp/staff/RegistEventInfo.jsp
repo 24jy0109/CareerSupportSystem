@@ -7,8 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/companylist.css">
 <title>開催情報登録画面（職員）</title>
 
 <!--<style>-->
@@ -299,6 +299,9 @@
 					<div class="bottom-btn-split">
 						<button type="button" onclick="location.href='${backUrl}'">
 							${backLabel}</button>
+						<div>
+							<input type="submit" class="event-btn" value="開催">
+						</div>
 
 					</div>
 
