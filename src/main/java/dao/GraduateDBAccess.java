@@ -98,51 +98,78 @@ public class GraduateDBAccess extends DBAccess {
 		return null;
 	}
 
-	public List<Graduate> searchGraduatesByGraduateStudentNumbers(String[] graduateStudentNumbers) throws Exception {
+	// 変更したここから
+	public List<Graduate> searchGraduatesByGraduateStudentNumbers(
+	        String[] graduateStudentNumbers) throws Exception {
 
-		List<Graduate> list = new ArrayList<>();
+	    List<Graduate> list = new ArrayList<>();
 
-		// 空チェック（重要：IN () エラー防止）
-		if (graduateStudentNumbers == null || graduateStudentNumbers.length == 0) {
-			return list;
-		}
+	    // 空チェック（IN () 防止）
+	    if (graduateStudentNumbers == null || graduateStudentNumbers.length == 0) {
+	        return list;
+	    }
 
-		// ?,?,? を学籍番号の数だけ作る
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < graduateStudentNumbers.length; i++) {
-			sb.append("?");
-			if (i < graduateStudentNumbers.length - 1) {
-				sb.append(",");
-			}
-		}
+	    // ?,?,? 動的生成
+	    StringBuilder sb = new StringBuilder();
+	    for (int i = 0; i < graduateStudentNumbers.length; i++) {
+	        sb.append("?");
+	        if (i < graduateStudentNumbers.length - 1) {
+	            sb.append(",");
+	        }
+	    }
 
-		String sql = "SELECT graduate_student_number, graduate_name, graduate_email " +
-				"FROM graduate " +
-				"WHERE graduate_student_number IN (" + sb.toString() + ")";
+	    String sql =
+	        "SELECT " +
+	        " g.graduate_student_number, " +
+	        " g.graduate_name, " +
+	        " g.graduate_email, " +
+	        " g.graduate_job_category, " +
+	        " c.course_code, " +
+	        " c.course_name, " +
+	        " c.course_term " +
+	        "FROM graduate g " +
+	        "JOIN course c ON g.course_code = c.course_code " +
+	        "WHERE g.graduate_student_number IN (" + sb + ")";
 
-		try (
-				Connection con = createConnection();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+	    try (
+	        Connection con = createConnection();
+	        PreparedStatement ps = con.prepareStatement(sql)
+	    ) {
 
-			// パラメータ設定
-			for (int i = 0; i < graduateStudentNumbers.length; i++) {
-				ps.setString(i + 1, graduateStudentNumbers[i]);
-			}
+	        for (int i = 0; i < graduateStudentNumbers.length; i++) {
+	            ps.setString(i + 1, graduateStudentNumbers[i]);
+	        }
 
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					Graduate g = new Graduate();
-					g.setGraduateStudentNumber(rs.getString("graduate_student_number"));
-					g.setGraduateName(rs.getString("graduate_name"));
-					g.setGraduateEmail(rs.getString("graduate_email"));
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
 
-					list.add(g);
-				}
-			}
-		}
+	                // Course
+	                Course course = new Course();
+	                course.setCourseCode(rs.getString("course_code"));
+	                course.setCourseName(rs.getString("course_name"));
+	                course.setCourseTerm(rs.getInt("course_term"));
 
-		return list;
+	                // Graduate
+	                Graduate g = new Graduate();
+	                g.setGraduateStudentNumber(
+	                        rs.getString("graduate_student_number"));
+	                g.setGraduateName(
+	                        rs.getString("graduate_name"));
+	                g.setGraduateEmail(
+	                        rs.getString("graduate_email"));
+	                g.setGraduateJobCategory(
+	                        rs.getString("graduate_job_category"));
+	                g.setCourse(course);
+
+	                list.add(g);
+	            }
+	        }
+	    }
+
+	    return list;
 	}
+	// 変更したここまで
+
 
 	public List<Graduate> findAll() throws Exception {
 

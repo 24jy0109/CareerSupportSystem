@@ -60,6 +60,9 @@
 
 		<!--		<h2>日程調整メール作成</h2>-->
 
+		<form action="event" method="post">
+			<input type="hidden" name="command" value="SendScheduleArrangeEmail">
+
 		<div class="schedulearrange-row">
 			<div class="field-name">担当者</div>
 			<select name="staffId">
@@ -74,10 +77,6 @@
 				%>
 			</select>
 		</div>
-
-		<form action="event" method="post">
-
-			<input type="hidden" name="command" value="SendScheduleArrangeEmail">
 			<div class="schedulearrange-row">
 				<div class="field-name">宛先</div>
 				<div>

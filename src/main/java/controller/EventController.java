@@ -46,6 +46,7 @@ public class EventController extends HttpServlet {
 		String data[];
 
 		String companyId;
+		String[] selectedGraduates;
 
 		// Test
 		System.out.println(studentNumber);
@@ -76,6 +77,32 @@ public class EventController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
+			case "RegistEventConfirm":
+				nextPage = "staff/EventInfoConfirm.jsp";
+				// 配列を作成（必要な項目分のサイズを確保）
+				data = new String[12];
+
+				data[0] = command;
+				data[1] = "";
+				data[2] = request.getParameter("companyId");
+				data[3] = request.getParameter("staffId");
+				data[4] = request.getParameter("eventPlace");
+				data[5] = request.getParameter("eventStartTime");
+				data[6] = request.getParameter("eventEndTime");
+				data[7] = request.getParameter("eventCapacity");
+				data[8] = request.getParameter("eventOtherInfo");
+				// チェックボックスで選択された参加卒業生
+				selectedGraduates = request.getParameterValues("graduateStudents");
+				data[9] = (selectedGraduates != null) ? String.join(",", selectedGraduates) : "";
+				data[10] = request.getParameter("eventId");
+				data[11] = request.getParameter("answerId");
+				try {
+					events = eventAction.execute(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("event", events.getFirst());
+				break;
 			case "RegistEvent":
 				// 配列を作成（必要な項目分のサイズを確保）
 				data = new String[12];
@@ -91,7 +118,7 @@ public class EventController extends HttpServlet {
 				data[8] = request.getParameter("eventOtherInfo");
 
 				// チェックボックスで選択された参加卒業生
-				String[] selectedGraduates = request.getParameterValues("graduateStudents");
+				selectedGraduates = request.getParameterValues("graduateStudents");
 				data[9] = (selectedGraduates != null) ? String.join(",", selectedGraduates) : "";
 
 				data[10] = request.getParameter("eventId");

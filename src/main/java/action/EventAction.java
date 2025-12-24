@@ -78,6 +78,28 @@ public class EventAction {
 
 			list.add(eventDTO);
 			break;
+		case "RegistEventConfirm":
+			company = companyDBA.SearchCompanById(Integer.parseInt(data[2])).getCompany();
+			event.setCompany(company);
+
+			staff = staffDBA.searchStaffById(Integer.parseInt(data[3]));
+			event.setStaff(staff);
+
+			// Event の基本情報をセット
+			event.setEventPlace(data[4]);
+			event.setEventStartTime(LocalDateTime.parse(data[5]));
+			event.setEventEndTime(LocalDateTime.parse(data[6]));
+			event.setEventCapacity(Integer.parseInt(data[7]));
+			event.setEventOtherInfo(data[8]);
+
+			// 参加させる卒業生をセット
+			if (!data[9].isEmpty()) {
+				graduates = graduateDBA.searchGraduatesByGraduateStudentNumbers(data[9].split(","));
+			}
+			event.setJoinGraduates(graduates);
+			eventDTO.setEvent(event);
+			list.add(eventDTO);
+			break;
 		case "RegistEvent":
 			company = companyDBA.SearchCompanById(Integer.parseInt(data[2])).getCompany();
 			event.setCompany(company);

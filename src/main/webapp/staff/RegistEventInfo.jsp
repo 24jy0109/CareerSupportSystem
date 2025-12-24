@@ -118,7 +118,7 @@
 					<div class="field-name">企業名</div>
 					<div class=company-name>${event.company.companyName}</div>
 				</div>
-				<form action="event?command=RegistEvent" method="post">
+				<form action="event?command=RegistEventConfirm" method="post">
 
 					<input type="hidden" name="companyId"
 						value="${event.company.companyId}" />
