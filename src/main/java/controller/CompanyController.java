@@ -81,7 +81,19 @@ public class CompanyController extends HttpServlet {
 				break;
 			case "CompanyRegisterNext":
 
-				companyName = request.getParameter("companyName");
+				String companyId = request.getParameter("companyId");
+				Integer.parseInt(companyId);
+				if (companyId == null) {
+					companyName = request.getParameter("companyName");
+				} else {
+					try {
+						List<CompanyDTO> companyDTO = companyAction.execute(new String[] {"findCompanyName",companyId});
+						request.setAttribute("companyDTO", companyDTO);
+					} catch (Exception e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+				}
 				CompanyDBAccess db = new CompanyDBAccess();
 				boolean exists = false;
 				try {
@@ -101,7 +113,7 @@ public class CompanyController extends HttpServlet {
 					nextPage = "staff/CompanyRegisterConfirm.jsp";
 				}
 				break;
-				//				企業名追加
+			//				企業名追加
 			case "CompanyRegisterConfirm":
 				nextPage = "staff/AppointMenu.jsp";
 				companyName = request.getParameter("companyName");
@@ -113,6 +125,7 @@ public class CompanyController extends HttpServlet {
 				}
 
 				break;
+				
 			case "CompanyRegisterBack":
 				nextPage = "staff/CompanyRegister.jsp";
 				companyName = request.getParameter("companyName");
@@ -121,7 +134,7 @@ public class CompanyController extends HttpServlet {
 
 			case "RegistEvent":
 				nextPage = "staff/RegistEventInfo.jsp";
-				String companyId = (String) request.getParameter("companyId");
+				companyId = (String) request.getParameter("companyId");
 				try {
 					companies = companyAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
