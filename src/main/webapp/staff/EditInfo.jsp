@@ -45,15 +45,15 @@
 							</div>
 						</div>
 						<table>
-								<tr>
-									<th>卒業年次</th>
-									<th>名前</th>
-									<th>学科</th>
-									<th>職種</th>
-									<th>メールアドレス</th>
-									<th></th>
+							<tr>
+								<th>卒業年次</th>
+								<th>名前</th>
+								<th>学科</th>
+								<th>職種</th>
+								<th>メールアドレス</th>
+								<th></th>
 
-								</tr>
+							</tr>
 							<c:forEach var="graduate" items="${companyDTO.company.graduates}">
 								<c:set var="admissionYear"
 									value="${fn:substring(graduate.graduateStudentNumber, 0, 2)}" />
@@ -69,7 +69,11 @@
 									<td>${graduate.course.courseName}</td>
 									<td>${graduate.graduateJobCategory}</td>
 									<td>${graduate.graduateEmail}</td>
-									<td>削除・編集</td>
+									<td><a
+										href="graduate?command=RegistEmail&graduateStudentNumber=${graduate.graduateStudentNumber}">編集</a>
+										<a
+										href="graduate?command=deleteGraduate&studentNumber=${graduate.graduateStudentNumber}"
+										onclick="return confirm('本当に削除しますか？');">削除</a></td>
 								</tr>
 							</c:forEach>
 						</table>
