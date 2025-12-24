@@ -510,6 +510,14 @@
     margin: 0;
 }
 
+.event-btn{
+	font-size: 15px;
+	color: white;
+	background-color: #009A37;
+	border: none;
+	padding: 10px 20px;
+}
+
 /* テーブル */
 /* selectの高さと幅 */
 .registevent-table select {
