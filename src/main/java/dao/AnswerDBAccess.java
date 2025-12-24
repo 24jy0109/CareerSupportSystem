@@ -221,7 +221,6 @@ public class AnswerDBAccess extends DBAccess {
 					grad.setGraduateStudentNumber(rs.getString("graduate_student_number"));
 					answer.setGraduate(grad);
 
-
 					// 企業
 					Company company = new Company();
 					company.setCompanyId(rs.getInt("company_id"));
@@ -229,7 +228,7 @@ public class AnswerDBAccess extends DBAccess {
 
 					// Graduate に Company をセット
 					grad.setCompany(company);
-					
+
 					// イベント
 					Event event = new Event();
 					event.setEventId(rs.getInt("event_id"));
@@ -274,18 +273,55 @@ public class AnswerDBAccess extends DBAccess {
 	}
 
 	public void deleteAnswer(int answerId) {
-	    String sql = "DELETE FROM answer WHERE answer_id = ?";
+		String sql = "DELETE FROM answer WHERE answer_id = ?";
 
-	    try (
-	        Connection con = createConnection();
-	        PreparedStatement ps = con.prepareStatement(sql)
-	    ) {
-	        ps.setInt(1, answerId);
-	        ps.executeUpdate();
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, answerId);
+			ps.executeUpdate();
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Answer searchAnswerById(int answerId) throws Exception {
+		String sql = "SELECT * FROM answer WHERE answer_id = ?";
+		Answer answer = new Answer();
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, answerId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					answer.setAnswerId(rs.getInt("answer_id"));
+					Boolean availability = rs.getBoolean("event_availability");
+					if (rs.wasNull()) {
+					    availability = null;
+					}
+					answer.setEventAvailability(availability);
+
+					answer.setFirstChoiceStartTime(
+							toLocalDateTime(rs.getTimestamp("first_choice_start_time")));
+					answer.setFirstChoiceEndTime(
+							toLocalDateTime(rs.getTimestamp("first_choice_end_time")));
+
+					answer.setSecondChoiceStartTime(
+							toLocalDateTime(rs.getTimestamp("second_choice_start_time")));
+					answer.setSecondChoiceEndTime(
+							toLocalDateTime(rs.getTimestamp("second_choice_end_time")));
+
+					answer.setThirdChoiceStartTime(
+							toLocalDateTime(rs.getTimestamp("third_choice_start_time")));
+					answer.setThirdChoiceEndTime(
+							toLocalDateTime(rs.getTimestamp("third_choice_end_time")));
+				}
+			}
+		}
+
+		return answer;
 	}
 
 }

@@ -5,23 +5,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.AnswerDBAccess;
+import exception.ValidationException;
 import model.Answer;
-import model.Graduate;
 import validator.AnswerTimeValidator;
 
 public class AnswerAction {
-	public List<Answer> execute(String[] data) throws Exception {
+	public List<Answer> execute(String[] data) throws ValidationException, Exception {
 		// data[0] アクション
 		String action = data[0];
 
 		List<Answer> answers = new ArrayList<>();
 
-		Graduate graduate = new Graduate();
-
 		AnswerDBAccess answerDBA = new AnswerDBAccess();
 		Answer answer = new Answer();
 
 		switch (action) {
+		case "AnsweredCheck":
+			// data[1] answerId
+			answers.add(answerDBA.searchAnswerById(Integer.parseInt(data[1])));
+			break;
 		case "registAnswer":
 			// data[1] answerId
 			// data[2] eventAvailability
@@ -44,10 +46,7 @@ public class AnswerAction {
 			answer.setThirdChoiceStartTime(parseDateTimeOrNull(data[7]));
 			answer.setThirdChoiceEndTime(parseDateTimeOrNull(data[8]));
 
-
 			AnswerTimeValidator.validate(answer);
-
-			System.out.println("実行チェック");
 
 			answerDBA.updateAnswer(answer);
 			answers.add(answer);

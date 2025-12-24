@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,29 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <title>イベント回答フォーム</title>
+
+<script>
+	function toggleTimeFields() {
+		const checked = document.querySelector('input[name="eventAvailability"]:checked');
+		if (!checked) return;
+
+		const isAttend = checked.value === "true";
+		const timeArea = document.getElementById("time-area");
+
+		if (isAttend) {
+			timeArea.style.display = "block";
+		} else {
+			timeArea.style.display = "none";
+			timeArea.querySelectorAll("input[type='datetime-local']").forEach(input => {
+				input.value = "";
+			});
+		}
+	}
+
+	window.onload = toggleTimeFields;
+</script>
 </head>
+
 <body>
 	<header>
 		<div class="head-part">
@@ -21,54 +44,80 @@
 				<div class="title-jp">就活サポート</div>
 				<div class="title-en">Career Support</div>
 			</div>
-
 		</div>
 	</header>
-	<main>
 
+	<main>
 		<%
-		// URL: answer?command=AnswerForm&answerId=1
 		String answerId = request.getParameter("answerId");
 		%>
 
 		<h2>参加可否・希望日時フォーム</h2>
-		
-		<p>${error}</p>
+
+		<p style="color: red;">${error}</p>
 
 		<form action="answer" method="post">
 
-			<!-- Hidden: answerId -->
 			<input type="hidden" name="answerId" value="<%=answerId%>"> <input
 				type="hidden" name="command" value="registAnswer">
 
 			<!-- 参加可否 -->
-			<label>参加可否 (event_availability)</label><br> <input type="radio"
-				name="eventAvailability" value="true"> 出席する<br> <input
-				type="radio" name="eventAvailability" value="false"> 出席しない<br>
-			<br>
+			<label>参加可否</label><br> <input type="radio"
+				name="eventAvailability" value="true"
+				<c:if test="${answer == null || answer.eventAvailability}">checked</c:if>
+				onchange="toggleTimeFields()"> 出席する<br> <input
+				type="radio" name="eventAvailability" value="false"
+				<c:if test="${answer != null && !answer.eventAvailability}">checked</c:if>
+				onchange="toggleTimeFields()"> 出席しない<br> <br>
 
-			<!-- 第一希望 -->
-			<h3>第一希望</h3>
-			<label>開始（first_choice_start_time）</label><br> <input
-				type="datetime-local" name="firstChoiceStart"><br> <label>終了（first_choice_end_time）</label><br>
-			<input type="datetime-local" name="firstChoiceEnd"><br>
-			<br>
+			<div id="time-area">
 
-			<!-- 第二希望 -->
-			<h3>第二希望</h3>
-			<label>開始（second_choice_start_time）</label><br> <input
-				type="datetime-local" name="secondChoiceStart"><br> <label>終了（second_choice_end_time）</label><br>
-			<input type="datetime-local" name="secondChoiceEnd"><br>
-			<br>
+				<!-- 第一希望 -->
+				<h3>第一希望</h3>
+				<label>開始</label><br> <input type="datetime-local"
+					name="firstChoiceStart"
+					value="${answer != null && answer.firstChoiceStartTime != null
+						? answer.firstChoiceStartTime.toString().substring(0,16)
+						: ''}">
+				<br> <label>終了</label><br> <input type="datetime-local"
+					name="firstChoiceEnd"
+					value="${answer != null && answer.firstChoiceEndTime != null
+						? answer.firstChoiceEndTime.toString().substring(0,16)
+						: ''}">
+				<br> <br>
 
-			<!-- 第三希望 -->
-			<h3>第三希望</h3>
-			<label>開始（third_choice_start_time）</label><br> <input
-				type="datetime-local" name="thirdChoiceStart"><br> <label>終了（third_choice_end_time）</label><br>
-			<input type="datetime-local" name="thirdChoiceEnd"><br>
-			<br> <input type="submit" value="回答する">
+				<!-- 第二希望 -->
+				<h3>第二希望</h3>
+				<label>開始</label><br> <input type="datetime-local"
+					name="secondChoiceStart"
+					value="${answer != null && answer.secondChoiceStartTime != null
+						? answer.secondChoiceStartTime.toString().substring(0,16)
+						: ''}">
+				<br> <label>終了</label><br> <input type="datetime-local"
+					name="secondChoiceEnd"
+					value="${answer != null && answer.secondChoiceEndTime != null
+						? answer.secondChoiceEndTime.toString().substring(0,16)
+						: ''}">
+				<br> <br>
+
+				<!-- 第三希望 -->
+				<h3>第三希望</h3>
+				<label>開始</label><br> <input type="datetime-local"
+					name="thirdChoiceStart"
+					value="${answer != null && answer.thirdChoiceStartTime != null
+						? answer.thirdChoiceStartTime.toString().substring(0,16)
+						: ''}">
+				<br> <label>終了</label><br> <input type="datetime-local"
+					name="thirdChoiceEnd"
+					value="${answer != null && answer.thirdChoiceEndTime != null
+						? answer.thirdChoiceEndTime.toString().substring(0,16)
+						: ''}">
+				<br> <br>
+
+			</div>
+
+			<input type="submit" value="回答する">
 		</form>
-
 	</main>
 
 	<footer>
@@ -76,6 +125,5 @@
 			<small>&copy; 2024 Example Inc.</small>
 		</p>
 	</footer>
-
 </body>
 </html>
