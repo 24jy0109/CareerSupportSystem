@@ -13,8 +13,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.AnswerAction;
+import action.EmailAction;
 import action.EventAction;
 import action.GraduateAction;
+import dto.EmailDTO;
 import dto.EventDTO;
 import model.Answer;
 
@@ -37,6 +39,7 @@ public class EventController extends HttpServlet {
 		// 戻り値用のArrayList<Company>
 		List<EventDTO> events = new ArrayList<EventDTO>();
 		List<Answer> answers = new ArrayList<Answer>();
+		List<EmailDTO> emails = new ArrayList<EmailDTO>();
 
 		// sessionから値を取得
 		HttpSession session = request.getSession();
@@ -61,6 +64,7 @@ public class EventController extends HttpServlet {
 		}
 
 		EventAction eventAction = new EventAction();
+		EmailAction emailAction = new EmailAction();
 
 		// 次画面用の変数
 		String nextPage = null;
@@ -139,6 +143,24 @@ public class EventController extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				break;
+			case "ScheduleArrangeEmailConfirm":
+				nextPage = "staff/ScheduleArrangeEmailConfirm.jsp";
+				data = new String[7];
+				data[0] = command;
+				data[1] = "";
+				data[2] = (String) request.getParameter("graduateStudentNumber");
+				data[3] = (String) request.getParameter("staffId");
+				data[4] = (String) request.getParameter("mailTitle");
+				data[5] = (String) request.getParameter("mailBody");
+				data[6] = (String) request.getParameter("companyId");
+
+				try {
+					emails = emailAction.execute(data);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("email", emails.getFirst());
 				break;
 			case "SendScheduleArrangeEmail":
 				data = new String[7];

@@ -229,7 +229,7 @@ public class EventAction {
 			s = new StaffDBAcess().getAllStaffs();
 			eventDTO.setStaffs(s);
 			list.add(eventDTO);
-			break;
+			break;			
 		case "SendScheduleArrangeEmail":
 			//			data[0]=コマンド
 			//			data[1]=空文字
