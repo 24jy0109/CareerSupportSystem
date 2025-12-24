@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,14 +35,45 @@
 					<div class="company">
 						<div class="field-name"></div>
 						<div class="company-name">
-<!--							<p>${companyDTO}</p>-->
-<!--							<p>${companyDTO.company}</p>-->
+							<!--							<p>${companyDTO}</p>-->
+							<!--							<p>${companyDTO.company}</p>-->
 							<p>${companyDTO.company.companyName}</p>
+
 							<div>
 								<a
 									href="company?command=CompanyRegisterNext&companyId=${companyDTO.company.companyId}">企業名編集</a>
 							</div>
 						</div>
+						<table>
+								<tr>
+									<th>卒業年次</th>
+									<th>名前</th>
+									<th>学科</th>
+									<th>職種</th>
+									<th>メールアドレス</th>
+									<th></th>
+
+								</tr>
+							<c:forEach var="graduate" items="${companyDTO.company.graduates}">
+								<c:set var="admissionYear"
+									value="${fn:substring(graduate.graduateStudentNumber, 0, 2)}" />
+								<c:set var="graduationYear"
+									value="${admissionYear + graduate.course.courseTerm}" />
+
+
+
+
+								<tr>
+									<td>${graduationYear}年卒</td>
+									<td>${graduate.graduateName}</td>
+									<td>${graduate.course.courseName}</td>
+									<td>${graduate.graduateJobCategory}</td>
+									<td>${graduate.graduateEmail}</td>
+									<td>削除・編集</td>
+								</tr>
+							</c:forEach>
+						</table>
+
 
 					</div>
 

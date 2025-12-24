@@ -278,24 +278,22 @@ public class GraduateController extends HttpServlet {
 
 			    companyId = request.getParameter("companyId");
 
-			    CompanyDTO companyDTO = null;
 			    try {
 			        List<Graduate> list = graduateAction.execute(
 			            new String[] { "graduateSearchBycompanyId", companyId }
-			            
 			        );
+
 			        if (list != null && !list.isEmpty()) {
-				        companyDTO = new CompanyDTO();
-				        companyDTO.setCompany(list.get(0).getCompany());
-				        request.setAttribute("companyDTO", companyDTO);
-				    }	
-			        
-			        
+			            request.setAttribute("companyDTO", list.get(0));
+			        }
+
 			    } catch (Exception e) {
 			        e.printStackTrace();
 			    }
 			    
-			  		    break;
+			    
+			    break;
+
 
 			}
 		} else {

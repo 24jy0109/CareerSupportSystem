@@ -81,37 +81,47 @@ public class CompanyController extends HttpServlet {
 				break;
 			case "CompanyRegisterNext":
 
-				String companyId = request.getParameter("companyId");
-				Integer.parseInt(companyId);
-				if (companyId == null) {
-					companyName = request.getParameter("companyName");
-				} else {
+				String companyId = null;
+				companyId = request.getParameter("companyId");
+				companyName = request.getParameter("companyName");
+				System.out.println(companyId);
+//				Integer.parseInt(companyId);
+				System.out.println(companyName);
+				if (companyName == null && companyId != null) {
+					List<CompanyDTO> list;
 					try {
-						List<CompanyDTO> companyDTO = companyAction.execute(new String[] {"findCompanyName",companyId});
-						request.setAttribute("companyDTO", companyDTO);
+						list = companyAction.execute(new String[] {"findCompanyName", companyId});
+						if (!list.isEmpty()) {
+							companyName = list.get(0).getCompany().getCompanyName();
+						}
 					} catch (Exception e) {
 						// TODO 自動生成された catch ブロック
 						e.printStackTrace();
 					}
-				}
-				CompanyDBAccess db = new CompanyDBAccess();
-				boolean exists = false;
-				try {
-					exists = db.existsCompanyName(companyName);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 
-				if (exists) {
-					// 重複してる場合 → 入力画面へ戻す
-					request.setAttribute("error", "この企業名はすでに登録されています。");
-					request.setAttribute("companyName", companyName);
-					nextPage = "staff/CompanyRegister.jsp";
+						
 				} else {
-					// 重複なし → 確認画面へ
-					request.setAttribute("companyName", companyName);
-					nextPage = "staff/CompanyRegisterConfirm.jsp";
+					
+					CompanyDBAccess db = new CompanyDBAccess();
+					boolean exists = false;
+					try {
+						exists = db.existsCompanyName(companyName);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					if (exists) {
+						// 重複してる場合 → 入力画面へ戻す
+						request.setAttribute("error", "この企業名はすでに登録されています。");
+						request.setAttribute("companyName", companyName);
+						nextPage = "staff/CompanyRegister.jsp";
+					} else {
+						// 重複なし → 確認画面へ
+					}
+
 				}
+				request.setAttribute("companyName", companyName);
+				nextPage = "staff/CompanyRegisterConfirm.jsp";
 				break;
 			//				企業名追加
 			case "CompanyRegisterConfirm":

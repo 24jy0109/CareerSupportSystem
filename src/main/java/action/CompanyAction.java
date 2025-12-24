@@ -43,9 +43,10 @@ public class CompanyAction {
 			companies.add(companyDBA.SearchCompanById(Integer.parseInt(data[2])));
 			break;
 		case "findCompanyName":
-			String companyId = data[1];
-			companyName = companyDBA.searchCompanyNameById(companyId);
-			
+			CompanyDTO dto = companyDBA.SearchCompanById(Integer.parseInt(data[1]));
+			if (dto != null) {
+				companies.add(dto);
+			}
 			break;
 		}
 		return companies;

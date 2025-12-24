@@ -44,7 +44,7 @@ public class LoginController extends HttpServlet {
 		switch (command) {
 		case "Login":
 			Key key = new Key();
-			// Google OAuth 2.0 認証画面への URL にリダイレクト
+			// Google OAuth 2w.0 認証画面への URL にリダイレクト
 			String url = "https://accounts.google.com/o/oauth2/v2/auth" +
 					"?client_id=" + key.getClientId() +
 					"&redirect_uri=" + key.getRedirectUri() +
