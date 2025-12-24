@@ -48,33 +48,30 @@ th {
 				<div class="title-en">Career Support</div>
 			</div>
 
-			<div class="header-user">ようこそ 24jy0119 さん</div>
+			<div class="header-user">ようこそ${name}さん</div>
 		</div>
 	</header>
 	<main>
-		<h2 class="center">企業リスト</h2>
 
 		<!-- ▼検索フォーム -->
-		
-		<form action="company" method="GET">
+
+		<form action="company" method="GET" class="search">
 			<input type="hidden" name="command" value="CompanyList"> <input
 				type="text" name="companyName" placeholder="企業名で検索"
-				value="${param.companyName}">
-			<button type="submit">検索</button>
+				value="${param.companyName}" class="search-box">
+			<button type="submit" class="search-button">検索</button>
 		</form>
+		
 
-		<table>
-			<thead>
-				<tr>
-					<th>企業ID</th>
-					<th>企業名</th>
-					<th>イベント状況</th>
-					<th>リクエスト状況</th>
-					<th>卒業生人数</th>
-					<th>申請/詳細</th>
+		<table class="company-table">
+				<tr class="company-r">
+					<th class="company-h">企業名</th>
+					<th class="company-h">イベント状況</th>
+					<th class="company-h">リクエスト状況</th>
+					<th class="company-h">卒業生人数</th>
+					<th class="company-h"></th>
 				</tr>
-			</thead>
-			<tbody>
+				
 				<c:choose>
 					<%-- 企業が1件もない場合 --%>
 					<c:when test="${empty companies}">
@@ -86,7 +83,7 @@ th {
 					<%-- 企業が存在する場合 --%>
 					<c:otherwise>
 						<c:forEach var="company" items="${companies}">
-							<tr>
+							<tr class="company-r">
 								<td>${company.company.companyId}</td>
 								<td>${company.company.companyName}</td>
 								<td>${company.eventProgress}</td>

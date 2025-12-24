@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <!DOCTYPE html>
 <html>
@@ -59,7 +59,7 @@
 				<div class="title-en">Career Support</div>
 			</div>
 
-			<div class="header-user">ようこそ 24jy0119 さん</div>
+			<div class="header-user">ようこそ${name}さん</div>
 		</div>
 	</header>
 
@@ -131,6 +131,17 @@
 						<input type="hidden" name="eventId"
 							value="${answer.event.eventId}" />
 					</c:if>
+					<!--戻るボタンの行先を変える-->
+					<c:choose>
+						<c:when test="${not empty answer}">
+							<c:set var="backUrl" value="answer?command=ScheduleAnswerCheck" />
+							<c:set var="backLabel" value="回答一覧に戻る" />
+						</c:when>
+						<c:otherwise>
+							<c:set var="backUrl" value="company?command=CompanyList" />
+							<c:set var="backLabel" value="企業一覧に戻る" />
+						</c:otherwise>
+					</c:choose>
 
 					<!--					<div class="form-block">-->
 					<!--						<label>開始日時：</label> <input type="datetime-local"-->
@@ -286,9 +297,9 @@
 					</table>
 
 					<div class="bottom-btn-split">
-						<button type="button"
-							onclick="location.href='company?command=CompanyList'">企業一覧に戻る</button>
-						<button type="submit">開催</button>
+						<button type="button" onclick="location.href='${backUrl}'">
+							${backLabel}</button>
+
 					</div>
 
 				</form>

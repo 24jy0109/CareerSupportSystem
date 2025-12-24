@@ -11,8 +11,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/companylist.css">
 <title>日程調整メール作成</title>
 </head>
 <body>
@@ -28,7 +28,7 @@
 				<div class="title-en">Career Support</div>
 			</div>
 
-			<div class="header-user">ようこそ 24jy0119 さん</div>
+			<div class="header-user">ようこそ${name}さん</div>
 		</div>
 	</header>
 	<main>
