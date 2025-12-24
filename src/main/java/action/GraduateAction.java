@@ -215,18 +215,22 @@ public class GraduateAction {
 
 		//editInfo
 		case "graduateSearchBycompanyId":
-			companyId = Integer.parseInt(data[1]);
+		    companyId = Integer.parseInt(data[1]);
 
-			List<CompanyDTO> companyList = CompanyDBA.SearchCompanyWithGraduates(companyId);
+		    List<CompanyDTO> companyList =
+		        CompanyDBA.SearchCompanyWithGraduates(companyId);
 
-			if (companyList != null && !companyList.isEmpty()) {
-				CompanyDTO dto = companyList.get(0);
+		    if (companyList != null && !companyList.isEmpty()) {
+		        CompanyDTO dto = companyList.get(0);
 
-				Graduate g = new Graduate();
-				g.setCompany(dto.getCompany()); // ★ここがポイント
-				list.add(g);
-			}
-			break;
+		        // ダミーGraduateではなく、
+		        // company を持った Graduate を1つだけ返す
+		        Graduate g = new Graduate();
+		        g.setCompany(dto.getCompany()); // ← companyの中に graduates 全員入ってる
+		        list.add(g);
+		    }
+		    break;
+
 		}
 
 		return list;

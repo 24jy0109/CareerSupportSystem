@@ -46,8 +46,8 @@
 								<div>企業名</div>
 							</td>
 							<td>
-								<div>${companyDTO.company.companyName}</div>
-								 <input type="hidden"name="companyName" value="${param.companyName}">
+								<div>${companyName}</div>
+								 <input type="hidden"name="companyName" value="${companyName}">
 							</td>
 						</tr>
 					</table>

@@ -298,7 +298,8 @@ public class CompanyDBAccess extends DBAccess {
 			// ------------------------------
 			// ② 卒業生 + コース + スタッフ JOIN
 			// ------------------------------
-			String sqlGraduate = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_job_category, " +
+			String sqlGraduate = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_email, g.graduate_job_category, "
+					+
 					"       c.course_name, c.course_term, " +
 					"       s.staff_id, s.staff_name " +
 					"FROM graduate g " +
@@ -315,6 +316,7 @@ public class CompanyDBAccess extends DBAccess {
 
 						graduate.setGraduateStudentNumber(rs.getString("graduate_student_number"));
 						graduate.setGraduateName(rs.getString("graduate_name"));
+						graduate.setGraduateEmail(rs.getString("graduate_email")); // ←ここを追加
 						graduate.setGraduateJobCategory(rs.getString("graduate_job_category"));
 
 						// コース
@@ -332,6 +334,7 @@ public class CompanyDBAccess extends DBAccess {
 						} else {
 							graduate.setStaff(null);
 						}
+
 						graduates.add(graduate);
 					}
 				}
