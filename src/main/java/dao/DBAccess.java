@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class DBAccess {
 	public Connection createConnection() throws Exception {
@@ -64,4 +65,9 @@ public class DBAccess {
 			ps.setObject(idx, value);
 		}
 	}
+	
+	public LocalDateTime toLocalDateTime(java.sql.Timestamp ts) {
+        return ts == null ? null : ts.toLocalDateTime();
+    }
+
 }

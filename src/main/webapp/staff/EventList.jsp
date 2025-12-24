@@ -25,7 +25,7 @@
 				<div class="title-en">Career Support</div>
 			</div>
 
-			<div class="header-user">ようこそ 24jy0119 さん</div>
+			<div class="header-user">ようこそ${name}さん</div>
 		</div>
 	</header>
 
@@ -53,7 +53,8 @@
 				<c:forEach var="dto" items="${requestScope.events}">
 					<c:if test="${dto.event.eventProgress == 'ONGOING'}">
 						<tr class="eventlist-tr">
-							<td>${dto.event.eventStartTime}</td>
+							<td>${dto.event.eventStartTime.year}/${dto.event.eventStartTime.monthValue}/${dto.event.eventStartTime.dayOfMonth}
+								${dto.event.eventStartTime.hour < 10 ? '0' : ''}${dto.event.eventStartTime.hour}:${dto.event.eventStartTime.minute < 10 ? '0' : ''}${dto.event.eventStartTime.minute}</td>
 							<td>${dto.event.company.companyName}</td>
 							<td><a
 								href="event?command=EventDetail&eventId=${dto.event.eventId}">
@@ -72,45 +73,48 @@
 				</c:forEach>
 			</table>
 
-					<!-- ================= 開催履歴 ================= -->
-					<div class="eventlist">
-						<div class="eventlist-title">開催履歴</div>
-					</div>
+			<!-- ================= 開催履歴 ================= -->
+			<div class="eventlist">
+				<div class="eventlist-title">開催履歴</div>
+			</div>
 
-					<table class="eventlist-table">
+			<table class="eventlist-table">
+				<tr class="eventlist-tr">
+					<th>開催日時</th>
+					<th>企業名</th>
+					<th></th>
+					<th>開催状況</th>
+					<th>参加人数</th>
+				</tr>
+
+				<c:forEach var="dto" items="${requestScope.events}">
+					<c:if
+						test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
 						<tr class="eventlist-tr">
-							<th>開催日時</th>
-							<th>企業名</th>
-							<th></th>
-							<th>開催状況</th>
-							<th>参加人数</th>
+							<td>${dto.event.eventStartTime.year}/${dto.event.eventStartTime.monthValue}/${dto.event.eventStartTime.dayOfMonth}
+								${dto.event.eventStartTime.hour < 10 ? '0' : ''}${dto.event.eventStartTime.hour}:${dto.event.eventStartTime.minute < 10 ? '0' : ''}${dto.event.eventStartTime.minute}
+							</td>
+
+							<td>${dto.event.company.companyName}</td>
+							<td><a
+								href="event?command=EventDetail&eventId=${dto.event.eventId}">
+									開催詳細 </a></td>
+
+							<c:choose>
+								<c:when test="${dto.event.eventProgress == 'CANCELED'}">
+									<td class="event-cancel">${dto.event.eventProgress.label}
+									</td>
+								</c:when>
+								<c:otherwise>
+									<td>${dto.event.eventProgress.label}</td>
+								</c:otherwise>
+							</c:choose>
+
+							<td>${dto.joinStudentCount}</td>
 						</tr>
-
-						<c:forEach var="dto" items="${requestScope.events}">
-							<c:if
-								test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
-								<tr class="eventlist-tr">
-									<td>${dto.event.eventStartTime}</td>
-									<td>${dto.event.company.companyName}</td>
-									<td><a
-										href="event?command=EventDetail&eventId=${dto.event.eventId}">
-											開催詳細 </a></td>
-
-									<c:choose>
-										<c:when test="${dto.event.eventProgress == 'CANCELED'}">
-											<td class="event-cancel">${dto.event.eventProgress.label}
-											</td>
-										</c:when>
-										<c:otherwise>
-											<td>${dto.event.eventProgress.label}</td>
-										</c:otherwise>
-									</c:choose>
-
-									<td>${dto.joinStudentCount}</td>
-								</tr>
-							</c:if>
-						</c:forEach>
-					</table>
+					</c:if>
+				</c:forEach>
+			</table>
 		</main>
 
 	</div>

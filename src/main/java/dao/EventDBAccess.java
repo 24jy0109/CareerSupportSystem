@@ -149,7 +149,7 @@ public class EventDBAccess extends DBAccess {
 						Types.TIMESTAMP);
 
 				setNullable(ps, 6, event.getEventCapacity(), Types.INTEGER);
-				setNullable(ps, 7, event.getEventProgress(), Types.INTEGER);
+				setNullable(ps, 7, event.getEventProgress().getCode(), Types.INTEGER);
 				setNullable(ps, 8, event.getEventOtherInfo(), Types.VARCHAR);
 
 				ps.setInt(9, event.getEventId());

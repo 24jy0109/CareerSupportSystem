@@ -23,7 +23,7 @@
 			<div class="title-en">Career Support</div>
 		</div>
 
-		<div class="header-user">ようこそ 24jy0119 さん</div>
+		<div class="header-user">ようこそ${name}さん</div>
 	</header>
 
 	<main>

@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import action.AnswerAction;
+import exception.ValidationException;
 import model.Answer;
 
 /**
@@ -57,11 +58,26 @@ public class AnswerController extends HttpServlet {
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
 		switch (command) {
 		case "AnswerForm":
-			nextPage = "graduate/Answer.jsp";
+			data = new String[2];
+			data[0] = "AnsweredCheck";
+			data[1] = request.getParameter("answerId");
+			// 回答済みかチェック
+			try {
+				answers = answerAction.execute(data);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			if(answers.getFirst().getEventAvailability() == null) {
+				nextPage = "graduate/Answer.jsp";
+			} else {
+				nextPage = "graduate/CompleteRegistAnswer.jsp";
+			}
 			break;
 		case "registAnswer":
 			nextPage = "graduate/CompleteRegistAnswer.jsp";
 			data = new String[9];
+
 			data[0] = command;
 			data[1] = request.getParameter("answerId");
 			data[2] = request.getParameter("eventAvailability");
@@ -77,9 +93,12 @@ public class AnswerController extends HttpServlet {
 			
 			try {
 				answers = answerAction.execute(data);
-			} catch (Exception e) {
+			} catch (ValidationException e) {
 				nextPage = "graduate/Answer.jsp";
+				request.setAttribute("answer", e.getAnswer());
 				request.setAttribute("error", e.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			break;
 		case "ScheduleAnswerCheck":
