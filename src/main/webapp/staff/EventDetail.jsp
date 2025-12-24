@@ -10,8 +10,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/companylist.css">
 <title>開催詳細(職員)</title>
 
 <!--<style>-->
@@ -92,53 +92,65 @@
 
 					<div class="detail-row">
 						<div class="field-name">参加卒業生</div>
+						<div>
+							<table class="eventdetail-table">
+								<c:choose>
+									<c:when test="${empty event.graduates}">
+										<tr>
+											<td><div class="errormsg">参加卒業生はいません。</div></td>
+										</tr>
+									</c:when>
+									<c:otherwise>
+										<!--									<div class="detail-data">-->
+										<c:forEach var="g" items="${event.graduates}">
+											<tr>
+												<td><c:if test="${not empty g.graduateStudentNumber}">
+														<c:set var="enterYear2"
+															value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
+														<c:set var="graduateYear"
+															value="${enterYear2 + g.course.courseTerm}" />
+														${graduateYear}年卒
+												</c:if></td>
 
-						<c:choose>
-							<c:when test="${empty event.graduates}">
-								<div class="errormsg">参加卒業生はいません。</div>
-							</c:when>
-							<c:otherwise>
-								<div class="detail-data">
-									<c:forEach var="g" items="${event.graduates}">
-										<c:if test="${not empty g.graduateStudentNumber}">
-											<c:set var="enterYear2"
-												value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
-											<c:set var="graduateYear"
-												value="${enterYear2 + g.course.courseTerm}" />
-							        		${graduateYear}年卒
-							    		</c:if>
-								</div>
-								<div class="detail-data">${g.graduateName}</div>
-								<div class="detail-data">${g.course.courseName}</div>
-								<div class="detail-data">${g.graduateJobCategory}</div>
 
-								</c:forEach>
+												<!--									</div>-->
+												<td><div class="detail-data">${g.graduateName}</div></td>
+												<td><div class="detail-data">${g.course.courseName}</div></td>
+												<td>
+													<div class="detail-data">${g.graduateJobCategory}</div>
+												</td>
+											</tr>
+
+										</c:forEach>
+									</c:otherwise>
+								</c:choose>
+							</table>
+						</div>
 					</div>
-				</c:otherwise>
-			</c:choose>
-		</div>
 
-		<div class="detail-row">
-			<div class="field-name">定員</div>
-			<div class="detail-data">${event.event.eventCapacity}名</div>
 
-			<div class="field-name">参加</div>
-			<div class="detail-data">${event.joinStudentCount}名</div>
 
-			<!--						<div class="field-name">不参加</div>-->
-			<!--						<div class="detail-data">19人</div>-->
+					<div class="detail-row">
+						<div class="field-name">定員</div>
+						<div class="detail-data">${event.event.eventCapacity}名</div>
 
-			<div class="detail-data">
-				<a
-					href="join_student?command=JoinStudentList&eventId=${event.event.eventId}">在校生参加者確認</a>
-			</div>
-		</div>
-		<div class="detail-row">
-			<div class="field-name">その他</div>
-			<div class="detail-data">
-				<td>${g.otherInfo}
-			</div>
-		</div>
+						<div class="field-name">参加</div>
+						<div class="detail-data">${event.joinStudentCount}名</div>
+
+						<!--						<div class="field-name">不参加</div>-->
+						<!--						<div class="detail-data">19人</div>-->
+
+						<div class="detail-data">
+							<a
+								href="join_student?command=JoinStudentList&eventId=${event.event.eventId}">在校生参加者確認</a>
+						</div>
+					</div>
+					<div class="detail-row">
+						<div class="field-name">その他</div>
+						<div class="detail-data">
+							<td>${g.otherInfo}
+						</div>
+					</div>
 		</div>
 
 		<div class="bottom-btn-right">
@@ -147,7 +159,7 @@
 					onclick="location.href='event?command=EventEnd&eventId=${event.event.eventId}'">開催終了</button>
 				<button type="button"
 					onclick="location.href='event?command=EventCancel&eventId=${event.event.eventId}'"
-					class="yellow-btn">開催中止</button>
+					class="white-btn">開催中止</button>
 			</div>
 		</div>
 		</c:otherwise>

@@ -60,48 +60,63 @@
 
 		<!--		<h2>日程調整メール作成</h2>-->
 
+		<div class="schedulearrange-row">
+			<div class="field-name">担当者</div>
+			<select name="staffId">
+				<%
+				for (Staff s : staffs) {
+				%>
+				<option value="<%=s.getStaffId()%>">
+					<%=s.getStaffName()%>
+				</option>
+				<%
+				}
+				%>
+			</select>
+		</div>
+
 		<form action="event" method="post">
 
 			<input type="hidden" name="command" value="SendScheduleArrangeEmail">
 			<div class="schedulearrange-row">
 				<div class="field-name">宛先</div>
 				<div>
-                <div class="toname-toemail">
-                    <div>川原田こうき</div>
-                    <div>24jy0000@gmail.com</div>
-                </div>
-            </div>
-				<p>
-					<%=grad.getGraduateName()%>
-					（学籍番号：<%=grad.getGraduateStudentNumber()%>）
-				</p>
-				<input type="hidden" name="graduateStudentNumber"
-					value="<%=grad.getGraduateStudentNumber()%>"> <input
-					type="hidden" name="companyId"
-					value="<%=grad.getCompany().getCompanyId()%>"> <br>
+					<div class="toname-toemail">
+						<%=grad.getGraduateName()%>
+						<%=grad.getGraduateStudentNumber()%>
+					</div>
+					<input type="hidden" name="graduateStudentNumber"
+						value="<%=grad.getGraduateStudentNumber()%>"> <input
+						type="hidden" name="companyId"
+						value="<%=grad.getCompany().getCompanyId()%>">
+				</div>
+			</div>
 
-				<!-- 担当スタッフ -->
-				<label>担当スタッフ</label><br> <select name="staffId">
-					<%
-					for (Staff s : staffs) {
-					%>
-					<option value="<%=s.getStaffId()%>">
-						<%=s.getStaffName()%>
-					</option>
-					<%
-					}
-					%>
-				</select> <br> <br>
 
-				<!-- 件名（デフォルト値入り） -->
-				<label>件名</label><br> <input type="text" name="mailTitle"
-					size="60" value="<%=defaultTitle%>" required> <br> <br>
+			<!-- 担当スタッフ -->
 
-				<!-- 本文（デフォルト値入り） -->
-				<label>本文</label><br>
-				<textarea name="mailBody" rows="14" cols="60" required><%=defaultBody%></textarea>
 
-				<br> <br> <input type="submit" value="メールを送信する">
+
+			<div class="schedulearrange-row">
+				<div class="field-name">件名</div>
+				<input type="text" name="mailTitle" size="60"
+					value="<%=defaultTitle%>" class="email-title" required>
+			</div>
+
+
+
+			<div class="schedulearrange-row">
+				<div class="field-name">本文</div>
+				<textarea name="mailBody" class="email-text" rows="30" cols="100"
+					required><%=defaultBody%></textarea>
+			</div>
+
+
+
+			<div class="bottom-btn-right schedulearrange-button">
+				<input type="submit" value="日程確認送信" class="schedulearrange-button">
+
+			</div>
 		</form>
 
 	</main>

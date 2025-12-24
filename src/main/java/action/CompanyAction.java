@@ -50,5 +50,4 @@ public class CompanyAction {
 		}
 		return companies;
 	}
-
 }
