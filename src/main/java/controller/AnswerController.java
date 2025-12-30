@@ -95,7 +95,7 @@ public class AnswerController extends HttpServlet {
 				answers = answerAction.execute(data);
 			} catch (ValidationException e) {
 				nextPage = "graduate/Answer.jsp";
-				request.setAttribute("answer", e.getAnswer());
+				request.setAttribute("inputAnswer", e.getAnswer());
 				request.setAttribute("error", e.getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -1,6 +1,5 @@
 package action;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ import model.Graduate;
 import model.Staff;
 import validator.AnswerTimeValidator;
 
-public class AnswerAction {
+public class AnswerAction extends BaseAction {
 	public List<Answer> execute(String[] data) throws ValidationException, Exception {
 		// data[0] アクション
 		String action = data[0];
@@ -158,12 +157,4 @@ public class AnswerAction {
 		}
 		return answers;
 	}
-
-	private LocalDateTime parseDateTimeOrNull(String value) {
-		if (value == null || value.isBlank()) {
-			return null;
-		}
-		return LocalDateTime.parse(value);
-	}
-
 }

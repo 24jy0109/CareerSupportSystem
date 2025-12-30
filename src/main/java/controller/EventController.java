@@ -18,6 +18,7 @@ import action.EventAction;
 import action.GraduateAction;
 import dto.EmailDTO;
 import dto.EventDTO;
+import exception.ValidationException;
 import model.Answer;
 
 @WebServlet("/event")
@@ -102,6 +103,15 @@ public class EventController extends HttpServlet {
 				data[11] = request.getParameter("answerId");
 				try {
 					events = eventAction.execute(data);
+				} catch (ValidationException e) {
+					request.setAttribute("error", e.getMessage());
+					request.setAttribute("inputEvent", e.getEvent());
+					try {
+						events = eventAction.execute(new String[] { "RegistEventForm", "", data[2] });
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					nextPage = "staff/RegistEventInfo.jsp";
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

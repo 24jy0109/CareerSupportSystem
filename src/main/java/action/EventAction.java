@@ -13,6 +13,7 @@ import dao.RequestDBAccess;
 import dao.StaffDBAcess;
 import dto.CompanyDTO;
 import dto.EventDTO;
+import exception.ValidationException;
 import model.Answer;
 import model.Company;
 import model.Email;
@@ -21,9 +22,10 @@ import model.EventProgress;
 import model.Graduate;
 import model.Staff;
 import model.Student;
+import validator.EventValidator;
 
-public class EventAction {
-	public List<EventDTO> execute(String[] data) throws Exception {
+public class EventAction extends BaseAction {
+	public List<EventDTO> execute(String[] data) throws ValidationException, Exception {
 		// data[0] = アクション名 ("RegistEvent")
 		// data[1] = 学籍番号
 		// data[2] = companyId || companyName
@@ -79,24 +81,34 @@ public class EventAction {
 			list.add(eventDTO);
 			break;
 		case "RegistEventConfirm":
+			// Event の基本情報をセット
+			event.setEventPlace(data[4]);
+			event.setEventStartTime(parseDateTimeOrNull(data[5]));
+			event.setEventEndTime(parseDateTimeOrNull(data[6]));
+
+			Integer capacity = parseIntOrNull(data[7]);
+			event.setEventCapacity(capacity != null ? capacity : 0);
+
+			event.setEventOtherInfo(data[8]);
+
+			// 基本情報が揃った時点で validation
+			EventValidator.validate(event);
+
+			// Company / Staff（ID 系は validation 対象外）
 			company = companyDBA.SearchCompanById(Integer.parseInt(data[2])).getCompany();
 			event.setCompany(company);
 
 			staff = staffDBA.searchStaffById(Integer.parseInt(data[3]));
 			event.setStaff(staff);
 
-			// Event の基本情報をセット
-			event.setEventPlace(data[4]);
-			event.setEventStartTime(LocalDateTime.parse(data[5]));
-			event.setEventEndTime(LocalDateTime.parse(data[6]));
-			event.setEventCapacity(Integer.parseInt(data[7]));
-			event.setEventOtherInfo(data[8]);
-
 			// 参加させる卒業生をセット
-			if (!data[9].isEmpty()) {
-				graduates = graduateDBA.searchGraduatesByGraduateStudentNumbers(data[9].split(","));
+			if (data[9] != null && !data[9].isBlank()) {
+				graduates = graduateDBA.searchGraduatesByGraduateStudentNumbers(
+					data[9].split(",")
+				);
+				event.setJoinGraduates(graduates);
 			}
-			event.setJoinGraduates(graduates);
+
 			eventDTO.setEvent(event);
 			list.add(eventDTO);
 			break;
