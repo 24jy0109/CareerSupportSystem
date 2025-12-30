@@ -12,61 +12,59 @@
 
 <body>
 
-	<header>
-		<h2>日程調整メール（確認）</h2>
-	</header>
+<header>
+    <h2>日程調整メール（確認）</h2>
+</header>
 
-	<main>
+<main>
 
-		<c:set var="mail" value="${email}" />
+    <c:set var="mail" value="${email}" />
 
-		<form action="event" method="post">
-			<input type="hidden" name="command" value="SendScheduleArrangeEmail">
+    <form id="emailForm" action="event" method="post">
+        <!-- デフォルト command -->
+        <input type="hidden" id="commandField" name="command" value="SendScheduleArrangeEmail">
 
-			<!-- 再送信用 hidden（入力値そのもの） -->
-			<input type="hidden" name="graduateStudentNumber"
-				value="${mail.graduate.graduateStudentNumber}"> <input
-				type="hidden" name="staffId" value="${mail.staff.staffId}">
-			<input type="hidden" name="companyId"
-				value="${mail.company.companyId}"> <input type="hidden"
-				name="mailTitle" value="${mail.email.subject}"> <input
-				type="hidden" name="mailBody" value="${mail.inputBody}">
+        <!-- 再送用 hidden -->
+        <input type="hidden" name="graduateStudentNumber" value="${mail.graduate.graduateStudentNumber}">
+        <input type="hidden" name="staffId" value="${mail.staff.staffId}">
+        <input type="hidden" name="companyId" value="${mail.company.companyId}">
+        <input type="hidden" name="mailTitle" value="${mail.email.subject}">
+        <input type="hidden" name="mailBody" value="${mail.inputBody}">
 
-			<table class="confirm-table">
-
-				<tr>
-					<th>担当者</th>
-					<td>${mail.staff.staffName}</td>
-				</tr>
-
-				<tr>
-					<th>宛先</th>
-					<td>${mail.graduate.graduateName}
-						（${mail.graduate.graduateStudentNumber}）</td>
-				</tr>
-
-				<tr>
-					<th>件名</th>
-					<td>${mail.email.subject}</td>
-				</tr>
-
-				<tr>
-					<th>本文</th>
-					<td><pre class="confirm-mail-body">
+        <table class="confirm-table">
+            <tr>
+                <th>担当者</th>
+                <td>${mail.staff.staffName}</td>
+            </tr>
+            <tr>
+                <th>宛先</th>
+                <td>${mail.graduate.graduateName}（${mail.graduate.graduateStudentNumber}）</td>
+            </tr>
+            <tr>
+                <th>件名</th>
+                <td>${mail.email.subject}</td>
+            </tr>
+            <tr>
+                <th>本文</th>
+                <td>
+                    <pre class="confirm-mail-body">
 <c:out value="${mail.email.body}" />
-				</pre></td>
-				</tr>
+                    </pre>
+                </td>
+            </tr>
+        </table>
 
-			</table>
+        <div class="bottom-btn-split">
+            <!-- 戻るボタンで command を切り替え -->
+            <button type="submit" onclick="document.getElementById('commandField').value='ScheduleArrangeEmailBack'">
+                戻る
+            </button>
+            <button type="submit">送信</button>
+        </div>
 
-			<div class="bottom-btn-split">
-				<button type="button" onclick="history.back()">戻る</button>
-				<button type="submit">送信</button>
-			</div>
+    </form>
 
-		</form>
-
-	</main>
+</main>
 
 </body>
 </html>

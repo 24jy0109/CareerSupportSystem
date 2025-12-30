@@ -203,6 +203,30 @@ public class EventController extends HttpServlet {
 				}
 				request.setAttribute("email", emails.getFirst());
 				break;
+			case "ScheduleArrangeEmailBack":
+				nextPage = "staff/ScheduleArrangeSend.jsp";
+				data = new String[7];
+				data[0] = command;
+				data[1] = "";
+				data[2] = (String) request.getParameter("graduateStudentNumber");
+				data[3] = (String) request.getParameter("staffId");
+				data[4] = (String) request.getParameter("mailTitle");
+				data[5] = (String) request.getParameter("mailBody");
+				data[6] = (String) request.getParameter("companyId");
+				
+				try {
+					emails = emailAction.execute(data);
+					request.setAttribute("email", emails.getFirst());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				try {
+					events = eventAction.execute(new String[] { "ScheduleArrangeSendForm", "", data[2] });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			case "SendScheduleArrangeEmail":
 				data = new String[7];
 				data[0] = command;
