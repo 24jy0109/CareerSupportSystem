@@ -82,17 +82,15 @@ public class EventAction extends BaseAction {
 			break;
 		case "RegistEventConfirm":
 			// Event の基本情報をセット
+			if (data[10] != null && !data[10].isEmpty()) {
+			    event.setEventId(Integer.parseInt(data[10]));
+			}
 			event.setEventPlace(data[4]);
 			event.setEventStartTime(parseDateTimeOrNull(data[5]));
 			event.setEventEndTime(parseDateTimeOrNull(data[6]));
-
 			Integer capacity = parseIntOrNull(data[7]);
 			event.setEventCapacity(capacity != null ? capacity : 0);
-
 			event.setEventOtherInfo(data[8]);
-
-			// 基本情報が揃った時点で validation
-			EventValidator.validate(event);
 
 			// Company / Staff（ID 系は validation 対象外）
 			company = companyDBA.SearchCompanById(Integer.parseInt(data[2])).getCompany();
@@ -108,7 +106,37 @@ public class EventAction extends BaseAction {
 				);
 				event.setJoinGraduates(graduates);
 			}
+			
+			// 基本情報が揃った時点で validation
+			EventValidator.validate(event);
 
+			eventDTO.setEvent(event);
+			list.add(eventDTO);
+			break;
+		case "RegistEventBack":
+			// Event の基本情報をセット
+			if (data[10] != null && !data[10].isEmpty()) {
+			    event.setEventId(Integer.parseInt(data[10]));
+			}
+			event.setEventPlace(data[4]);
+			event.setEventStartTime(parseDateTimeOrNull(data[5]));
+			event.setEventEndTime(parseDateTimeOrNull(data[6]));
+			event.setEventCapacity(Integer.parseInt(data[7]));
+			event.setEventOtherInfo(data[8]);
+
+			company = companyDBA.SearchCompanById(Integer.parseInt(data[2])).getCompany();
+			event.setCompany(company);
+
+			staff = staffDBA.searchStaffById(Integer.parseInt(data[3]));
+			event.setStaff(staff);
+
+			// 参加させる卒業生をセット
+			if (data[9] != null && !data[9].isBlank()) {
+				graduates = graduateDBA.searchGraduatesByGraduateStudentNumbers(
+					data[9].split(",")
+				);
+				event.setJoinGraduates(graduates);
+			}
 			eventDTO.setEvent(event);
 			list.add(eventDTO);
 			break;
@@ -147,7 +175,7 @@ public class EventAction extends BaseAction {
 				try {
 					event.setEventId(Integer.parseInt(data[10]));
 					eventDBA.updateEvent(event);
-					answerDBA.deleteAnswer(Integer.parseInt(data[11]));
+					answerDBA.deleteAnswerByEventId(Integer.parseInt(data[10]));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

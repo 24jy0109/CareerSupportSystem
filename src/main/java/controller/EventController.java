@@ -103,6 +103,7 @@ public class EventController extends HttpServlet {
 				data[11] = request.getParameter("answerId");
 				try {
 					events = eventAction.execute(data);
+					request.setAttribute("event", events.getFirst());
 				} catch (ValidationException e) {
 					request.setAttribute("error", e.getMessage());
 					request.setAttribute("inputEvent", e.getEvent());
@@ -115,7 +116,38 @@ public class EventController extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				request.setAttribute("event", events.getFirst());
+				break;
+			case "RegistEventBack":
+				nextPage = "staff/RegistEventInfo.jsp";
+				// 配列を作成（必要な項目分のサイズを確保）
+				data = new String[11];
+				data[0] = command;
+				data[1] = "";
+				data[2] = request.getParameter("companyId");
+				data[3] = request.getParameter("staffId");
+				data[4] = request.getParameter("eventPlace");
+				data[5] = request.getParameter("eventStartTime");
+				data[6] = request.getParameter("eventEndTime");
+				data[7] = request.getParameter("eventCapacity");
+				data[8] = request.getParameter("eventOtherInfo");
+
+				// チェックボックスで選択された参加卒業生
+				selectedGraduates = request.getParameterValues("graduateStudents");
+				data[9] = (selectedGraduates != null) ? String.join(",", selectedGraduates) : "";
+
+				data[10] = request.getParameter("eventId");
+				try {
+					events = eventAction.execute(data);
+					request.setAttribute("inputEvent", events.getFirst().getEvent());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				try {
+					events = eventAction.execute(new String[] { "RegistEventForm", "", data[2] });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				break;
 			case "RegistEvent":
 				// 配列を作成（必要な項目分のサイズを確保）
@@ -136,7 +168,6 @@ public class EventController extends HttpServlet {
 				data[9] = (selectedGraduates != null) ? String.join(",", selectedGraduates) : "";
 
 				data[10] = request.getParameter("eventId");
-				data[11] = request.getParameter("answerId");
 				try {
 					events = eventAction.execute(data);
 				} catch (Exception e) {
@@ -220,15 +251,14 @@ public class EventController extends HttpServlet {
 				data[0] = command;
 				data[1] = request.getParameter("answerId");
 				data[2] = request.getParameter("choice");
-
+				
 				try {
 					answers = new AnswerAction().execute(data);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				Answer answer = answers.getFirst();
-				request.setAttribute("answer", answer);
-
+				request.setAttribute("inputEvent", answer.toInputEvent());
 				companyId = String.valueOf(answer.getGraduate().getCompany().getCompanyId());
 				try {
 					events = eventAction.execute(new String[] { "RegistEventForm", "", companyId });

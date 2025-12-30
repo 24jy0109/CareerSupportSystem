@@ -40,7 +40,7 @@
 				<th class="schedule-check-h"></th>
 			</tr>
 			<c:forEach var="a" items="${answers}">
-				<form action="event" method="post">
+				<form action="event" method="get">
 					<tr class="schedule-check-r2">
 						<td>${a.event.company.companyName}</td>
 						<td>${a.graduate.graduateName}</td>
@@ -66,9 +66,7 @@
 					</label></td>
 					<td><input type="hidden" name="command" value="yesAnswer">
 						<input type="hidden" name="answerId" value="${a.answerId}">
-						<input type="submit" value="決定" class="decision-button"> <input
-						type="hidden" name="command" value="noAnswer"> <input
-						type="hidden" name="answerId" value="${a.answerId}">
+						<input type="submit" value="決定" class="decision-button">
 						<button type="button" class="cancel-button"
 							onclick="location.href='answer?command=noAnswer&answerId=${a.answerId}'">
 							拒否</button></td>

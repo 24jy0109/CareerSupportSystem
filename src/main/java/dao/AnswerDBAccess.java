@@ -387,4 +387,16 @@ public class AnswerDBAccess extends DBAccess {
 			e.printStackTrace();
 		}
 	}
+	
+	public void deleteAnswerByEventId(int eventId) throws Exception {
+	    String sql = "DELETE FROM answer WHERE event_id = ?";
+
+	    try (
+	        Connection con = createConnection();
+	        PreparedStatement ps = con.prepareStatement(sql)
+	    ) {
+	        ps.setInt(1, eventId);
+	        ps.executeUpdate();
+	    }
+	}
 }

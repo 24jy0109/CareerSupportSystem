@@ -1,6 +1,8 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Answer {
 
@@ -99,5 +101,41 @@ public class Answer {
 
     public void setThirdChoiceEndTime(LocalDateTime thirdChoiceEndTime) {
         this.thirdChoiceEndTime = thirdChoiceEndTime;
+    }
+    
+    public Event toInputEvent() {
+        Event inputEvent = new Event();
+
+        if (this.event != null) {
+            // Event ID は Answer の Event から
+            inputEvent.setEventId(event.getEventId());
+
+            // 日時は希望順でセット
+            if (firstChoiceStartTime != null) {
+                inputEvent.setEventStartTime(firstChoiceStartTime);
+                inputEvent.setEventEndTime(firstChoiceEndTime);
+            } else if (secondChoiceStartTime != null) {
+                inputEvent.setEventStartTime(secondChoiceStartTime);
+                inputEvent.setEventEndTime(secondChoiceEndTime);
+            } else if (thirdChoiceStartTime != null) {
+                inputEvent.setEventStartTime(thirdChoiceStartTime);
+                inputEvent.setEventEndTime(thirdChoiceEndTime);
+            }
+
+            // その他 Event 情報
+            inputEvent.setEventPlace(event.getEventPlace());
+            inputEvent.setEventCapacity(event.getEventCapacity());
+            inputEvent.setEventProgress(event.getEventProgress());
+            inputEvent.setStaff(event.getStaff());
+        }
+
+        // joinGraduates リストを作って Answer の Graduate を追加
+        List<Graduate> joinGraduates = new ArrayList<>();
+        if (graduate != null) {
+            joinGraduates.add(graduate);
+        }
+        inputEvent.setJoinGraduates(joinGraduates);
+
+        return inputEvent;
     }
 }
