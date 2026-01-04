@@ -255,9 +255,26 @@ public class GraduateDBAccess extends DBAccess {
 		}
 	}
 
-	public void deleteGraduate(int graduateId) {
+	public void deleteGraduate(String graduateStudentNumber) throws Exception {
+	    Connection con = null;
+	    PreparedStatement ps = null;
 
+	    try {
+	        con = createConnection();
+
+	        String sql = "DELETE FROM graduate WHERE graduate_student_number = ?";
+
+	        ps = con.prepareStatement(sql);
+	        ps.setString(1, graduateStudentNumber);
+
+	        ps.executeUpdate();
+
+	    } finally {
+	        if (ps != null) ps.close();
+	        if (con != null) con.close();
+	    }
 	}
+
 
 	public void searchGraduate(int graduate) {
 

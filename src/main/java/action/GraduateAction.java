@@ -176,6 +176,14 @@ public class GraduateAction {
 			gdb = new GraduateDBAccess();
 			gdb.updateGraduate(graduate); // ← insertじゃなくupdateを呼ぶ
 			break;
+			
+		case"deleteGraduate":
+			graduateStudentNumber = data[1];
+			
+
+			GraduateDBA.deleteGraduate(graduateStudentNumber);
+
+			break;
 
 		case "findCompanyName":
 			companyId = Integer.parseInt(data[1]);

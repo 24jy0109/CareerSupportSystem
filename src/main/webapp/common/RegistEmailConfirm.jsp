@@ -59,6 +59,7 @@
 	</header>
 	<main>
 		<form action="graduate" method="post">
+		<input type="hidden" name="updateMode" value="${updateMode}">
 
 			<div class="split-screen">
 				<div class="left-screen">

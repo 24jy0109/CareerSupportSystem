@@ -39,6 +39,7 @@
 
 		<form action="graduate" method="post">
 			<input type="hidden" name="fromConfirm" value="${fromConfirm}">
+			<input type="hidden" name="updateMode" value="${updateMode}">
 
 			<input type="hidden" name="command" value="RegistEmailNext">
 			<div class="split-screen">

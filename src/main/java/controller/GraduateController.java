@@ -108,6 +108,13 @@ public class GraduateController extends HttpServlet {
 				// パラメータ取得
 				graduateStudentNumber = request.getParameter("graduateStudentNumber");
 				String fromConfirm = request.getParameter("fromConfirm");
+				String updateMode = request.getParameter("updateMode");
+				if (updateMode == null) {
+				    updateMode = "false";
+				}
+				request.setAttribute("updateMode", updateMode);
+
+
 				if (fromConfirm == null)
 					fromConfirm = "false";
 
@@ -177,6 +184,22 @@ public class GraduateController extends HttpServlet {
 					// 新規の場合は空のまま
 					nextPage = "/common/RegistEmail.jsp";
 				}
+				
+				// 企業一覧読み込み
+				try {
+					companies = companyAction.execute(new String[] { "CompanyList", "", "" });
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("companies", companies);
+
+				// 学科一覧読み込み
+				try {
+					courses = new CourseDBAccess().getAllCourses();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				request.setAttribute("courses", courses);
 
 				// ③ JSPに値を渡す
 				request.setAttribute("companyId", companyId);
@@ -226,21 +249,38 @@ public class GraduateController extends HttpServlet {
 				}
 
 				//学籍番号が既にあるかチェック！
-				List<Graduate> exists = null;
-				try {
-					exists = graduateAction.execute(
-							new String[] { "findGraduateStudentNumber", graduateStudentNumber });
-				} catch (Exception e) {
-					e.printStackTrace();
+				updateMode = request.getParameter("updateMode");
+				if (updateMode == null) {
+				    updateMode = "false";
 				}
 
-				if (exists != null && !exists.isEmpty()) {
-					request.setAttribute("error",
-							"この学籍番号はすでに登録されています");
-					nextPage = "/common/RegistEmail.jsp";
+				if (!"true".equals(updateMode)) {
+				    // 新規登録のときだけ重複チェック
+				    List<Graduate> exists = null;
+				    try {
+				        exists = graduateAction.execute(
+				            new String[] { "findGraduateStudentNumber", graduateStudentNumber }
+				        );
+				    } catch (Exception e) {
+				        e.printStackTrace();
+				    }
+
+				    if (exists != null && !exists.isEmpty()) {
+				        request.setAttribute("error",
+				                "この学籍番号はすでに登録されています");
+				        nextPage = "/common/RegistEmail.jsp";
+				    } else {
+				        nextPage = "/common/RegistEmailConfirm.jsp";
+				    }
+
 				} else {
-					nextPage = "/common/RegistEmailConfirm.jsp";
+				    // 更新モードなら無条件で確認画面へ
+				    nextPage = "/common/RegistEmailConfirm.jsp";
 				}
+
+				// モードは必ず引き回す
+				request.setAttribute("updateMode", updateMode);
+
 
 				// JSPへ渡す値
 				request.setAttribute("companyId", companyId); // 登録処理用
@@ -263,7 +303,7 @@ public class GraduateController extends HttpServlet {
 				nextPage = "common/CompleteRegistEmail.jsp";
 				//				配列に挿入！
 				String[] registEmailInfo = new String[10];
-				registEmailInfo[0] = "RegisterGraduate";
+//				registEmailInfo[0] = "RegisterGraduate";
 				registEmailInfo[1] = request.getParameter("companyId");
 				registEmailInfo[2] = request.getParameter("companyName");
 				registEmailInfo[3] = request.getParameter("jobType");
@@ -274,6 +314,14 @@ public class GraduateController extends HttpServlet {
 				registEmailInfo[8] = request.getParameter("graduateEmail");
 				registEmailInfo[9] = request.getParameter("otherInfo");
 
+				updateMode = request.getParameter("updateMode");
+				
+				if ("true".equals(updateMode)) {
+					registEmailInfo[0] = "UpdateGraduate";
+				} else {
+					registEmailInfo[0] = "RegisterGraduate";
+				}
+				
 				try {
 					graduateAction.execute(registEmailInfo);
 				} catch (Exception e) {
@@ -304,6 +352,33 @@ public class GraduateController extends HttpServlet {
 					e.printStackTrace();
 				}
 
+				break;
+			case "deleteGraduate":
+				graduateStudentNumber = request.getParameter("graduateStudentNumber");
+				companyId = request.getParameter("companyId");
+				
+				System.out.println("DEBUG delete studentNumber = " + studentNumber);
+				
+				try {
+					graduateAction.execute(
+						new String[] { "deleteGraduate", graduateStudentNumber }
+					);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				try {
+					List<Graduate> list = graduateAction.execute(
+							new String[] { "graduateSearchBycompanyId", companyId });
+
+					if (list != null && !list.isEmpty()) {
+						request.setAttribute("companyDTO", list.get(0));
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				nextPage = "staff/EditInfo.jsp";
 				break;
 
 			}

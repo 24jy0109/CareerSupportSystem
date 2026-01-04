@@ -70,10 +70,11 @@
 									<td>${graduate.graduateJobCategory}</td>
 									<td>${graduate.graduateEmail}</td>
 									<td><a
-										href="graduate?command=RegistEmail&graduateStudentNumber=${graduate.graduateStudentNumber}">編集</a>
+										href="graduate?command=RegistEmail&graduateStudentNumber=${graduate.graduateStudentNumber}&updateMode=true">編集</a>
 										<a
-										href="graduate?command=deleteGraduate&studentNumber=${graduate.graduateStudentNumber}"
+										href="graduate?command=deleteGraduate&graduateStudentNumber=${graduate.graduateStudentNumber}&companyId=${companyDTO.company.companyId}"
 										onclick="return confirm('本当に削除しますか？');">削除</a></td>
+										
 								</tr>
 							</c:forEach>
 						</table>
