@@ -73,6 +73,7 @@
 
 								</select></td>
 							</tr>
+							
 							<tr>
 								<td>
 									<div>職種</div>
@@ -216,6 +217,8 @@
 	</footer>
 	<!--処理-->
 	<script>
+
+	
 		document.getElementById("jobType").addEventListener("change",
 				function() {
 					const selected = this.value;
