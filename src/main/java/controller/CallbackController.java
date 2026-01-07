@@ -15,7 +15,7 @@ import action.LoginAction;
 @WebServlet("/callback")
 public class CallbackController extends HttpServlet {
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse resppnse)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// リクエスト情報に対する文字コードの設定する
 		request.setCharacterEncoding("UTF-8");
@@ -25,7 +25,7 @@ public class CallbackController extends HttpServlet {
 		if (code == null || code.isEmpty()) {
 			System.out.println("認可コードが取得できません");
 			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
-			rd.forward(request, resppnse);
+			rd.forward(request, response);
 			return;
 		}
 
@@ -36,7 +36,7 @@ public class CallbackController extends HttpServlet {
 			if (user.length == 0) {
 				//　違うアカウントでログイン
 				RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
-				rd.forward(request, resppnse);
+				rd.forward(request, response);
 				return;
 			}
 
@@ -48,10 +48,10 @@ public class CallbackController extends HttpServlet {
 			session.setAttribute("email", user[2]);
 			session.setAttribute("role", user[3]);
 
-			resppnse.sendRedirect("mypage?command=Mypage");
+			response.sendRedirect("mypage?command=AppointmentMenu");
 		} catch (Exception e) {
 			e.printStackTrace();
-			resppnse.getWriter().println("Google認証エラー: " + e.getMessage());
+			response.getWriter().println("Google認証エラー: " + e.getMessage());
 		}
 
 
