@@ -21,7 +21,7 @@ public class AnswerAction extends BaseAction {
 
 		AnswerDBAccess answerDBA = new AnswerDBAccess();
 		Answer answer = new Answer();
-		
+
 		Staff staff = new Staff();
 		Graduate graduate = new Graduate();
 
@@ -36,7 +36,56 @@ public class AnswerAction extends BaseAction {
 			// data[1] answerId
 			answers.add(answerDBA.searchAnswerById(Integer.parseInt(data[1])));
 			break;
-		case "registAnswer":
+		case "AnswerConfirm":
+			// data[1] answerId
+			// data[2] eventAvailability
+			// data[3] firstChoiceStart
+			// data[4] firstChoiceEnd
+			// data[5] secondChoiceStart
+			// data[6] secondChoiceEnd
+			// data[7] thirdChoiceStart
+			// data[8] thirdChoiceEnd
+
+			answer.setAnswerId(Integer.parseInt(data[1]));
+			answer.setEventAvailability(Boolean.parseBoolean(data[2]));
+
+			answer.setFirstChoiceStartTime(parseDateTimeOrNull(data[3]));
+			answer.setFirstChoiceEndTime(parseDateTimeOrNull(data[4]));
+
+			answer.setSecondChoiceStartTime(parseDateTimeOrNull(data[5]));
+			answer.setSecondChoiceEndTime(parseDateTimeOrNull(data[6]));
+
+			answer.setThirdChoiceStartTime(parseDateTimeOrNull(data[7]));
+			answer.setThirdChoiceEndTime(parseDateTimeOrNull(data[8]));
+
+			AnswerTimeValidator.validate(answer);
+			answers.add(answer);
+			break;
+		case "AnswerBack":
+			// data[1] answerId
+			// data[2] eventAvailability
+			// data[3] firstChoiceStart
+			// data[4] firstChoiceEnd
+			// data[5] secondChoiceStart
+			// data[6] secondChoiceEnd
+			// data[7] thirdChoiceStart
+			// data[8] thirdChoiceEnd
+
+			answer.setAnswerId(Integer.parseInt(data[1]));
+			answer.setEventAvailability(Boolean.parseBoolean(data[2]));
+
+			answer.setFirstChoiceStartTime(parseDateTimeOrNull(data[3]));
+			answer.setFirstChoiceEndTime(parseDateTimeOrNull(data[4]));
+
+			answer.setSecondChoiceStartTime(parseDateTimeOrNull(data[5]));
+			answer.setSecondChoiceEndTime(parseDateTimeOrNull(data[6]));
+
+			answer.setThirdChoiceStartTime(parseDateTimeOrNull(data[7]));
+			answer.setThirdChoiceEndTime(parseDateTimeOrNull(data[8]));
+
+			answers.add(answer);
+			break;
+		case "RegistAnswer":
 			// data[1] answerId
 			// data[2] eventAvailability
 			// data[3] firstChoiceStart
@@ -73,47 +122,47 @@ public class AnswerAction extends BaseAction {
 
 			/* ===== 冒頭 ===== */
 			sb.append(graduate.getGraduateName())
-			  .append(" さんより、以下の開催について回答がありました。\n\n");
+					.append(" さんより、以下の開催について回答がありました。\n\n");
 
 			/* ===== 参加可否 ===== */
 			sb.append("■ 参加可否\n");
 			if (Boolean.TRUE.equals(answer.getEventAvailability())) {
-			    sb.append("  出席する\n\n");
+				sb.append("  出席する\n\n");
 			} else {
-			    sb.append("  出席しない\n\n");
+				sb.append("  出席しない\n\n");
 			}
 
 			/* ===== 希望日時（出席の場合のみ） ===== */
 			if (Boolean.TRUE.equals(answer.getEventAvailability())) {
-			    sb.append("■ 希望日時\n");
+				sb.append("■ 希望日時\n");
 
-			    if (answer.getFirstChoiceStartTime() != null) {
-			        sb.append("  【第1希望】\n");
-			        sb.append("    ")
-			          .append(answer.getFirstChoiceStartTime().format(fmt))
-			          .append(" ～ ")
-			          .append(answer.getFirstChoiceEndTime().format(fmt))
-			          .append("\n");
-			    }
+				if (answer.getFirstChoiceStartTime() != null) {
+					sb.append("  【第1希望】\n");
+					sb.append("    ")
+							.append(answer.getFirstChoiceStartTime().format(fmt))
+							.append(" ～ ")
+							.append(answer.getFirstChoiceEndTime().format(fmt))
+							.append("\n");
+				}
 
-			    if (answer.getSecondChoiceStartTime() != null) {
-			        sb.append("  【第2希望】\n");
-			        sb.append("    ")
-			          .append(answer.getSecondChoiceStartTime().format(fmt))
-			          .append(" ～ ")
-			          .append(answer.getSecondChoiceEndTime().format(fmt))
-			          .append("\n");
-			    }
+				if (answer.getSecondChoiceStartTime() != null) {
+					sb.append("  【第2希望】\n");
+					sb.append("    ")
+							.append(answer.getSecondChoiceStartTime().format(fmt))
+							.append(" ～ ")
+							.append(answer.getSecondChoiceEndTime().format(fmt))
+							.append("\n");
+				}
 
-			    if (answer.getThirdChoiceStartTime() != null) {
-			        sb.append("  【第3希望】\n");
-			        sb.append("    ")
-			          .append(answer.getThirdChoiceStartTime().format(fmt))
-			          .append(" ～ ")
-			          .append(answer.getThirdChoiceEndTime().format(fmt))
-			          .append("\n");
-			    }
-			    sb.append("\n");
+				if (answer.getThirdChoiceStartTime() != null) {
+					sb.append("  【第3希望】\n");
+					sb.append("    ")
+							.append(answer.getThirdChoiceStartTime().format(fmt))
+							.append(" ～ ")
+							.append(answer.getThirdChoiceEndTime().format(fmt))
+							.append("\n");
+				}
+				sb.append("\n");
 			}
 
 			/* ===== 卒業生情報 ===== */
@@ -126,7 +175,7 @@ public class AnswerAction extends BaseAction {
 			sb.append("※本メールは自動送信です。\n\n");
 
 			body = sb.toString();
-			
+
 			mail.setTo("24jy0109@jec.ac.jp");
 			mail.setSubject(title);
 			mail.setBody(body + "\n\n" + staff.getStaffEmail());
@@ -134,11 +183,10 @@ public class AnswerAction extends BaseAction {
 			result = mail.send();
 
 			if (!result) {
-			    System.out.println("送信失敗" + staff.getStaffEmail());
+				System.out.println("送信失敗" + staff.getStaffEmail());
 			} else {
-			    System.out.println("送信成功" + staff.getStaffEmail());
+				System.out.println("送信成功" + staff.getStaffEmail());
 			}
-
 
 			break;
 		case "ScheduleAnswerCheck":

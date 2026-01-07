@@ -59,7 +59,7 @@
 		<form action="answer" method="post">
 
 			<input type="hidden" name="answerId" value="<%=answerId%>">
-			<input type="hidden" name="command" value="registAnswer">
+			<input type="hidden" name="command" value="AnswerConfirm">
 
 			<!-- 参加可否 -->
 			<label>参加可否</label><br>
