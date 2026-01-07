@@ -82,17 +82,12 @@
 
 
 
-<!--					<div class="event">-->
-<!--						<div class="event-info">12月16日(水)17時～18時 172教室(本館７階)</div>-->
-<!--					</div>-->
 				</div>
 
-<!--				<p class="errormsg">申請者がいません</p>-->
 
 				<div class="bottom-btn-left">
 					<!-- 戻るボタン　左側 -->
-					<button type="button"
-						onclick="location.href='company?command=CompanyList'">企業一覧に戻る</button>
+					<button type="button" onclick="location.href='company?command=CompanyList'">企業一覧に戻る</button>
 				</div>
 
 			</main>

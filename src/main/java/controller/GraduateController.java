@@ -357,7 +357,7 @@ public class GraduateController extends HttpServlet {
 				graduateStudentNumber = request.getParameter("graduateStudentNumber");
 				companyId = request.getParameter("companyId");
 				
-				System.out.println("DEBUG delete studentNumber = " + studentNumber);
+				System.out.println("DEBUG delete studentNumber = " + graduateStudentNumber);
 				
 				try {
 					graduateAction.execute(
@@ -367,17 +367,7 @@ public class GraduateController extends HttpServlet {
 					e.printStackTrace();
 				}
 				
-				try {
-					List<Graduate> list = graduateAction.execute(
-							new String[] { "graduateSearchBycompanyId", companyId });
-
-					if (list != null && !list.isEmpty()) {
-						request.setAttribute("companyDTO", list.get(0));
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		
 				nextPage = "staff/EditInfo.jsp";
 				break;
 

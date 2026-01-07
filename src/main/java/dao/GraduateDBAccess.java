@@ -273,16 +273,15 @@ public class GraduateDBAccess extends DBAccess {
 		Connection con = null;
 		PreparedStatement ps = null;
 
+		System.out.println(
+				"DELETE対象=[" + graduateStudentNumber + "] length=" + graduateStudentNumber.length());
+
 		try {
 			con = createConnection();
-
 			String sql = "DELETE FROM graduate WHERE graduate_student_number = ?";
-
 			ps = con.prepareStatement(sql);
 			ps.setString(1, graduateStudentNumber);
-
 			ps.executeUpdate();
-
 		} finally {
 			if (ps != null)
 				ps.close();
