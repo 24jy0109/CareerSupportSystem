@@ -126,6 +126,7 @@ public class AnswerDBAccess extends DBAccess {
 				+ "JOIN graduate g ON a.graduate_student_number = g.graduate_student_number "
 				+ "JOIN event e ON a.event_id = e.event_id "
 				+ "JOIN company c ON e.company_id = c.company_id "
+				+ "WHERE a.event_availability IS NOT NULL "
 				+ "ORDER BY a.answer_id";
 
 		try (
@@ -185,6 +186,7 @@ public class AnswerDBAccess extends DBAccess {
 
 		return list;
 	}
+
 
 	public Answer searchAnswerById(int answerId) throws Exception {
 	    String sql =

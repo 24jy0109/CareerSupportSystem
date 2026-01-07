@@ -201,7 +201,50 @@ public class AnswerAction extends BaseAction {
 			break;
 		case "noAnswer":
 			// data[1] answerId
+			// アンサーから卒業生情報とスタッフ情報取得してメール
+			answer = answerDBA.searchAnswerById(Integer.parseInt(data[1]));
+			staff = answer.getEvent().getStaff();
+			graduate = answer.getGraduate();
+
+			// -----------------------------
+			// 卒業生宛て 拒否通知メール作成
+			// -----------------------------
+			sb.append(graduate.getGraduateName()).append(" 様\n\n");
+			sb.append("お世話になっております。\n");
+			sb.append("キャリアサポート担当です。\n\n");
+			sb.append("この度は、イベントへのご関心および\n");
+			sb.append("参加可否のご回答をいただき、誠にありがとうございました。\n\n");
+			sb.append("慎重に検討を行いました結果、\n");
+			sb.append("今回はやむを得ずご参加を見送らせていただくこととなりました。\n\n");
+			sb.append("ご期待に添えず誠に恐縮ではございますが、\n");
+			sb.append("何卒ご理解いただけますと幸いです。\n\n");
+			sb.append("今後のイベントにつきましては、\n");
+			sb.append("改めてご案内させていただく場合がございます。\n\n");
+			sb.append("引き続き、よろしくお願いいたします。\n\n");
+			sb.append("――――――――――――\n");
+			sb.append("キャリアサポート担当\n");
+			sb.append(staff.getStaffName()).append("\n");
+			sb.append(staff.getStaffEmail()).append("\n");
+
+			body = sb.toString();
+
+			mail.setTo("24jy0109@jec.ac.jp");
+			mail.setSubject("【イベント参加についてのご連絡】");
+			mail.setBody(body + "\n\n" + graduate.getGraduateEmail());
+
+			result = mail.send();
+
+			if (!result) {
+				System.out.println("送信失敗" + graduate.getGraduateEmail());
+			} else {
+				System.out.println("送信成功" + graduate.getGraduateEmail());
+			}
+
+			// -----------------------------
+			// Answer 削除
+			// -----------------------------
 			answerDBA.deleteAnswer(Integer.parseInt(data[1]));
+			break;
 		}
 		return answers;
 	}

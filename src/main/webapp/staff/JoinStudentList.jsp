@@ -55,7 +55,7 @@
 
 						<c:forEach var="js" items="${joinStudents}">
 							<tr>
-								<td class="joinlist-td">${js.student.studentNumber}</td>
+								<td class="joinlist-td">${js.student.studentName}</td>
 								<td class="joinlist-td">${js.student.course.courseName}</td>
 								<td class="joinlist-td">${js.student.studentNumber}</td>
 							</tr>
