@@ -13,25 +13,27 @@
 
 .search {
     display: flex;
+	align-items: center;
     gap: 15px;
 }
 
 .search-box {
     width: 250px;
-    height: 30px;
+    height: 40px;
     font-size: 15px;
-    padding: 5px 10px;
+    padding: 0px 10px;
     border: 2px solid #009A37;
+	box-sizing: border-box;
 }
 
 .search-button {
     width: 80px;
-    height: 30px;
+    height: 40px;
     font-size: 15px;
     color: white;
     background-color: #009A37;
     border: none;
-    padding: 0px 0px;
+	box-sizing: border-box;
 }
 
 /* 企業テーブル */
@@ -386,6 +388,13 @@
 	color: #009A37;
 	font-weight: 500;
 	border: 2px solid #009A37;
+	box-sizing: border-box;
+	height: 43px;
+}
+
+.btn-gap{
+/*    display: flex;*/
+    gap: 50px;
 }
 
 /*ーーー参加者一覧画面（職員）ーーー */
@@ -677,14 +686,14 @@
 /* 決定ボタン*/
 .schedule-check-h:nth-child(4),
 .schedule-check-table td:nth-child(4) {
-    width: 10%;
+    width: 15%;
 }
 
 /* 拒否ボタン*/
-.schedule-check-h:nth-child(5),
-.schedule-check-table td:nth-child(5) {
-    width: 10%;
-}
+/*.schedule-check-h:nth-child(5),*/
+/*.schedule-check-table td:nth-child(5) {*/
+/*    width: 10%;*/
+/*}*/
 
 .decision-button{
     font-size: 15px;
@@ -692,6 +701,7 @@
     background-color: #009A37;
     border: 2px solid #009A37;
     padding: 10px 20px;
+	margin-bottom: 10px;
 }
 
 .cancel-button{

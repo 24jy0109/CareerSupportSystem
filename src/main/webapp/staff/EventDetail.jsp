@@ -154,7 +154,7 @@
 		</div>
 
 		<div class="bottom-btn-right">
-			<div class="event-btn">
+			<div class="btn-gap">
 				<button type="button"
 					onclick="location.href='event?command=EventEnd&eventId=${event.event.eventId}'">開催終了</button>
 				<button type="button"
