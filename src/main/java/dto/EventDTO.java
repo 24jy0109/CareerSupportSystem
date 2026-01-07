@@ -13,7 +13,7 @@ public class EventDTO {
 	private List<Graduate> graduates;
 	private List<Student> students;
 	private int joinStudentCount;
-	private boolean joinAvailability;
+	private Boolean joinAvailability;
 
 	public EventDTO() {
 	}
@@ -64,11 +64,11 @@ public class EventDTO {
 		this.joinStudentCount = joinStudentCount;
 	}
 	
-	public boolean isJoinAvailability() {
+	public Boolean getJoinAvailability() {
 		return joinAvailability;
 	}
 
-	public void setJoinAvailability(boolean joinAvailability) {
+	public void setJoinAvailability(Boolean joinAvailability) {
 		this.joinAvailability = joinAvailability;
 	}
 }

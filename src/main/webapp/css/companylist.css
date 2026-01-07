@@ -712,3 +712,16 @@
 	padding: 10px 20px;
 }
 
+/*ーーーー企業詳細（生徒）ーーーー*/
+.detail-table{
+	border-collapse: collapse;
+	table-layout: fixed;
+	width: auto;
+	margin: 0;
+}
+
+.detail-table td{
+	padding: 0 10px;
+	text-align: left;
+}
+

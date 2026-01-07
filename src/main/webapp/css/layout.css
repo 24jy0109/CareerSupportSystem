@@ -19,6 +19,10 @@ tr {
     border-bottom: 1px solid #009A37;
 }
 
+.noline{
+	border-bottom: none !important;
+}
+
 th {
     font-size: 15px;
     color: #009A37;
@@ -28,6 +32,15 @@ th {
 
 a {
     text-decoration: none;
+	cursor: pointer;
+}
+
+[onclick]{
+	cursor: pointer;
+}
+
+submit{
+	cursor: pointer;
 }
 
 td {
@@ -46,6 +59,12 @@ td a {
     color: #009A37;
     font-size: 15px;
 }
+
+
+.red-msg{
+	color: red;
+}
+
 
 /* 画面上部「企業名　アイティフォー（申請済）開催情報　～」等の形式時使用 */
 .top-info {
@@ -92,6 +111,7 @@ td a {
     background-color: #009A37;
     border: none;
     padding: 0px 0px;
+	cursor: pointer;
 }
 
 /* ラジオボタンの色と大きさ */
@@ -140,8 +160,9 @@ button{
     background-color: #009A37;
     border: none;
     padding: 10px 20px;
-/*	box-sizing: border-box;*/
-/*	height: 45px;*/
+	box-sizing: border-box;
+	height: 45px;
+	cursor: pointer;
 }
 
 /* 画面を２分割するとき */

@@ -37,18 +37,12 @@ public class MypageController extends HttpServlet {
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
 		if (role.equals("staff")) {
 			switch (command) {
-			case "Mypage":
-				nextPage = "staff/Mypage.jsp";
-				break;
 			case "AppointmentMenu":
 				nextPage = "staff/AppointMenu.jsp";
 				break;
 			}
 		} else {
 			switch (command) {
-			case "Mypage":
-				nextPage = "student/Mypage.jsp";
-				break;
 			case "AppointmentMenu":
 				nextPage = "student/AppointMenu.jsp";
 				break;

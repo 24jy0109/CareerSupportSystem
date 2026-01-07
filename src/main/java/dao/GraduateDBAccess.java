@@ -31,6 +31,23 @@ public class GraduateDBAccess extends DBAccess {
 		}
 	}
 
+	// 卒業生の担当スタッフを外す（staff_id を NULL にする）
+	public void removeStaff(Graduate graduate) throws Exception {
+		Connection con = createConnection();
+		try {
+			String sql = "UPDATE graduate "
+					+ "SET staff_id = NULL "
+					+ "WHERE graduate_student_number = ?";
+			try (PreparedStatement ps = con.prepareStatement(sql)) {
+				ps.setString(1, graduate.getGraduateStudentNumber());
+				ps.executeUpdate();
+			}
+		} finally {
+			if (con != null)
+				con.close();
+		}
+	}
+
 	public Graduate searchGraduateByGraduateStudentNumber(String graduateStudentNumber) throws Exception {
 		Connection con = createConnection();
 
@@ -261,14 +278,10 @@ public class GraduateDBAccess extends DBAccess {
 
 		try {
 			con = createConnection();
-
 			String sql = "DELETE FROM graduate WHERE graduate_student_number = ?";
-
 			ps = con.prepareStatement(sql);
 			ps.setString(1, graduateStudentNumber);
-
 			ps.executeUpdate();
-
 		} finally {
 			if (ps != null)
 				ps.close();

@@ -68,7 +68,7 @@ public class LoginController extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			response.sendRedirect("mypage?command=Mypage");
+			response.sendRedirect("mypage?command=AppointmentMenu");
 			break;
 		}
 

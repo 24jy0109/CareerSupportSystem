@@ -9,27 +9,27 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <title>開催一覧</title>
-<style>
-table {
-	border-collapse: collapse;
-	width: 90%;
-	margin: 20px auto;
-}
+<!--<style>-->
+<!--table {-->
+<!--	border-collapse: collapse;-->
+<!--	width: 90%;-->
+<!--	margin: 20px auto;-->
+<!--}-->
 
-th, td {
-	border: 1px solid #333;
-	padding: 8px;
-	text-align: center;
-}
+<!--th, td {-->
+<!--	border: 1px solid #333;-->
+<!--	padding: 8px;-->
+<!--	text-align: center;-->
+<!--}-->
 
-th {
-	background-color: #eee;
-}
+<!--th {-->
+<!--	background-color: #eee;-->
+<!--}-->
 
-h2 {
-	text-align: center;
-}
-</style>
+<!--h2 {-->
+<!--	text-align: center;-->
+<!--}-->
+<!--</style>-->
 </head>
 <body>
 	<header class="head-part">
@@ -47,7 +47,7 @@ h2 {
 
 	</header>
 	<main>
-		<h2>開催中イベント一覧</h2>
+		<div>開催詳細から参加登録をしてください。</div>
 
 		<c:choose>
 			<c:when test="${empty events}">

@@ -27,14 +27,16 @@
 	</header>
 
 	<main>
-		<h3>参加中のイベント</h3>
+		<div class="eventlist">
+			<div class="eventlist-title">参加一覧</div>
+		</div>
 
 		<table>
-			<tr>
-				<th>企業名</th>
-				<th>イベントID</th>
-				<th>状態</th>
-			</tr>
+			<!--			<tr>-->
+			<!--				<th>企業名</th>-->
+			<!--				<th>イベントID</th>-->
+			<!--				<th>状態</th>-->
+			<!--			</tr>-->
 
 			<c:forEach var="dto" items="${events}">
 				<c:if test="${dto.event.eventProgress == \"ONGOING\"}">
@@ -57,15 +59,24 @@
 		</table>
 
 
-		<h3>参加履歴</h3>
+
+		<div class="eventlist">
+			<div class="eventlist-title">参加履歴</div>
+		</div>
 		<table>
-			<tr>
-				<th>企業名</th>
-				<th>イベントID</th>
-				<th>結果</th>
-			</tr>
+			<!--			<tr>-->
+			<!--				<th>企業名</th>-->
+			<!--				<th>イベントID</th>-->
+			<!--				<th>結果</th>-->
+			<!--			</tr>-->
+
+
 
 			<c:forEach var="dto" items="${events}">
+				<c:if test="${empty dto.event}">
+					<div class="errormsg">履歴がありません。</div>
+				</c:if>
+
 				<c:if
 					test="${dto.event.eventProgress == \"FINISHED\" || dto.event.eventProgress == \"CANCELED\"}">
 					<tr>
@@ -78,14 +89,16 @@
 							中止
 						</c:when>
 								<c:when test="${dto.joinAvailability}">
-							参加済み
+							参加済
 						</c:when>
 								<c:otherwise>
 							不参加
 						</c:otherwise>
 							</c:choose></td>
 					</tr>
+
 				</c:if>
+
 			</c:forEach>
 		</table>
 

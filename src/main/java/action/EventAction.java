@@ -9,6 +9,7 @@ import dao.AnswerDBAccess;
 import dao.CompanyDBAccess;
 import dao.EventDBAccess;
 import dao.GraduateDBAccess;
+import dao.JoinStudentDBAccess;
 import dao.RequestDBAccess;
 import dao.StaffDBAcess;
 import dto.CompanyDTO;
@@ -20,6 +21,7 @@ import model.Email;
 import model.Event;
 import model.EventProgress;
 import model.Graduate;
+import model.JoinStudent;
 import model.Staff;
 import model.Student;
 import validator.EventValidator;
@@ -49,6 +51,7 @@ public class EventAction extends BaseAction {
 		AnswerDBAccess answerDBA = new AnswerDBAccess();
 		StaffDBAcess staffDBA = new StaffDBAcess();
 		GraduateDBAccess graduateDBA = new GraduateDBAccess();
+		RequestDBAccess requestDBA = new RequestDBAccess();
 
 		Event event = new Event();
 		Company company = new Company();
@@ -67,7 +70,10 @@ public class EventAction extends BaseAction {
 			break;
 		case "EventDetail":
 			// data[1] eventId
-			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[1]));
+			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[2]));
+			if (data[1] != "") {
+				eventDTO.setJoinAvailability(eventDBA.isStudentJoinedEvent(Integer.parseInt(data[2]), data[1]));
+			}
 			list.add(eventDTO);
 			break;
 		case "RegistEventForm":
@@ -181,7 +187,7 @@ public class EventAction extends BaseAction {
 				}
 			}
 
-			RequestDBAccess requestDBA = new RequestDBAccess();
+			requestDBA = new RequestDBAccess();
 			List<String> studentEmails = requestDBA.searchEmailsByCompanyId(Integer.parseInt(data[2]));
 
 			List<String> graduateEmails = new ArrayList<String>();
@@ -323,6 +329,14 @@ public class EventAction extends BaseAction {
 		case "EventEnd":
 			// data[1] eventId
 			eventDBA.eventEnd(Integer.parseInt(data[1]));
+			List<JoinStudent> joinStudents = new JoinStudentDBAccess().searchJoinStudentsByEventId(Integer.parseInt(data[1]));
+			for (JoinStudent joinStudent : joinStudents) {
+				requestDBA.cancelRequest(joinStudent.getEvent().getCompany().getCompanyId(), joinStudent.getStudent().getStudentNumber());
+			}
+			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[1]));
+			for (Graduate gr : eventDTO.getGraduates()) {
+				graduateDBA.removeStaff(gr);
+			}
 			break;
 		case "EventCancel":
 			// data[1] eventId
