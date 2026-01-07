@@ -38,6 +38,7 @@
 							<!--							<p>${companyDTO}</p>-->
 							<!--							<p>${companyDTO.company}</p>-->
 							<p>${companyDTO.company.companyName}</p>
+					</div>
 
 							<div>
 								<a
@@ -80,7 +81,7 @@
 						</table>
 
 
-					</div>
+
 				</div>
 
 

@@ -74,7 +74,59 @@ public class AnswerController extends HttpServlet {
 				nextPage = "graduate/CompleteRegistAnswer.jsp";
 			}
 			break;
-		case "registAnswer":
+		case "AnswerConfirm":
+			nextPage = "graduate/AnswerConfirm.jsp";
+			data = new String[9];
+
+			data[0] = command;
+			data[1] = request.getParameter("answerId");
+			data[2] = request.getParameter("eventAvailability");
+
+			data[3] = request.getParameter("firstChoiceStart");
+			data[4] = request.getParameter("firstChoiceEnd");
+
+			data[5] = request.getParameter("secondChoiceStart");
+			data[6] = request.getParameter("secondChoiceEnd");
+
+			data[7] = request.getParameter("thirdChoiceStart");
+			data[8] = request.getParameter("thirdChoiceEnd");
+			
+			try {
+				answers = answerAction.execute(data);
+				request.setAttribute("answer", answers.getFirst());
+			} catch (ValidationException e) {
+				nextPage = "graduate/Answer.jsp";
+				request.setAttribute("inputAnswer", e.getAnswer());
+				request.setAttribute("error", e.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+		case "AnswerBack":
+			nextPage = "graduate/Answer.jsp";
+			data = new String[9];
+
+			data[0] = command;
+			data[1] = request.getParameter("answerId");
+			data[2] = request.getParameter("eventAvailability");
+
+			data[3] = request.getParameter("firstChoiceStart");
+			data[4] = request.getParameter("firstChoiceEnd");
+
+			data[5] = request.getParameter("secondChoiceStart");
+			data[6] = request.getParameter("secondChoiceEnd");
+
+			data[7] = request.getParameter("thirdChoiceStart");
+			data[8] = request.getParameter("thirdChoiceEnd");
+			
+			try {
+				answers = answerAction.execute(data);
+				request.setAttribute("inputAnswer", answers.getFirst());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+		case "RegistAnswer":
 			nextPage = "graduate/CompleteRegistAnswer.jsp";
 			data = new String[9];
 
