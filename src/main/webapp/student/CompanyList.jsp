@@ -9,31 +9,7 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <title>企業リスト</title>
-<!--<style>-->
-<!--body {-->
-<!--	font-family: Arial, sans-serif;-->
-<!--}-->
 
-<!--table {-->
-<!--	border-collapse: collapse;-->
-<!--	width: 80%;-->
-<!--	margin: 20px auto;-->
-<!--}-->
-
-<!--th, td {-->
-<!--	border: 1px solid #333;-->
-<!--	padding: 8px;-->
-<!--	text-align: left;-->
-<!--}-->
-
-<!--th {-->
-<!--	background-color: #f0f0f0;-->
-<!--}-->
-
-<!--.center {-->
-<!--	text-align: center;-->
-<!--}-->
-<!--</style>-->
 </head>
 <body>
 	<header>

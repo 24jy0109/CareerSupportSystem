@@ -5,53 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/companylist.css">
 <title>企業詳細</title>
-<style>
-body {
-	font-family: Arial, sans-serif;
-	margin: 20px;
-}
-
-h2, h3 {
-	color: #2c3e50;
-}
-
-table {
-	border-collapse: collapse;
-	width: 100%;
-	margin-bottom: 20px;
-}
-
-th, td {
-	border: 1px solid #ccc;
-	padding: 8px;
-	text-align: left;
-}
-
-th {
-	background-color: #f2f2f2;
-}
-
-tr:nth-child(even) {
-	background-color: #f9f9f9;
-}
-
-.section {
-	margin-bottom: 30px;
-}
-
-.label {
-	font-weight: bold;
-}
-
-button {
-	padding: 4px 8px;
-	margin: 0 4px;
-	cursor: pointer;
-}
-</style>
 </head>
 <body>
 	<header>
@@ -70,76 +26,54 @@ button {
 		</div>
 	</header>
 	<main>
-		<h2>企業詳細</h2>
-
-		<c:if test="${not empty companies}">
-			<!-- List<CompanyDTO> の1件目だけを取得 -->
-			<c:set var="companyDTO" value="${companies[0]}" />
-
-			<div class="section">
-				<p>
-					<span class="label">企業名:</span> ${companyDTO.company.companyName}
-				</p>
-				<p>
-					<span class="label">リクエスト状況:</span>
+		<div class="request-top">
+			<c:if test="${not empty companies}">
+				<!-- List<CompanyDTO> の1件目だけを取得 -->
+				<c:set var="companyDTO" value="${companies[0]}" />
+				<div class="company">
+					<div class="field-name">企業名</div>
+					<div class="company-name">${companyDTO.company.companyName}</div>
 					<c:choose>
-						<c:when test="${companyDTO.isRequest == '申請済み'}">はい</c:when>
-						<c:otherwise>いいえ</c:otherwise>
+						<c:when test="${companyDTO.isRequest == '申請済み'}">
+							<div class="red-msg">申請済</div>
+						</c:when>
+						<c:otherwise>未申請</c:otherwise>
 					</c:choose>
-				</p>
+				</div>
 
-				<!-- ▼申請ボタン／取り消しボタン -->
-				<c:choose>
-					<c:when test="${companyDTO.isRequest == '申請済み'}">
-						<form action="appointment_request" method="POST"
-							style="display: inline;">
-							<input type="hidden" name="command" value="CancelRequest">
-							<input type="hidden" name="companyId"
-								value="${companyDTO.company.companyId}">
-							<button type="submit">取り消し</button>
-						</form>
-					</c:when>
-					<c:otherwise>
-						<form action="appointment_request" method="POST"
-							style="display: inline;">
-							<input type="hidden" name="command" value="ApplyRequest">
-							<input type="hidden" name="companyId"
-								value="${companyDTO.company.companyId}">
-							<button type="submit">申請</button>
-						</form>
-					</c:otherwise>
-				</c:choose>
-			</div>
+				<div class="event">
+					<div class="event-info">
+						<div class="event-frex">
+							<div class="field-name">開催情報</div>
+							<c:if test="${not empty companyDTO.company.events}">
+								<table class="detail-table">
+									<c:forEach var="event" items="${companyDTO.company.events}">
+										<tr class="noline">
+											<td>${event.eventPlace}</td>
+											<td>
+												${event.eventStartTime.year}/${event.eventStartTime.monthValue}/${event.eventStartTime.dayOfMonth}</td>
+											<td>${event.eventStartTime.hour < 10 ? '0' : ''}${event.eventStartTime.hour}:${event.eventStartTime.minute < 10 ? '0' : ''}${event.eventStartTime.minute}</td>
+											<td>～</td>
+											<td>
+												${event.eventEndTime.year}/${event.eventEndTime.monthValue}/${event.eventEndTime.dayOfMonth}</td>
+											
+											<td>${event.eventEndTime.hour < 10 ? '0' : ''}${event.eventEndTime.hour}:${event.eventEndTime.minute
+												< 10 ? '0' : ''}${event.eventEndTime.minute}</td>
+											</td>
 
-			<div class="section">
-				<h3>開催予定イベント</h3>
-				<c:if test="${not empty companyDTO.company.events}">
-					<table>
-						<thead>
-							<tr>
-								<th>場所</th>
-								<th>開始時間</th>
-								<th>終了時間</th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach var="event" items="${companyDTO.company.events}">
-								<tr>
-									<td>${event.eventPlace}</td>
-									<td>${event.eventStartTime}</td>
-									<td>${event.eventEndTime}</td>
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
-				</c:if>
-				<c:if test="${empty companyDTO.company.events}">
-					<p>開催予定のイベントはありません</p>
-				</c:if>
-			</div>
 
-			<div class="section">
-				<h3>卒業生情報</h3>
+										</tr>
+									</c:forEach>
+								</table>
+							</c:if>
+						</div>
+						<c:if test="${empty companyDTO.company.events}">
+							<td>開催予定のイベントはありません</td>
+						</c:if>
+					</div>
+				</div>
+
+
 				<c:if test="${not empty companyDTO.company.graduates}">
 					<table>
 						<thead>
@@ -169,14 +103,38 @@ button {
 				<c:if test="${empty companyDTO.company.graduates}">
 					<p>卒業生情報はありません</p>
 				</c:if>
-			</div>
-
+		</div>
 		</c:if>
 
 		<c:if test="${empty companies}">
 			<p>企業情報が見つかりません。</p>
 		</c:if>
 
+		<div class="bottom-btn-split">
+			<button type="button"
+				onclick="location.href='company?command=CompanyList'">企業一覧に戻る</button>
+			<!-- ▼申請ボタン／取り消しボタン -->
+			<c:choose>
+				<c:when test="${companyDTO.isRequest == '申請済み'}">
+					<form action="appointment_request" method="POST"
+						style="display: inline;">
+						<input type="hidden" name="command" value="CancelRequest">
+						<input type="hidden" name="companyId"
+							value="${companyDTO.company.companyId}">
+						<button type="submit">取消</button>
+					</form>
+				</c:when>
+				<c:otherwise>
+					<form action="appointment_request" method="POST"
+						style="display: inline;">
+						<input type="hidden" name="command" value="ApplyRequest">
+						<input type="hidden" name="companyId"
+							value="${companyDTO.company.companyId}">
+						<button type="submit">申請</button>
+					</form>
+				</c:otherwise>
+			</c:choose>
+		</div>
 	</main>
 	<footer>
 		<p>
