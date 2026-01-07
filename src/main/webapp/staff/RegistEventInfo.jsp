@@ -76,7 +76,7 @@
 								class="registevent-input"
 								value="${event.eventStartTime != null
 							? event.eventStartTime.toString().substring(0,16)
-							: ''}" />
+							: ''}" required />
 						</div>
 
 						<div class="registevent-row">
@@ -85,7 +85,7 @@
 								class="registevent-input"
 								value="${event.eventEndTime != null
 							? event.eventEndTime.toString().substring(0,16)
-							: ''}" />
+							: ''}" required />
 						</div>
 					</div>
 
@@ -93,13 +93,13 @@
 						<div class="registevent-row">
 							<div class="field-name">場所</div>
 							<input type="text" name="eventPlace" class="registevent-input"
-								value="${event.eventPlace}" />
+								value="${event.eventPlace}" required />
 						</div>
 
 						<div class="registevent-row">
 							<div class="field-name">定員</div>
 							<input type="number" name="eventCapacity"
-								class="registevent-input" min="1" value="${event.eventCapacity}" />
+								class="registevent-input" min="1" value="${event.eventCapacity}" required />
 						</div>
 					</div>
 
