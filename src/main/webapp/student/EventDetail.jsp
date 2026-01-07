@@ -33,6 +33,12 @@ th {
 h2, h3 {
 	text-align: center;
 }
+
+.join-status {
+	text-align: center;
+	font-weight: bold;
+	margin-top: 20px;
+}
 </style>
 </head>
 <body>
@@ -48,7 +54,6 @@ h2, h3 {
 		</div>
 
 		<div class="header-user">ようこそ${name}さん</div>
-
 	</header>
 
 	<main>
@@ -87,7 +92,7 @@ h2, h3 {
 				<th>現在の参加者数</th>
 				<td>${event.joinStudentCount}名</td>
 			</tr>
-			
+
 			<tr>
 				<th>その他</th>
 				<td>${event.event.eventOtherInfo}</td>
@@ -119,9 +124,8 @@ h2, h3 {
 										value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
 									<c:set var="graduateYear"
 										value="${enterYear2 + g.course.courseTerm}" />
-							        ${graduateYear}年卒
-							    </c:if></td>
-
+									${graduateYear}年卒
+								</c:if></td>
 							<td>${g.course.courseName}</td>
 							<td>${g.graduateJobCategory}</td>
 						</tr>
@@ -129,9 +133,40 @@ h2, h3 {
 				</table>
 			</c:otherwise>
 		</c:choose>
-		
-		<a href="event?command=EventJoin&eventId=${event.event.eventId}">参加</a>
-		<a href="event?command=EventNotJoin&eventId=${event.event.eventId}">不参加</a>
+
+		<%-- 参加可否表示 --%>
+		<div class="join-status">
+			<c:choose>
+
+				<%-- 未回答 --%>
+				<c:when test="${event.joinAvailability == null}">
+
+					<%-- 定員未達の場合のみリンク表示 --%>
+					<c:if test="${event.joinStudentCount < event.event.eventCapacity}">
+						<a href="event?command=EventJoin&eventId=${event.event.eventId}">参加</a>
+				&nbsp;|&nbsp;
+				<a href="event?command=EventNotJoin&eventId=${event.event.eventId}">不参加</a>
+					</c:if>
+
+					<%-- 定員到達時は何も表示しない --%>
+					満員です
+				</c:when>
+
+				<%-- 参加 --%>
+				<c:when test="${event.joinAvailability}">
+			参加予定
+		</c:when>
+
+				<%-- 不参加 --%>
+				<c:otherwise>
+			不参加
+		</c:otherwise>
+
+			</c:choose>
+		</div>
+
+
+
 	</main>
 </body>
 </html>

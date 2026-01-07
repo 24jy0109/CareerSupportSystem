@@ -67,7 +67,10 @@ public class EventAction extends BaseAction {
 			break;
 		case "EventDetail":
 			// data[1] eventId
-			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[1]));
+			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[2]));
+			if (data[1] != "") {
+				eventDTO.setJoinAvailability(eventDBA.isStudentJoinedEvent(Integer.parseInt(data[2]), data[1]));
+			}
 			list.add(eventDTO);
 			break;
 		case "RegistEventForm":

@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -194,66 +195,62 @@ public class EventDBAccess extends DBAccess {
 		List<EventDTO> list = new ArrayList<>();
 		Connection con = createConnection();
 
-		String sql =
-			    "SELECT " +
-			    "  e.event_id, " +
-			    "  e.event_progress, " +
-			    "  e.event_capacity, " +
-			    "  e.event_start_time, " +
-			    "  e.event_end_time, " +
-			    "  c.company_id, " +
-			    "  c.company_name, " +
-			    "  COUNT(js.student_number) AS join_count " +
-			    "FROM event e " +
-			    "JOIN company c " +
-			    "  ON e.company_id = c.company_id " +
-			    "LEFT JOIN join_student js " +
-			    "  ON e.event_id = js.event_id " +
-			    " AND js.join_availability = 1 " +
-			    "WHERE e.event_progress <> 0 " +
-			    "GROUP BY " +
-			    "  e.event_id, " +
-			    "  e.event_progress, " +
-			    "  e.event_capacity, " +
-			    "  e.event_start_time, " +
-			    "  e.event_end_time, " +
-			    "  c.company_id, " +
-			    "  c.company_name " +
-			    "ORDER BY " +
-			    "  CASE WHEN e.event_progress = 2 THEN 0 ELSE 1 END, " +
-			    "  e.event_start_time ASC";
-
+		String sql = "SELECT " +
+				"  e.event_id, " +
+				"  e.event_progress, " +
+				"  e.event_capacity, " +
+				"  e.event_start_time, " +
+				"  e.event_end_time, " +
+				"  c.company_id, " +
+				"  c.company_name, " +
+				"  COUNT(js.student_number) AS join_count " +
+				"FROM event e " +
+				"JOIN company c " +
+				"  ON e.company_id = c.company_id " +
+				"LEFT JOIN join_student js " +
+				"  ON e.event_id = js.event_id " +
+				" AND js.join_availability = 1 " +
+				"WHERE e.event_progress <> 0 " +
+				"GROUP BY " +
+				"  e.event_id, " +
+				"  e.event_progress, " +
+				"  e.event_capacity, " +
+				"  e.event_start_time, " +
+				"  e.event_end_time, " +
+				"  c.company_id, " +
+				"  c.company_name " +
+				"ORDER BY " +
+				"  CASE WHEN e.event_progress = 2 THEN 0 ELSE 1 END, " +
+				"  e.event_start_time ASC";
 
 		try (PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
 
-			    // -------- Event --------
-			    Event event = new Event();
-			    event.setEventId(rs.getInt("event_id"));
-			    event.setEventProgress(rs.getInt("event_progress"));
-			    event.setEventCapacity(rs.getInt("event_capacity"));
+				// -------- Event --------
+				Event event = new Event();
+				event.setEventId(rs.getInt("event_id"));
+				event.setEventProgress(rs.getInt("event_progress"));
+				event.setEventCapacity(rs.getInt("event_capacity"));
 
-			    event.setEventStartTime(
-			        rs.getTimestamp("event_start_time").toLocalDateTime()
-			    );
-			    event.setEventEndTime(
-			        rs.getTimestamp("event_end_time").toLocalDateTime()
-			    );
+				event.setEventStartTime(
+						rs.getTimestamp("event_start_time").toLocalDateTime());
+				event.setEventEndTime(
+						rs.getTimestamp("event_end_time").toLocalDateTime());
 
-			    // -------- Company --------
-			    Company company = new Company();
-			    company.setCompanyId(rs.getInt("company_id"));
-			    company.setCompanyName(rs.getString("company_name"));
-			    event.setCompany(company);
+				// -------- Company --------
+				Company company = new Company();
+				company.setCompanyId(rs.getInt("company_id"));
+				company.setCompanyName(rs.getString("company_name"));
+				event.setCompany(company);
 
-			    // -------- EventDTO --------
-			    EventDTO dto = new EventDTO();
-			    dto.setEvent(event);
-			    dto.setJoinStudentCount(rs.getInt("join_count"));
+				// -------- EventDTO --------
+				EventDTO dto = new EventDTO();
+				dto.setEvent(event);
+				dto.setJoinStudentCount(rs.getInt("join_count"));
 
-			    list.add(dto);
+				list.add(dto);
 			}
 
 		} finally {
@@ -619,6 +616,39 @@ public class EventDBAccess extends DBAccess {
 		}
 
 		return list;
+	}
+
+	public Boolean isStudentJoinedEvent(int eventId, String studentNumber) throws Exception {
+		String sql = "SELECT join_availability " +
+				"FROM join_student " +
+				"WHERE event_id = ? AND student_number = ?";
+
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, eventId);
+			ps.setString(2, studentNumber);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				// レコードが存在しない（＝未回答）
+				if (!rs.next()) {
+					return null;
+				}
+
+				Boolean availability = rs.getBoolean("join_availability");
+
+				// カラム値が NULL（＝未回答）
+				if (rs.wasNull()) {
+					return null;
+				}
+
+				return availability;
+			}
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

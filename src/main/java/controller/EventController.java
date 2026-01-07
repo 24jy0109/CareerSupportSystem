@@ -263,7 +263,7 @@ public class EventController extends HttpServlet {
 				nextPage = "staff/EventDetail.jsp";
 				String eventId = request.getParameter("eventId");
 				try {
-					events = eventAction.execute(new String[] { command, eventId });
+					events = eventAction.execute(new String[] { command, "", eventId });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -324,7 +324,7 @@ public class EventController extends HttpServlet {
 				nextPage = "student/EventDetail.jsp";
 				String eventId = request.getParameter("eventId");
 				try {
-					events = eventAction.execute(new String[] { command, eventId });
+					events = eventAction.execute(new String[] { command, studentNumber, eventId });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
