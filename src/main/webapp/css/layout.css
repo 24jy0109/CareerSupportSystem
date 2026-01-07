@@ -140,6 +140,8 @@ button{
     background-color: #009A37;
     border: none;
     padding: 10px 20px;
+/*	box-sizing: border-box;*/
+/*	height: 45px;*/
 }
 
 /* 画面を２分割するとき */
