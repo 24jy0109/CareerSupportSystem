@@ -31,6 +31,23 @@ public class GraduateDBAccess extends DBAccess {
 		}
 	}
 
+	// 卒業生の担当スタッフを外す（staff_id を NULL にする）
+	public void removeStaff(Graduate graduate) throws Exception {
+		Connection con = createConnection();
+		try {
+			String sql = "UPDATE graduate "
+					+ "SET staff_id = NULL "
+					+ "WHERE graduate_student_number = ?";
+			try (PreparedStatement ps = con.prepareStatement(sql)) {
+				ps.setString(1, graduate.getGraduateStudentNumber());
+				ps.executeUpdate();
+			}
+		} finally {
+			if (con != null)
+				con.close();
+		}
+	}
+
 	public Graduate searchGraduateByGraduateStudentNumber(String graduateStudentNumber) throws Exception {
 		Connection con = createConnection();
 
@@ -100,76 +117,73 @@ public class GraduateDBAccess extends DBAccess {
 
 	// 変更したここから
 	public List<Graduate> searchGraduatesByGraduateStudentNumbers(
-	        String[] graduateStudentNumbers) throws Exception {
+			String[] graduateStudentNumbers) throws Exception {
 
-	    List<Graduate> list = new ArrayList<>();
+		List<Graduate> list = new ArrayList<>();
 
-	    // 空チェック（IN () 防止）
-	    if (graduateStudentNumbers == null || graduateStudentNumbers.length == 0) {
-	        return list;
-	    }
+		// 空チェック（IN () 防止）
+		if (graduateStudentNumbers == null || graduateStudentNumbers.length == 0) {
+			return list;
+		}
 
-	    // ?,?,? 動的生成
-	    StringBuilder sb = new StringBuilder();
-	    for (int i = 0; i < graduateStudentNumbers.length; i++) {
-	        sb.append("?");
-	        if (i < graduateStudentNumbers.length - 1) {
-	            sb.append(",");
-	        }
-	    }
+		// ?,?,? 動的生成
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < graduateStudentNumbers.length; i++) {
+			sb.append("?");
+			if (i < graduateStudentNumbers.length - 1) {
+				sb.append(",");
+			}
+		}
 
-	    String sql =
-	        "SELECT " +
-	        " g.graduate_student_number, " +
-	        " g.graduate_name, " +
-	        " g.graduate_email, " +
-	        " g.graduate_job_category, " +
-	        " c.course_code, " +
-	        " c.course_name, " +
-	        " c.course_term " +
-	        "FROM graduate g " +
-	        "JOIN course c ON g.course_code = c.course_code " +
-	        "WHERE g.graduate_student_number IN (" + sb + ")";
+		String sql = "SELECT " +
+				" g.graduate_student_number, " +
+				" g.graduate_name, " +
+				" g.graduate_email, " +
+				" g.graduate_job_category, " +
+				" c.course_code, " +
+				" c.course_name, " +
+				" c.course_term " +
+				"FROM graduate g " +
+				"JOIN course c ON g.course_code = c.course_code " +
+				"WHERE g.graduate_student_number IN (" + sb + ")";
 
-	    try (
-	        Connection con = createConnection();
-	        PreparedStatement ps = con.prepareStatement(sql)
-	    ) {
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
-	        for (int i = 0; i < graduateStudentNumbers.length; i++) {
-	            ps.setString(i + 1, graduateStudentNumbers[i]);
-	        }
+			for (int i = 0; i < graduateStudentNumbers.length; i++) {
+				ps.setString(i + 1, graduateStudentNumbers[i]);
+			}
 
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
 
-	                // Course
-	                Course course = new Course();
-	                course.setCourseCode(rs.getString("course_code"));
-	                course.setCourseName(rs.getString("course_name"));
-	                course.setCourseTerm(rs.getInt("course_term"));
+					// Course
+					Course course = new Course();
+					course.setCourseCode(rs.getString("course_code"));
+					course.setCourseName(rs.getString("course_name"));
+					course.setCourseTerm(rs.getInt("course_term"));
 
-	                // Graduate
-	                Graduate g = new Graduate();
-	                g.setGraduateStudentNumber(
-	                        rs.getString("graduate_student_number"));
-	                g.setGraduateName(
-	                        rs.getString("graduate_name"));
-	                g.setGraduateEmail(
-	                        rs.getString("graduate_email"));
-	                g.setGraduateJobCategory(
-	                        rs.getString("graduate_job_category"));
-	                g.setCourse(course);
+					// Graduate
+					Graduate g = new Graduate();
+					g.setGraduateStudentNumber(
+							rs.getString("graduate_student_number"));
+					g.setGraduateName(
+							rs.getString("graduate_name"));
+					g.setGraduateEmail(
+							rs.getString("graduate_email"));
+					g.setGraduateJobCategory(
+							rs.getString("graduate_job_category"));
+					g.setCourse(course);
 
-	                list.add(g);
-	            }
-	        }
-	    }
+					list.add(g);
+				}
+			}
+		}
 
-	    return list;
+		return list;
 	}
 	// 変更したここまで
-
 
 	public List<Graduate> findAll() throws Exception {
 
@@ -256,25 +270,26 @@ public class GraduateDBAccess extends DBAccess {
 	}
 
 	public void deleteGraduate(String graduateStudentNumber) throws Exception {
-	    Connection con = null;
-	    PreparedStatement ps = null;
+		Connection con = null;
+		PreparedStatement ps = null;
 
-	    try {
-	        con = createConnection();
+		try {
+			con = createConnection();
 
-	        String sql = "DELETE FROM graduate WHERE graduate_student_number = ?";
+			String sql = "DELETE FROM graduate WHERE graduate_student_number = ?";
 
-	        ps = con.prepareStatement(sql);
-	        ps.setString(1, graduateStudentNumber);
+			ps = con.prepareStatement(sql);
+			ps.setString(1, graduateStudentNumber);
 
-	        ps.executeUpdate();
+			ps.executeUpdate();
 
-	    } finally {
-	        if (ps != null) ps.close();
-	        if (con != null) con.close();
-	    }
+		} finally {
+			if (ps != null)
+				ps.close();
+			if (con != null)
+				con.close();
+		}
 	}
-
 
 	public void searchGraduate(int graduate) {
 
