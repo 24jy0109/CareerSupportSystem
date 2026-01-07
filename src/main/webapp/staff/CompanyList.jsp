@@ -16,56 +16,14 @@
 			<img src="./img/rogo.png" alt="アイコン">
 		</div>
 
-		<div class="header-title" onclick="location.href='mypage?command=AppointmentMenu'">
+		<div class="header-title"
+			onclick="location.href='mypage?command=AppointmentMenu'">
 			<div class="title-jp">就活サポート</div>
 			<div class="title-en">Career Support</div>
 		</div>
 
 		<div class="header-user">ようこそ${name}さん</div>
-
 	</header>
-
-	<!--		<h2>企業一覧</h2>-->
-
-	<!--	 ▼検索フォーム -->
-	<!--		<form action="company" method="GET">-->
-	<!--			<input type="hidden" name="command" value="CompanyList"> <input-->
-	<!--				type="text" name="companyName" placeholder="企業名で検索"-->
-	<!--				value="${param.companyName}">-->
-	<!--			<button type="submit">検索</button>-->
-	<!--		</form>-->
-
-	<!--		<table border="1">-->
-	<!--			<thead>-->
-	<!--				<tr>-->
-	<!--					<th>企業名</th>-->
-	<!--					<th>進行状況</th>-->
-	<!--					<th>申請数</th>-->
-	<!--					<th>情報編集</th>-->
-	<!--					<th>開催ページ</th>-->
-	<!--				</tr>-->
-	<!--			</thead>-->
-	<!--			<tbody>-->
-	<!--				<c:forEach var="companyDTO" items="${companies}">-->
-	<!--					<tr>-->
-	<!--						<td>${companyDTO.company.companyName}</td>-->
-	<!--						<td>${companyDTO.eventProgress}</td>-->
-	<!--						<td><a-->
-	<!--							href="appointment_request?command=RequestList&companyId=${companyDTO.company.companyId}">申請者リスト</a>-->
-	<!--							${companyDTO.requestCount}人</td>-->
-	<!--						<td>-->
-	<!--							 仮リンク  <a-->
-	<!--							href="editCompany.jsp?companyId=${companyDTO.company.companyId}">編集</a>-->
-	<!--						</td>-->
-	<!--						<td>-->
-	<!--							 仮リンク  <a-->
-	<!--							href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}">開催ページ</a>-->
-	<!--						</td>-->
-	<!--					</tr>-->
-	<!--				</c:forEach>-->
-	<!--			</tbody>-->
-	<!--		</table>-->
-
 
 	<main>
 		<form action="company" method="GET">
@@ -89,31 +47,47 @@
 			<c:forEach var="companyDTO" items="${companies}">
 				<tr class="company-r">
 					<td>${companyDTO.company.companyName}</td>
+
 					<td>
-						<!-- 仮リンク --> <a
-						href="./graduate?companyId=${companyDTO.company.companyId}&command=editInfo">情報編集</a>
+						<a
+							href="./graduate?companyId=${companyDTO.company.companyId}&command=editInfo">
+							情報編集
+						</a>
 					</td>
 
 					<c:choose>
 						<c:when test="${companyDTO.eventProgress == '開催'}">
-							<td class=held>${companyDTO.eventProgress}</td>
+							<td class="held">${companyDTO.eventProgress}</td>
 						</c:when>
 						<c:otherwise>
 							<td>${companyDTO.eventProgress}</td>
 						</c:otherwise>
 					</c:choose>
 
-					<td><a
-						href="appointment_request?command=RequestList&companyId=${companyDTO.company.companyId}">申請者一覧</a>
-						<p>${companyDTO.requestCount}人</p></td>
 					<td>
-						<!-- 仮リンク --> <a
-						href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}">開催情報登録</a>
+						<c:choose>
+							<c:when test="${companyDTO.requestCount > 0}">
+								<a
+									href="appointment_request?command=RequestList&companyId=${companyDTO.company.companyId}">
+									申請者一覧
+								</a>
+								<p>${companyDTO.requestCount}人</p>
+							</c:when>
+							<c:otherwise>
+								<p style="padding: 1.25rem 0;">${companyDTO.requestCount}人</p>
+							</c:otherwise>
+						</c:choose>
+					</td>
+
+					<td>
+						<a
+							href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}">
+							開催情報登録
+						</a>
 					</td>
 				</tr>
 			</c:forEach>
 		</table>
-
 	</main>
 
 	<footer>
