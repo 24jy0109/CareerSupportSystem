@@ -38,17 +38,17 @@ public class GraduateAction {
 		String body;
 		switch (action) {
 		case "SendScheduleArrangeEmail":
-					// data[2] graduateStudentNumber
-					// data[3] staffId
-		
-					graduate = GraduateDBA.searchGraduateByGraduateStudentNumber(data[2]);
-		
-					//			graduate.setGraduateStudentNumber(data[2]);
-					Staff staff = new Staff();
-					staff.setStaffId(Integer.parseInt(data[3]));
-					graduate.setStaff(staff);
-					GraduateDBA.setStaff(graduate);
-					break;
+			// data[2] graduateStudentNumber
+			// data[3] staffId
+
+			graduate = GraduateDBA.searchGraduateByGraduateStudentNumber(data[2]);
+
+			//			graduate.setGraduateStudentNumber(data[2]);
+			Staff staff = new Staff();
+			staff.setStaffId(Integer.parseInt(data[3]));
+			graduate.setStaff(staff);
+			GraduateDBA.setStaff(graduate);
+			break;
 		case "findGraduateStudentNumber":
 			boolean exists = GraduateDBA.findGraduateStudentNumber(data[1]);
 
@@ -176,11 +176,11 @@ public class GraduateAction {
 			gdb = new GraduateDBAccess();
 			gdb.updateGraduate(graduate); // ← insertじゃなくupdateを呼ぶ
 			break;
-			
-		case"deleteGraduate":
-			graduateStudentNumber = data[1];
-			
 
+		case "deleteGraduate":
+			graduateStudentNumber = data[1];
+
+			System.out.println("DEBUG delete studentNumber = " + graduateStudentNumber);
 			GraduateDBA.deleteGraduate(graduateStudentNumber);
 
 			break;
@@ -223,21 +223,20 @@ public class GraduateAction {
 
 		//editInfo
 		case "graduateSearchBycompanyId":
-		    companyId = Integer.parseInt(data[1]);
+			companyId = Integer.parseInt(data[1]);
 
-		    List<CompanyDTO> companyList =
-		        CompanyDBA.SearchCompanyWithGraduates(companyId);
+			List<CompanyDTO> companyList = CompanyDBA.SearchCompanyWithGraduates(companyId);
 
-		    if (companyList != null && !companyList.isEmpty()) {
-		        CompanyDTO dto = companyList.get(0);
+			if (companyList != null && !companyList.isEmpty()) {
+				CompanyDTO dto = companyList.get(0);
 
-		        // ダミーGraduateではなく、
-		        // company を持った Graduate を1つだけ返す
-		        Graduate g = new Graduate();
-		        g.setCompany(dto.getCompany()); // ← companyの中に graduates 全員入ってる
-		        list.add(g);
-		    }
-		    break;
+				// ダミーGraduateではなく、
+				// company を持った Graduate を1つだけ返す
+				Graduate g = new Graduate();
+				g.setCompany(dto.getCompany()); // ← companyの中に graduates 全員入ってる
+				list.add(g);
+			}
+			break;
 
 		}
 
