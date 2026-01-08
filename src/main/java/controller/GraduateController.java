@@ -542,6 +542,14 @@ public class GraduateController extends HttpServlet {
 					request.setAttribute("otherInfo", info);
 
 					request.setAttribute("fromConfirm", fromConfirm);
+					
+					// 企業一覧読み込み
+					try {
+						companies = companyAction.execute(new String[] { "CompanyList", "", "" });
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					request.setAttribute("companies", companies);
 
 					break;
 				}
