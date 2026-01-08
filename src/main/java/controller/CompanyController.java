@@ -76,70 +76,123 @@ public class CompanyController extends HttpServlet {
 			//				企業名入力、確認
 			case "CompanyRegister":
 				nextPage = "staff/CompanyRegister.jsp";
-				//				companyName = request.getParameter("companyname");
-				//				request.setAttribute("companyName", companyName);
-				break;
-			case "CompanyRegisterNext":
+				String companyId = request.getParameter("companyId");
 
-				String companyId = null;
-				companyId = request.getParameter("companyId");
-				companyName = request.getParameter("companyName");
-				System.out.println(companyId);
-//				Integer.parseInt(companyId);
-				System.out.println(companyName);
-				if (companyName == null && companyId != null) {
-					List<CompanyDTO> list;
+				if (companyId != null) {
+					List<CompanyDTO> result = new ArrayList<>();
 					try {
-						list = companyAction.execute(new String[] {"findCompanyName", companyId});
-						if (!list.isEmpty()) {
-							companyName = list.get(0).getCompany().getCompanyName();
-						}
+						result = companyAction.execute(
+								new String[] { "findCompanyName", companyId, "" });
 					} catch (Exception e) {
-						// TODO 自動生成された catch ブロック
 						e.printStackTrace();
 					}
 
-						
-				} else {
+					if (!result.isEmpty()) {
+						CompanyDTO dto = result.get(0);
+						request.setAttribute("companyId", companyId);
+						request.setAttribute(
+								"companyName",
+								dto.getCompany().getCompanyName());
+					}
+					System.out.println("companyId:" + companyId);
+					System.out.println("companyName:" + companyName);
+					System.out.println("result:" + result);
+				}
+
+				break;
+			case "CompanyRegisterNext":
+
+				companyId = null;
+				companyId = request.getParameter("companyId");
+				companyName = request.getParameter("companyName");
+
+				System.out.println("companyId:" + companyId);
+				System.out.println("companyName:" + companyName);
+				CompanyDBAccess db = new CompanyDBAccess();
+
+				if (companyId == null || companyId == "") {
+					// ① 空白チェック
+					if (companyName == null || companyName.trim().isEmpty()) {
+						request.setAttribute("error", "企業名を入力してください。");
+						nextPage = "staff/CompanyRegister.jsp";
+						break;
+					}
+
+					// ② 重複チェック
 					
-					CompanyDBAccess db = new CompanyDBAccess();
 					boolean exists = false;
 					try {
 						exists = db.existsCompanyName(companyName);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
+
 					if (exists) {
-						// 重複してる場合 → 入力画面へ戻す
 						request.setAttribute("error", "この企業名はすでに登録されています。");
 						request.setAttribute("companyName", companyName);
 						nextPage = "staff/CompanyRegister.jsp";
-					} else {
-						// 重複なし → 確認画面へ
+						break;
 					}
 
+					// ③ 問題なし → 確認画面
+					request.setAttribute("companyName", companyName);
+					nextPage = "staff/CompanyRegisterConfirm.jsp";
+					break;
+
+				} else {
+					// ① 空白チェック
+					if (companyName == null || companyName.trim().isEmpty()) {
+						request.setAttribute("error", "企業名を入力してください。");
+						request.setAttribute("companyId", companyId);
+						nextPage = "staff/CompanyRegister.jsp";
+						break;
+					}
+					
+					boolean exists = false;
+					try {
+						exists = db.existsCompanyName(companyName);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					if (exists) {
+						request.setAttribute("error", "この企業名はすでに登録されています。");
+						request.setAttribute("companyName", companyName);
+						nextPage = "staff/CompanyRegister.jsp";
+						break;
+					}
+
+					// ② 確認画面へ
+					request.setAttribute("companyId", companyId);
+					request.setAttribute("companyName", companyName);
+					nextPage = "staff/CompanyRegisterConfirm.jsp";
+					break;
 				}
-				request.setAttribute("companyName", companyName);
-				nextPage = "staff/CompanyRegisterConfirm.jsp";
-				break;
-			//				企業名追加
+
+				//				企業名追加
 			case "CompanyRegisterConfirm":
 				nextPage = "staff/AppointMenu.jsp";
+				companyId = request.getParameter("companyId");
 				companyName = request.getParameter("companyName");
-				CompanyAction companyAction1 = new CompanyAction();
 				try {
-					companyAction1.execute(new String[] { "CompanyRegister", "", companyName }); // ← requestを渡す！
+					if (companyId == null || companyId.isEmpty()) {
+						companyAction.execute(
+								new String[] { "CompanyRegister", "", companyName });
+					} else {
+						companyAction.execute(
+								new String[] { "CompanyUpdate", companyId, companyName });
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
 				break;
-				
+
 			case "CompanyRegisterBack":
 				nextPage = "staff/CompanyRegister.jsp";
 				companyName = request.getParameter("companyName");
 				request.setAttribute("companyName", companyName);
+				request.setAttribute("companyId", request.getParameter("companyId"));
 				break;
 
 			case "RegistEvent":

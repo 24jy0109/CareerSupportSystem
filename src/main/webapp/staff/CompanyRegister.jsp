@@ -26,25 +26,26 @@
 			<div class="header-user">ようこそ${name}さん</div>
 		</div>
 	</header>
-	
+
 
 	<main>
 		<form action="company" method="post">
+			<input type="hidden" name="companyId" value="${companyId}">
+			<input type="hidden" name="command" value="CompanyRegisterNext">
 			<div class="left-screen">
 				<span class="leftscreen-title">企業登録</span>
-					<c:if test="${not empty error}">
-						<p style="color: red">${error}</p>
-					</c:if>
+				<c:if test="${not empty error}">
+					<p style="color: red">${error}</p>
+				</c:if>
 				<div class="company-register-flame">
 					<table class="registscreen-table">
 						<tr>
 							<td>
 								<div>企業名</div>
 							</td>
-							<td>
-							    <input type="hidden" name="command"value="CompanyRegisterNext"> 
-							    <input type="text"name="companyName" placeholder="企業名入力"value="${param.companyName}" class="company-input">
-							</td>
+							<td> <input type="text"
+								name="companyName" class="company-input" value="${companyName}"
+								placeholder="${empty companyName ? '企業名を入力' : ''}"></td>
 						</tr>
 					</table>
 				</div>
