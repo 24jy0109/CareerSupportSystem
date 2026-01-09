@@ -103,27 +103,27 @@ public class CompanyController extends HttpServlet {
 				break;
 
 			case "AjaxSearchCompany":
-			    String name = request.getParameter("companyName");
-			    List<CompanyDTO> list = new ArrayList<>();
-			    CompanyDBAccess dbAccess = new CompanyDBAccess(); // ← ここで DAO を作る
-			    try {
-			        list = dbAccess.findSimilarCompany(name); // DAOで曖昧検索
-			    } catch (Exception e) {
-			        e.printStackTrace();
-			    }
+				String name = request.getParameter("companyName");
+				List<CompanyDTO> list = new ArrayList<>();
+				CompanyDBAccess dbAccess = new CompanyDBAccess(); // ← ここで DAO を作る
+				try {
+					list = dbAccess.findSimilarCompany(name); // DAOで曖昧検索
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
-			    // JSONに変換して返す
-			    response.setContentType("application/json;charset=UTF-8");
-			    PrintWriter out = response.getWriter();
-			    out.print("[");
-			    for (int i = 0; i < list.size(); i++) {
-			        out.print("{\"companyName\":\"" + list.get(i).getCompany().getCompanyName() + "\"}");
-			        if (i < list.size() - 1)
-			            out.print(",");
-			    }
-			    out.print("]");
-			    out.flush();
-			    return; // JSP遷移しない
+				// JSONに変換して返す
+				response.setContentType("application/json;charset=UTF-8");
+				PrintWriter out = response.getWriter();
+				out.print("[");
+				for (int i = 0; i < list.size(); i++) {
+					out.print("{\"companyName\":\"" + list.get(i).getCompany().getCompanyName() + "\"}");
+					if (i < list.size() - 1)
+						out.print(",");
+				}
+				out.print("]");
+				out.flush();
+				return; // JSP遷移しない
 
 			case "CompanyRegisterNext":
 
@@ -133,14 +133,13 @@ public class CompanyController extends HttpServlet {
 				companyName = request.getParameter("companyName");
 
 				CompanyDBAccess db = new CompanyDBAccess();
-				
-				
+
 				System.out.println("companyId:" + companyId);
 				System.out.println("companyName:" + companyName);
 
 				if (companyId == null || companyId == "") {
 					// ① 空白チェック
-					if (companyName == null || companyName.trim().isEmpty()) {
+					if (companyName == null || companyName.replaceAll("[ 　]", "").isEmpty()) {
 						request.setAttribute("error", "企業名を入力してください。");
 						nextPage = "staff/CompanyRegister.jsp";
 						System.out.println("空白チェック");
@@ -163,14 +162,12 @@ public class CompanyController extends HttpServlet {
 					normalizedCompanyName = normalizedCompanyName.replaceAll("株式会社$", ""); // 末尾
 					normalizedCompanyName = normalizedCompanyName.trim();
 
-
 					boolean exists = false;
 					try {
-						 exists = db.existsCompanyName(companyName);
+						exists = db.existsCompanyName(companyName);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
 
 					if (exists) {
 						request.setAttribute("error", "この企業名はすでに登録されています。");
@@ -200,7 +197,7 @@ public class CompanyController extends HttpServlet {
 
 				} else {
 					// ① 空白チェック
-					if (companyName == null || companyName.trim().isEmpty()) {
+					if (companyName == null || companyName.replaceAll("[ 　]", "").isEmpty()) {
 						request.setAttribute("error", "企業名を入力してください。");
 						request.setAttribute("companyId", companyId);
 						nextPage = "staff/CompanyRegister.jsp";
@@ -228,10 +225,10 @@ public class CompanyController extends HttpServlet {
 					nextPage = "staff/CompanyRegisterConfirm.jsp";
 					break;
 				}
-				
+
 				break;
 
-				//				企業名追加
+			//				企業名追加
 			case "CompanyRegisterConfirm":
 				nextPage = "staff/AppointMenu.jsp";
 				companyId = request.getParameter("companyId");
