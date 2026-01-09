@@ -49,11 +49,15 @@
 					<div class="flame">
 						<table class="registscreen-table">
 							<tr>
+								<td>企業検索</td>
+								<td><input type="text" id="companySearch"
+									placeholder="企業名で検索"></td>
+							</tr>
+							<tr>
 								<td>
 									<div>企業</div>
 								</td>
-								<td
-									><select name="companyId" class="company-input">
+								<td><select name="companyId" class="company-input">
 										<c:choose>
 											<%-- 新規登録の時だけ「企業選択」を出す --%>
 											<c:when test="${empty companyId}">
@@ -72,10 +76,9 @@
 												${companyDTO.company.companyName}</option>
 										</c:forEach>
 
-								</select>
-								</td>
+								</select></td>
 							</tr>
-							
+
 							<tr>
 								<td>
 									<div>職種</div>
@@ -219,7 +222,19 @@
 	</footer>
 	<!--処理-->
 	<script>
-
+		const searchInput = document.getElementById("companySearch");
+		const companySelect = document.querySelector("select[name='companyId']");
+		const allOptions = Array.from(companySelect.options);
+	
+		searchInput.addEventListener("input", function() {
+		  const query = this.value.toLowerCase();
+		  
+		  allOptions.forEach(option => {
+		    if(option.value === "") return; // 「企業選択」は常に表示
+		    option.style.display = option.text.toLowerCase().includes(query) ? "" : "none";
+		  });
+		});
+	
 	
 		document.getElementById("jobType").addEventListener("change",
 				function() {
