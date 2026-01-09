@@ -14,33 +14,29 @@ import action.LoginAction;
 
 @WebServlet("/callback")
 public class CallbackController extends HttpServlet {
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// リクエスト情報に対する文字コードの設定する
+
 		request.setCharacterEncoding("UTF-8");
 
-		// 認可コード
-		String code = request.getParameter("code");
-		if (code == null || code.isEmpty()) {
-			System.out.println("認可コードが取得できません");
-			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
-			rd.forward(request, response);
-			return;
-		}
-
 		try {
+			// 認可コード取得
+			String code = request.getParameter("code");
+			if (code == null || code.isEmpty()) {
+				throw new Exception("ログイン処理に失敗しました。もう一度お試しください。");
+			}
+
+			// ログイン処理
 			LoginAction action = new LoginAction();
 			String[] user = action.execute(new String[] { code });
 
-			if (user.length == 0) {
-				//　違うアカウントでログイン
-				RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
-				rd.forward(request, response);
-				return;
+			if (user == null || user.length == 0) {
+				throw new Exception("許可されていないアカウントでログインが行われました。");
 			}
 
-			// セッションにユーザー情報を保存
+			// セッション保存
 			HttpSession session = request.getSession();
 			session.setMaxInactiveInterval(60 * 60 * 24 * 7);
 			session.setAttribute("studentNumber", user[0]);
@@ -48,12 +44,17 @@ public class CallbackController extends HttpServlet {
 			session.setAttribute("email", user[2]);
 			session.setAttribute("role", user[3]);
 
+			// 正常遷移
 			response.sendRedirect("mypage?command=AppointmentMenu");
+
 		} catch (Exception e) {
+			// 開発者向けログ
 			e.printStackTrace();
-			response.getWriter().println("Google認証エラー: " + e.getMessage());
+
+			// ユーザー向けエラーメッセージ
+			request.setAttribute("error", e.getMessage());
+			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
+			rd.forward(request, response);
 		}
-
-
 	}
 }

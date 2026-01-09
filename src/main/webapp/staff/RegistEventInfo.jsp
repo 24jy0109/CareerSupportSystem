@@ -40,7 +40,9 @@
 
 			<div class="registevent-layout">
 
-				<p style="color: red;">${error}</p>
+				<c:if test="${not empty error}">
+					<p class="red-msg">${error}</p>
+				</c:if>
 
 				<!-- 企業名は必ず dto から -->
 				<div class="registevent-row">
@@ -76,7 +78,8 @@
 								class="registevent-input"
 								value="${event.eventStartTime != null
 							? event.eventStartTime.toString().substring(0,16)
-							: ''}" required />
+							: ''}"
+								required />
 						</div>
 
 						<div class="registevent-row">
@@ -85,7 +88,8 @@
 								class="registevent-input"
 								value="${event.eventEndTime != null
 							? event.eventEndTime.toString().substring(0,16)
-							: ''}" required />
+							: ''}"
+								required />
 						</div>
 					</div>
 
@@ -99,7 +103,8 @@
 						<div class="registevent-row">
 							<div class="field-name">定員</div>
 							<input type="number" name="eventCapacity"
-								class="registevent-input" min="1" value="${event.eventCapacity}" required />
+								class="registevent-input" min="1" value="${event.eventCapacity}"
+								required />
 						</div>
 					</div>
 

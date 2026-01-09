@@ -57,7 +57,7 @@ public class LoginController extends HttpServlet {
 		case "TestStaffLogin":
 			LoginAction action = new LoginAction();
 			try {
-				String[] staff = action.execute(new String[] {"TestStaffLogin"});
+				String[] staff = action.execute(new String[] { "TestStaffLogin" });
 				// セッションにユーザー情報を保存
 				session = request.getSession();
 				session.setMaxInactiveInterval(60 * 60 * 24 * 7);
@@ -66,7 +66,10 @@ public class LoginController extends HttpServlet {
 				session.setAttribute("email", staff[2]);
 				session.setAttribute("role", staff[3]);
 			} catch (Exception e) {
-				e.printStackTrace();
+				request.setAttribute("error", e.getMessage());
+				RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
+				rd.forward(request, response);
+				return;
 			}
 			response.sendRedirect("mypage?command=AppointmentMenu");
 			break;

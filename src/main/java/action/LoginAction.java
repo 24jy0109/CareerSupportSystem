@@ -20,6 +20,7 @@ import model.Student;
 public class LoginAction {
 
 	public String[] execute(String[] data) throws Exception {
+
 		String code = data[0];
 
 		// ---- テスト用職員ログイン ----
@@ -28,25 +29,41 @@ public class LoginAction {
 			staff.setStaffName("テスト スタッフ");
 			staff.setStaffEmail("TestStaff@jec.ac.jp");
 
+			// DBA で例外が発生した場合はそのまま上位へ
 			StaffDBAcess staffDBA = new StaffDBAcess();
 			staffDBA.insertStaff(staff);
 
-			return new String[] { String.valueOf(staff.getStaffId()), staff.getStaffName(), staff.getStaffEmail(),
-					"staff" };
+			return new String[] {
+					String.valueOf(staff.getStaffId()),
+					staff.getStaffName(),
+					staff.getStaffEmail(),
+					"staff"
+			};
 		}
 
 		// ---- Key クラスから OAuth 設定取得 ----
 		Key key = new Key();
 
 		// ---- ① 認可コード → アクセストークン ----
-		String accessToken = getAccessToken(code, key);
+		String accessToken;
+		try {
+			accessToken = getAccessToken(code, key);
+		} catch (IOException e) {
+			throw new Exception("Google OAuth 認証（アクセストークン取得）に失敗しました。", e);
+		}
 
 		// ---- ② UserInfo API でユーザー情報取得 ----
-		JSONObject userObj = getUserInfo(accessToken);
+		JSONObject userObj;
+		try {
+			userObj = getUserInfo(accessToken);
+		} catch (IOException e) {
+			throw new Exception("Google UserInfo API からユーザー情報を取得できませんでした。", e);
+		}
+
 		String email = userObj.getString("email");
 
 		if (!email.endsWith("@jec.ac.jp")) {
-			return new String[] {}; // jec以外のメールは無視
+			throw new Exception("許可されていないメールアドレスでのログインが検出されました。");
 		}
 
 		String name = userObj.getString("name");
@@ -55,36 +72,55 @@ public class LoginAction {
 		if (email.matches("^\\d{2}[a-zA-Z]{2}\\d{4}@.*")) {
 			// 生徒
 			String studentNumber = name.substring(0, 8);
+
 			Course course = new Course();
 			course.setCourseCode(name.substring(2, 4));
+
 			String studentName = name.substring(8);
 
 			Student student = new Student(studentNumber, course, null, studentName, email);
+
+			// DBA でのエラーは DBA に責務を委譲
 			StudentDBAcess studentDBA = new StudentDBAcess();
 			studentDBA.insertStudent(student);
 
-			return new String[] { studentNumber, studentName, email, "student" };
+			return new String[] {
+					studentNumber,
+					studentName,
+					email,
+					"student"
+			};
+
 		} else {
 			// 職員
 			Staff staff = new Staff();
 			staff.setStaffName(name);
 			staff.setStaffEmail(email);
 
+			// DBA でのエラーはそのまま throw
 			StaffDBAcess staffDBA = new StaffDBAcess();
 			staffDBA.insertStaff(staff);
 
-			return new String[] { "", name, email, "staff" };
+			return new String[] {
+					"",
+					name,
+					email,
+					"staff"
+			};
 		}
 	}
 
 	private String getAccessToken(String code, Key key) throws IOException {
+
 		URL url = new URL("https://oauth2.googleapis.com/token");
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
 		con.setRequestMethod("POST");
 		con.setDoOutput(true);
 		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
-		String params = "code=" + URLEncoder.encode(code, "UTF-8") +
+		String params =
+				"code=" + URLEncoder.encode(code, "UTF-8") +
 				"&client_id=" + URLEncoder.encode(key.getClientId(), "UTF-8") +
 				"&client_secret=" + URLEncoder.encode(key.getClientSecret(), "UTF-8") +
 				"&redirect_uri=" + URLEncoder.encode(key.getRedirectUri(), "UTF-8") +
@@ -96,31 +132,45 @@ public class LoginAction {
 		}
 
 		int status = con.getResponseCode();
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				(status < 400) ? con.getInputStream() : con.getErrorStream(), "UTF-8"));
+
+		BufferedReader br = new BufferedReader(
+				new InputStreamReader(
+						(status < 400) ? con.getInputStream() : con.getErrorStream(),
+						"UTF-8"
+				)
+		);
 
 		StringBuilder response = new StringBuilder();
 		String line;
-		while ((line = br.readLine()) != null)
+		while ((line = br.readLine()) != null) {
 			response.append(line);
+		}
 
 		if (status >= 400) {
-			throw new IOException("Token endpoint returned HTTP " + status + ": " + response);
+			throw new IOException("Token API HTTP " + status + " : " + response.toString());
 		}
 
 		return new JSONObject(response.toString()).getString("access_token");
 	}
 
 	private JSONObject getUserInfo(String accessToken) throws IOException {
-		URL userUrl = new URL("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + accessToken);
+
+		URL userUrl = new URL(
+				"https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + accessToken
+		);
+
 		HttpURLConnection ucon = (HttpURLConnection) userUrl.openConnection();
 		ucon.setRequestMethod("GET");
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(ucon.getInputStream(), "UTF-8"));
+		BufferedReader br = new BufferedReader(
+				new InputStreamReader(ucon.getInputStream(), "UTF-8")
+		);
+
 		StringBuilder userJson = new StringBuilder();
 		String line;
-		while ((line = br.readLine()) != null)
+		while ((line = br.readLine()) != null) {
 			userJson.append(line);
+		}
 
 		return new JSONObject(userJson.toString());
 	}
