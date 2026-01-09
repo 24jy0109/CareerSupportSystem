@@ -354,6 +354,41 @@ public class CompanyDBAccess extends DBAccess {
 		return list;
 	}
 
+	public List<CompanyDTO> findSimilarCompany(String name) throws Exception {
+		List<CompanyDTO> list = new ArrayList<>();
+		String sql = "SELECT company_id, company_name FROM company WHERE company_name LIKE ?";
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, "%" + name + "%");
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Company company = new Company();
+					company.setCompanyId(rs.getInt("company_id"));
+					company.setCompanyName(rs.getString("company_name"));
+
+					CompanyDTO dto = new CompanyDTO();
+					dto.setCompany(company);
+					list.add(dto);
+				}
+			}
+		}
+		return list;
+	}
+
+	public boolean existsNormalizedCompanyName(String normalizedName) throws Exception {
+		String sql = "SELECT COUNT(*) FROM company WHERE REPLACE(company_name,'株式会社','') = ?";
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, normalizedName);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return rs.getInt(1) > 0;
+				}
+			}
+		}
+		return false;
+	}
+
 	public String searchCompanyNameById(String companyId) throws SQLException, Exception {
 		String companyName = null;
 

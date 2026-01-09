@@ -52,7 +52,8 @@
 								<td>
 									<div>企業</div>
 								</td>
-								<td><select name="companyId" class="company-input">
+								<td
+									><select name="companyId" class="company-input">
 										<c:choose>
 											<%-- 新規登録の時だけ「企業選択」を出す --%>
 											<c:when test="${empty companyId}">
@@ -71,7 +72,8 @@
 												${companyDTO.company.companyName}</option>
 										</c:forEach>
 
-								</select></td>
+								</select>
+								</td>
 							</tr>
 							
 							<tr>

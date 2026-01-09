@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,44 +101,102 @@ public class CompanyController extends HttpServlet {
 				}
 
 				break;
+
+			case "AjaxSearchCompany":
+			    String name = request.getParameter("companyName");
+			    List<CompanyDTO> list = new ArrayList<>();
+			    CompanyDBAccess dbAccess = new CompanyDBAccess(); // ← ここで DAO を作る
+			    try {
+			        list = dbAccess.findSimilarCompany(name); // DAOで曖昧検索
+			    } catch (Exception e) {
+			        e.printStackTrace();
+			    }
+
+			    // JSONに変換して返す
+			    response.setContentType("application/json;charset=UTF-8");
+			    PrintWriter out = response.getWriter();
+			    out.print("[");
+			    for (int i = 0; i < list.size(); i++) {
+			        out.print("{\"companyName\":\"" + list.get(i).getCompany().getCompanyName() + "\"}");
+			        if (i < list.size() - 1)
+			            out.print(",");
+			    }
+			    out.print("]");
+			    out.flush();
+			    return; // JSP遷移しない
+
 			case "CompanyRegisterNext":
 
 				companyId = null;
+				System.out.println("companyId:" + companyId);
 				companyId = request.getParameter("companyId");
 				companyName = request.getParameter("companyName");
 
+				CompanyDBAccess db = new CompanyDBAccess();
+				
+				
 				System.out.println("companyId:" + companyId);
 				System.out.println("companyName:" + companyName);
-				CompanyDBAccess db = new CompanyDBAccess();
 
 				if (companyId == null || companyId == "") {
 					// ① 空白チェック
 					if (companyName == null || companyName.trim().isEmpty()) {
 						request.setAttribute("error", "企業名を入力してください。");
 						nextPage = "staff/CompanyRegister.jsp";
+						System.out.println("空白チェック");
 						break;
 					}
 
-					// ② 重複チェック
-					
+					// (株) が含まれていないかチェック
+					if (companyName.matches(".*[\\(（]株[\\)）].*")) {
+						request.setAttribute("error", "(株) は使用できません。");
+						request.setAttribute("companyName", companyName);
+						request.setAttribute("companyId", companyId);
+						nextPage = "staff/CompanyRegister.jsp";
+						System.out.println("（株）チェック");
+						break;
+					}
+
+					// 前後の「株式会社」を削除
+					String normalizedCompanyName = companyName.trim();
+					normalizedCompanyName = normalizedCompanyName.replaceAll("^株式会社", ""); // 先頭
+					normalizedCompanyName = normalizedCompanyName.replaceAll("株式会社$", ""); // 末尾
+					normalizedCompanyName = normalizedCompanyName.trim();
+
+
 					boolean exists = false;
 					try {
-						exists = db.existsCompanyName(companyName);
+						 exists = db.existsCompanyName(companyName);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					
 
 					if (exists) {
 						request.setAttribute("error", "この企業名はすでに登録されています。");
 						request.setAttribute("companyName", companyName);
 						nextPage = "staff/CompanyRegister.jsp";
+						System.out.println("重複チェック（あり）");
+					} else {
+						// 類似企業検索
+						List<CompanyDTO> similarList = new ArrayList<>();
+						try {
+							similarList = db.findSimilarCompany(normalizedCompanyName);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						if (!similarList.isEmpty()) {
+							// 類似企業があれば JSP に表示
+							request.setAttribute("similarCompanies", similarList);
+						}
+						// 入力値をセットして JSP に戻す（確認ボタンを押すまで登録しない）
+						request.setAttribute("companyName", companyName);
+						request.setAttribute("companyId", companyId);
+						nextPage = "staff/CompanyRegisterConfirm.jsp";
+						System.out.println("重複チェック（なし）");
 						break;
 					}
-
-					// ③ 問題なし → 確認画面
-					request.setAttribute("companyName", companyName);
-					nextPage = "staff/CompanyRegisterConfirm.jsp";
-					break;
 
 				} else {
 					// ① 空白チェック
@@ -145,9 +204,10 @@ public class CompanyController extends HttpServlet {
 						request.setAttribute("error", "企業名を入力してください。");
 						request.setAttribute("companyId", companyId);
 						nextPage = "staff/CompanyRegister.jsp";
+						System.out.println("空白チェック");
 						break;
 					}
-					
+
 					boolean exists = false;
 					try {
 						exists = db.existsCompanyName(companyName);
@@ -168,6 +228,8 @@ public class CompanyController extends HttpServlet {
 					nextPage = "staff/CompanyRegisterConfirm.jsp";
 					break;
 				}
+				
+				break;
 
 				//				企業名追加
 			case "CompanyRegisterConfirm":
