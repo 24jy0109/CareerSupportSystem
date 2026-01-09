@@ -402,4 +402,17 @@ public class CompanyDBAccess extends DBAccess {
 		// 見つからなかった場合
 		return null;
 	}
+
+	public void updateCompany(int companyId, String companyName) throws Exception {
+		String sql = "UPDATE company SET company_name = ? WHERE company_id = ?";
+
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, companyName);
+			ps.setInt(2, companyId);
+			ps.executeUpdate();
+		}
+	}
+
 }

@@ -42,7 +42,7 @@
 
 							<div>
 								<a
-									href="company?command=CompanyRegisterNext&companyId=${companyDTO.company.companyId}">企業名編集</a>
+									href="company?command=CompanyRegister&companyId=${companyDTO.company.companyId}">企業名編集</a>
 							</div>
 						</div>
 						<table>

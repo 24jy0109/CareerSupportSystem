@@ -38,6 +38,7 @@
 		</c:if>
 
 		<form action="graduate" method="post">
+			<c:set var="isStudent" value="${sessionScope.role == 'student'}" />
 			<input type="hidden" name="fromConfirm" value="${fromConfirm}">
 			<input type="hidden" name="updateMode" value="${updateMode}">
 
@@ -65,14 +66,14 @@
 										</c:choose>
 										<!-- 企業一覧 -->
 										<c:forEach var="companyDTO" items="${companies}">
-											<option value="${companyDTO.company.companyId}">
-												<c:if test="${companyId == companyDTO.company.companyId}">selected
-                                                </c:if>
-												${companyDTO.company.companyName}
-											</option>
+											<option value="${companyDTO.company.companyId}"
+												<c:if test="${companyId eq companyDTO.company.companyId}">selected</c:if>>
+												${companyDTO.company.companyName}</option>
 										</c:forEach>
+
 								</select></td>
 							</tr>
+							
 							<tr>
 								<td>
 									<div>職種</div>
@@ -118,49 +119,66 @@
 					<div class="flame">
 						<table class="registscreen-table">
 							<tr>
-								<td>
-									<div>氏名</div>
-								</td>
-								<td><input type="text" name="graduateName"
-									value="${graduateName}" class="name-input"></td>
+								<td><div>氏名</div></td>
+								<td><c:choose>
+										<c:when test="${isStudent}">
+										        ${graduateName}
+										        <input type="hidden" name="graduateName"
+												value="${graduateName}">
+										</c:when>
+										<c:otherwise>
+											<input type="text" name="graduateName"
+												value="${graduateName}" class="name-input">
+										</c:otherwise>
+									</c:choose></td>
 							</tr>
+
 
 							<tr>
 								<td>
 									<div>学科</div>
 								</td>
-								<td><select name="courseCode" class="department-input">
-										<c:choose>
-											<%-- 新規登録の時だけ「学科を選択」を出す --%>
-											<c:when test="${empty courseCode}">
-												<option value="">学科選択</option>
-											</c:when>
+								<td><c:choose>
 
-											<%-- 戻ってきたとき（Back 時）は courseName を見出しに表示 --%>
-											<c:otherwise>
-												<option value="${courseCode}">${courseName}</option>
-											</c:otherwise>
-										</c:choose>
+										<c:when test="${isStudent}">
+											<span class="department-fixed">${courseName}</span>
+											<input type="hidden" name="courseCode" value="${courseCode}">
+										</c:when>
 
-										<!-- 企業一覧 -->
-										<c:forEach var="course" items="${courses}">
-											<option value="${course.courseCode}">
-												<c:if test="${courseCode == course.courseCode}"></c:if>
-												${course.courseName}
-											</option>
-										</c:forEach>
-								</select></td>
+										<c:otherwise>
+											<select name="courseCode" class="department-input">
+												<c:if test="${empty courseCode}">
+													<option value="">学科選択</option>
+												</c:if>
+
+												<c:forEach var="course" items="${courses}">
+													<option value="${course.courseCode}"
+														<c:if test="${courseCode eq course.courseCode}">selected</c:if>>
+														${course.courseName}</option>
+												</c:forEach>
+											</select>
+										</c:otherwise>
+
+									</c:choose></td>
 							</tr>
 							<tr>
-								<td>
-									<div>学籍番号</div>
-								</td>
-								<td><input type="text" name="graduateStudentNumber"
-									value="${graduateStudentNumber}"
-									pattern="^[0-9]{2}[a-z]{2}[0-9]{4}$"
-									title="例: 24jy0101 の形式で入力してください" class="student-number-input">
-								</td>
+								<td><div>学籍番号</div></td>
+								<td><c:choose>
+										<c:when test="${isStudent}">
+								        ${graduateStudentNumber}
+								        <input type="hidden" name="graduateStudentNumber"
+												value="${graduateStudentNumber}">
+										</c:when>
+										<c:otherwise>
+											<input type="text" name="graduateStudentNumber"
+												value="${graduateStudentNumber}"
+												pattern="^[0-9]{2}[a-z]{2}[0-9]{4}$"
+												title="例: 24jy0101 の形式で入力してください"
+												class="student-number-input">
+										</c:otherwise>
+									</c:choose></td>
 							</tr>
+
 							<tr>
 								<td>
 									<div>メールアドレス</div>
@@ -197,8 +215,10 @@
 			<small>&copy; 2024 Example Inc.</small>
 		</p>
 	</footer>
-	<!--	処理-->
+	<!--処理-->
 	<script>
+
+	
 		document.getElementById("jobType").addEventListener("change",
 				function() {
 					const selected = this.value;

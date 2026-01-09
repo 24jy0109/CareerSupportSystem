@@ -39,6 +39,12 @@ public class CompanyAction {
 			List<Staff> staffs = new StaffDBAcess().getAllStaffs();
 			companies.getFirst().setStaffs(staffs);
 			break;
+		case "CompanyUpdate":
+			int id = Integer.parseInt(data[1]);
+			String name = data[2];
+			companyDBA.updateCompany(id, name);
+			break;
+
 		case "CompanyName":
 			companies.add(companyDBA.SearchCompanById(Integer.parseInt(data[2])));
 			break;

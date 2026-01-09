@@ -26,17 +26,18 @@
 		</div>
 	</header>
 
-<!--	<h2>企業登録（確認）</h2>-->
-<!--	<form action="company" method="POST">-->
-<!--		<p>企業名：${param.companyName}</p>-->
-<!--		<input type="hidden" name="companyName" value="${param.companyName}">-->
-<!--		<button type="submit" name="command" value="CompanyRegisterBack">戻る</button>-->
-<!--		<button type="submit" name="command" value="CompanyRegisterConfirm">登録</button>-->
-<!--	</form>-->
+	<!--	<h2>企業登録（確認）</h2>-->
+	<!--	<form action="company" method="POST">-->
+	<!--		<p>企業名：${param.companyName}</p>-->
+	<!--		<input type="hidden" name="companyName" value="${param.companyName}">-->
+	<!--		<button type="submit" name="command" value="CompanyRegisterBack">戻る</button>-->
+	<!--		<button type="submit" name="command" value="CompanyRegisterConfirm">登録</button>-->
+	<!--	</form>-->
 
 
 	<main>
 		<form action="company" method="POST">
+			<input type="hidden" name="companyId" value="${companyId}">
 			<div class="left-screen">
 				<span class="leftscreen-title">企業登録</span>
 				<div class="company-register-flame">
@@ -46,8 +47,8 @@
 								<div>企業名</div>
 							</td>
 							<td>
-								<div>${companyName}</div>
-								 <input type="hidden"name="companyName" value="${companyName}">
+								<div>${companyName}</div> <input type="hidden"
+								name="companyName" value="${companyName}">
 							</td>
 						</tr>
 					</table>

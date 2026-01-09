@@ -285,8 +285,6 @@ public class GraduateDBAccess extends DBAccess {
 		} finally {
 			if (ps != null)
 				ps.close();
-			if (con != null)
-				con.close();
 		}
 	}
 

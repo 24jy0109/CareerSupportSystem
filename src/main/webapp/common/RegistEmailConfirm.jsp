@@ -59,7 +59,7 @@
 	</header>
 	<main>
 		<form action="graduate" method="post">
-		<input type="hidden" name="updateMode" value="${updateMode}">
+			<input type="hidden" name="updateMode" value="${updateMode}">
 
 			<div class="split-screen">
 				<div class="left-screen">
@@ -123,8 +123,8 @@
 									<div>備考（任意）</div>
 								</td>
 								<td>${otherInfo}<input type="hidden" name="otherInfo"
-									value="${otherInfo}"> <input type="hidden"
-									name="fromConfirm" value="${fromConfirm}"></td>
+									value="${otherInfo}">
+								</td>
 							</tr>
 						</table>
 					</div>
@@ -132,11 +132,15 @@
 			</div>
 			<div class="bottom-btn-right">
 				<div class="edit-regist-btn">
-					<button type="submit" name="command" value="RegistEmail">編集</button>
-					<button type="submit" name="command" value="RegistEmailConfirm">登録</button>
-				</div>
-			</div>
+					<div>
+						<input type="hidden" name="fromConfirm" value="true"> <input
+							type="hidden" name="updateMode" value="${updateMode}">
 
+						<button type="submit" name="command" value="RegistEmail">編集</button>
+
+						<button type="submit" name="command" value="RegistEmailConfirm">登録</button>
+					</div>
+				</div>
 		</form>
 
 	</main>

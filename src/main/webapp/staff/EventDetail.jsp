@@ -14,27 +14,6 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <title>開催詳細(職員)</title>
 
-<!--<style>-->
-<!--table {-->
-<!--	border-collapse: collapse;-->
-<!--	width: 80%;-->
-<!--	margin: 20px auto;-->
-<!--}-->
-
-<!--th, td {-->
-<!--	border: 1px solid #333;-->
-<!--	padding: 8px;-->
-<!--}-->
-
-<!--th {-->
-<!--	background-color: #eee;-->
-<!--	width: 30%;-->
-<!--}-->
-
-<!--h2 {-->
-<!--	text-align: center;-->
-<!--}-->
-<!--</style>-->
 </head>
 <body>
 	<header>

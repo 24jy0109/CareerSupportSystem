@@ -93,15 +93,28 @@ public class GraduateAction {
 			graduate.setOtherInfo(data[9]);
 			String otherInfo = data[9];
 
-			//メール送信
-			title = "【連絡先登録完了】";
-			body = "内容をご確認ください。";
-			body += "\n企業名：" + companyName;
-			body += "\n職種：" + jobType;
-			body += "\n学科:" + courseName;
-			body += "\n氏名：" + name;
-			body += "\n学籍番号：" + graduateStudentNumber;
-			body += "\nその他：" + otherInfo;
+			// メール送信（登録完了）
+			title = "【連絡先登録完了】" + name + " 様";
+
+			body = "";
+			body += courseName + "\n";
+			body += name + " 様\n\n";
+
+			body += "連絡先登録ありがとうございます。\n";
+			body += "下記の内容で連絡先情報が登録されましたのでご確認ください。\n\n";
+
+			body += "――――――――――――――\n";
+			body += "企業名　　：" + companyName + "\n";
+			body += "職種　　　：" + jobType + "\n";
+			body += "氏名　　　：" + name + "\n";
+			body += "学籍番号　：" + graduateStudentNumber + "\n";
+			body += "その他　　：" + otherInfo + "\n";
+			body += "――――――――――――――\n\n";
+
+			body += "内容を変更する場合は、再度システムより登録情報の変更をお願いいたします。\n\n";
+
+			body += "本メールはシステムより自動送信されています。\n";
+			body += "本メールに返信されても対応できませんのでご了承ください。";
 
 			mail.setTo(email);
 			mail.setSubject(title);
@@ -152,14 +165,28 @@ public class GraduateAction {
 			otherInfo = data[9];
 
 			// メール送信
-			title = "【連絡先情報更新完了】";
-			body = "内容をご確認ください。";
-			body += "\n企業名：" + companyName;
-			body += "\n職種：" + jobType;
-			body += "\n学科:" + courseName;
-			body += "\n氏名：" + name;
-			body += "\n学籍番号：" + graduateStudentNumber;
-			body += "\nその他：" + otherInfo;
+			title = "【連絡先情報更新完了】" + name + " 様";
+			body = "";
+			body += name + " 様\n\n";
+			body += "情報システム開発科\n";
+			body += name + " 様\n\n";
+
+			body += "連絡先情報の更新が完了しました。\n";
+			body += "下記の内容が現在の登録情報となりますのでご確認ください。\n\n";
+
+			body += "――――――――――――――\n";
+			body += "企業名　　：" + companyName + "\n";
+			body += "職種　　　：" + jobType + "\n";
+			body += "学科　　　：" + courseName + "\n";
+			body += "氏名　　　：" + name + "\n";
+			body += "学籍番号　：" + graduateStudentNumber + "\n";
+			body += "その他　　：" + (otherInfo == null || otherInfo.isEmpty() ? "なし" : otherInfo) + "\n";
+			body += "――――――――――――――\n\n";
+
+			body += "内容を修正する場合は、再度システムより情報の更新をお願いいたします。\n\n";
+
+			body += "本メールはシステムより自動送信されています。\n";
+			body += "本メールに返信されても対応できませんのでご了承ください。\n";
 
 			mail.setTo(email);
 			mail.setSubject(title);
