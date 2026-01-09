@@ -254,7 +254,7 @@ public class EventController extends HttpServlet {
 			case "EventList":
 				nextPage = "staff/EventList.jsp";
 				try {
-					events = eventAction.execute(new String[] { command, studentNumber });
+					events = eventAction.execute(new String[] { command, "" });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

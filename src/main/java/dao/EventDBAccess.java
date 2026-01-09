@@ -192,106 +192,111 @@ public class EventDBAccess extends DBAccess {
 
 	public List<EventDTO> getAllEvents(String studentNumber) throws Exception {
 
-		List<EventDTO> list = new ArrayList<>();
-		Connection con = createConnection();
+	    List<EventDTO> list = new ArrayList<>();
+	    Connection con = createConnection();
 
-		boolean hasStudentNumber = studentNumber != null && !studentNumber.isEmpty();
+	    boolean hasStudentNumber = studentNumber != null && !studentNumber.isEmpty();
 
-		String sql = "SELECT " +
-				"  e.event_id, " +
-				"  e.event_progress, " +
-				"  e.event_capacity, " +
-				"  e.event_start_time, " +
-				"  e.event_end_time, " +
-				"  c.company_id, " +
-				"  c.company_name, " +
-				"  COUNT(js.student_number) AS join_count ";
+	    String sql =
+	        "SELECT " +
+	        "  e.event_id, " +
+	        "  e.event_progress, " +
+	        "  e.event_capacity, " +
+	        "  e.event_start_time, " +
+	        "  e.event_end_time, " +
+	        "  c.company_id, " +
+	        "  c.company_name, " +
+	        "  COUNT(js.student_number) AS join_count ";
 
-		if (hasStudentNumber) {
-			sql += ", js2.join_availability ";
-		}
+	    if (hasStudentNumber) {
+	        sql += ", js2.join_availability ";
+	    }
 
-		sql += "FROM event e " +
-				"JOIN company c " +
-				"  ON e.company_id = c.company_id " +
-				"LEFT JOIN join_student js " +
-				"  ON e.event_id = js.event_id " +
-				" AND js.join_availability = 1 ";
+	    sql +=
+	        "FROM event e " +
+	        "JOIN company c ON e.company_id = c.company_id " +
+	        "LEFT JOIN join_student js ON e.event_id = js.event_id AND js.join_availability = 1 ";
 
-		if (hasStudentNumber) {
-			sql += "LEFT JOIN join_student js2 " +
-					"  ON e.event_id = js2.event_id " +
-					" AND js2.student_number = ? ";
-		}
+	    if (hasStudentNumber) {
+	        sql += "LEFT JOIN join_student js2 ON e.event_id = js2.event_id AND js2.student_number = ? ";
+	    }
 
-		/* ▼ ここが肝 */
-		if (hasStudentNumber) {
-			sql += "WHERE e.event_progress IN (1, 2) ";
-		} else {
-			sql += "WHERE e.event_progress <> 0 ";
-		}
+	    // ▼ WHERE 条件
+	    if (hasStudentNumber) {
+	        // 学籍番号あり → 企画中(1)・開催中(2)のみ
+	        sql += "WHERE e.event_progress IN (1, 2) ";
+	    } else {
+	        // 学籍番号なし → progress=0（未）を除くすべて
+	        sql += "WHERE e.event_progress <> 0 ";
+	    }
 
-		sql += "GROUP BY " +
-				"  e.event_id, " +
-				"  e.event_progress, " +
-				"  e.event_capacity, " +
-				"  e.event_start_time, " +
-				"  e.event_end_time, " +
-				"  c.company_id, " +
-				"  c.company_name ";
+	    sql +=
+	        "GROUP BY " +
+	        "  e.event_id, " +
+	        "  e.event_progress, " +
+	        "  e.event_capacity, " +
+	        "  e.event_start_time, " +
+	        "  e.event_end_time, " +
+	        "  c.company_id, " +
+	        "  c.company_name ";
 
-		if (hasStudentNumber) {
-			sql += ", js2.join_availability ";
-		}
+	    if (hasStudentNumber) {
+	        sql += ", js2.join_availability ";
+	    }
 
-		sql += "ORDER BY " +
-				"  CASE WHEN e.event_progress = 2 THEN 0 ELSE 1 END, " +
-				"  e.event_start_time ASC";
+	    sql += "ORDER BY e.event_start_time ASC";
 
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
+	    try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-			if (hasStudentNumber) {
-				ps.setString(1, studentNumber);
-			}
+	        if (hasStudentNumber) {
+	            ps.setString(1, studentNumber);
+	        }
 
-			try (ResultSet rs = ps.executeQuery()) {
+	        try (ResultSet rs = ps.executeQuery()) {
 
-				while (rs.next()) {
+	            while (rs.next()) {
 
-					Event event = new Event();
-					event.setEventId(rs.getInt("event_id"));
-					event.setEventProgress(rs.getInt("event_progress"));
-					event.setEventCapacity(rs.getInt("event_capacity"));
-					event.setEventStartTime(
-							rs.getTimestamp("event_start_time").toLocalDateTime());
-					event.setEventEndTime(
-							rs.getTimestamp("event_end_time").toLocalDateTime());
+	                Event event = new Event();
+	                event.setEventId(rs.getInt("event_id"));
+	                event.setEventProgress(rs.getInt("event_progress"));
+	                event.setEventCapacity(rs.getInt("event_capacity"));
 
-					Company company = new Company();
-					company.setCompanyId(rs.getInt("company_id"));
-					company.setCompanyName(rs.getString("company_name"));
-					event.setCompany(company);
+	                // ▼ NULL 安全
+	                Timestamp startTs = rs.getTimestamp("event_start_time");
+	                if (startTs != null) {
+	                    event.setEventStartTime(startTs.toLocalDateTime());
+	                }
 
-					EventDTO dto = new EventDTO();
-					dto.setEvent(event);
-					dto.setJoinStudentCount(rs.getInt("join_count"));
+	                Timestamp endTs = rs.getTimestamp("event_end_time");
+	                if (endTs != null) {
+	                    event.setEventEndTime(endTs.toLocalDateTime());
+	                }
 
-					if (hasStudentNumber) {
-						Boolean joinAvailability = (Boolean) rs.getObject("join_availability");
-						dto.setJoinAvailability(joinAvailability);
-					}
+	                Company company = new Company();
+	                company.setCompanyId(rs.getInt("company_id"));
+	                company.setCompanyName(rs.getString("company_name"));
+	                event.setCompany(company);
 
-					list.add(dto);
-				}
-			}
+	                EventDTO dto = new EventDTO();
+	                dto.setEvent(event);
+	                dto.setJoinStudentCount(rs.getInt("join_count"));
 
-		} finally {
-			if (con != null)
-				con.close();
-		}
+	                if (hasStudentNumber) {
+	                    Boolean joinAvailability = (Boolean) rs.getObject("join_availability");
+	                    dto.setJoinAvailability(joinAvailability);
+	                }
 
-		return list;
+	                list.add(dto);
+	            }
+	        }
+
+	    } finally {
+	        if (con != null) con.close();
+	    }
+
+	    return list;
 	}
+
 
 	public EventDTO searchEventById(int eventId) throws Exception {
 
