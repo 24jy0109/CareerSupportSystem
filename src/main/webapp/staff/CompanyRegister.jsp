@@ -43,25 +43,15 @@
 					<table class="registscreen-table">
 						<tr>
 							<td>
-								<div>企業名</div>
+								<div id="compay-name">企業名</div>
 							</td>
 							<td><input type="text" id="companyName" name="companyName"
 								class="company-input" value="${companyName}"
 								placeholder="${empty companyName ? '企業名を入力' : ''}"></td>
 						</tr>
 					</table>
-					<p>(株)は使えません</p>
-
-					<!-- 類似企業表示 -->
-					<div id="similarCompanies">
-						<c:if test="${not empty similarCompanies}">
-							<ul>
-								<c:forEach var="dto" items="${similarCompanies}">
-									<li>${dto.company.companyName}</li>
-								</c:forEach>
-							</ul>
-						</c:if>
-					</div>
+					<div class="warning-stock">(株)
+						は入力できません。会社名は「株式会社〇〇」もしくは「○○株式会社」としてください。</div>
 
 				</div>
 			</div>
@@ -70,6 +60,18 @@
 				<button type="submit" name="command" value="CompanyRegisterNext">確認</button>
 			</div>
 		</form>
+
+		<!-- 類似企業表示 -->
+		<div>もしかして…</div>
+		<div id="similarCompanies">
+			<c:if test="${not empty similarCompanies}">
+				<ul>
+					<c:forEach var="dto" items="${similarCompanies}">
+						<li>${dto.company.companyName}</li>
+					</c:forEach>
+				</ul>
+			</c:if>
+		</div>
 
 	</main>
 
@@ -81,6 +83,37 @@
 
 
 </body>
+
+<!-- 直書きCSS -->
+<style>
+.warning-stock {
+	color: #555; /* 強すぎないグレー */
+	font-size: 0.9em; /* 少し小さめ */
+	margin-top: 5px; /* 上とのスペース */
+	margin-left: 10px; /* 左少しスペース */
+	padding-left: 10px; /* 入力欄との微調整 */
+	font-style: italic; /* 柔らかい印象 */
+}
+
+/* フレームの大きさを変える */
+.company-register-flame {
+	width: 700px;
+	height: 200px;
+	background-color: #a9e2bd;
+	border: 1px solid #009a36;
+	border-radius: 6px;
+	margin-top: 20px;
+}
+
+#compay-name {
+	text-align: center;
+}
+
+li {
+	font-size: 20px;
+}
+</style>
+
 <script>
 const input = document.getElementById('companyName'); // id を付けた
 const similarDiv = document.getElementById('similarCompanies');
