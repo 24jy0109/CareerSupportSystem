@@ -49,7 +49,6 @@
 								<table class="detail-table">
 									<c:forEach var="event" items="${companyDTO.company.events}">
 										<tr class="noline">
-											<td>${event.eventPlace}</td>
 											<td>
 												${event.eventStartTime.year}/${event.eventStartTime.monthValue}/${event.eventStartTime.dayOfMonth}</td>
 											<td>${event.eventStartTime.hour < 10 ? '0' : ''}${event.eventStartTime.hour}:${event.eventStartTime.minute < 10 ? '0' : ''}${event.eventStartTime.minute}</td>
@@ -60,6 +59,7 @@
 											<td>${event.eventEndTime.hour < 10 ? '0' : ''}${event.eventEndTime.hour}:${event.eventEndTime.minute
 												< 10 ? '0' : ''}${event.eventEndTime.minute}</td>
 											</td>
+											<td>${event.eventPlace}</td>
 
 
 										</tr>

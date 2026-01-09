@@ -90,7 +90,7 @@
 
 
 												<!--									</div>-->
-												<td><div class="detail-data">${g.graduateName}</div></td>
+									
 												<td><div class="detail-data">${g.course.courseName}</div></td>
 												<td>
 													<div class="detail-data">${g.graduateJobCategory}</div>
@@ -123,12 +123,12 @@
 
 							<%-- 参加済み --%>
 							<c:when test="${event.joinAvailability == true}">
-		参加予定
+		<div class="eventdetail-msg">参加予定</div>
 	</c:when>
 
 							<%-- 不参加 --%>
 							<c:when test="${event.joinAvailability == false}">
-		不参加
+		<div class="eventdetail-msg">不参加</div>
 	</c:when>
 
 							<%-- 未回答 --%>

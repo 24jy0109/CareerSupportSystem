@@ -83,6 +83,11 @@
     font-size: 25px;
 }
 
+.company-link{
+	text-decoration: none;
+	color: black;
+}
+
 .request {
     color: red;
 }
