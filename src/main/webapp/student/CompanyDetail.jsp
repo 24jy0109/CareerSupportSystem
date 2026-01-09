@@ -5,8 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/companylist.css">
+<link rel="stylesheet" href="./css/layout.css">
 <title>企業詳細</title>
 </head>
 <body>
@@ -68,7 +68,7 @@
 							</c:if>
 						</div>
 						<c:if test="${empty companyDTO.company.events}">
-							<td>開催予定のイベントはありません</td>
+							<div class="red-msg">開催予定のイベントはありません</div>
 						</c:if>
 					</div>
 				</div>
@@ -78,36 +78,30 @@
 					<table>
 						<thead>
 							<tr>
-								<th>卒業生番号</th>
-								<th>名前</th>
-								<th>メール</th>
-								<th>職種</th>
-								<th>学科</th>
 								<th>卒業年次</th>
+								<th>学科</th>
+								<th>職種</th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach var="grad" items="${companyDTO.company.graduates}">
 								<tr>
-									<td>${grad.graduateStudentNumber}</td>
-									<td>${grad.graduateName}</td>
-									<td>${grad.graduateEmail}</td>
-									<td>${grad.graduateJobCategory}</td>
-									<td>${grad.course.courseName}</td>
 									<td>${grad.course.courseTerm}</td>
+									<td>${grad.course.courseName}</td>
+									<td>${grad.graduateJobCategory}</td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
 				</c:if>
-				<c:if test="${empty companyDTO.company.graduates}">
-					<p>卒業生情報はありません</p>
+				<c:if test="${empty companyDTO.company.graduates}" >
+					<div class="red-msg">卒業生情報はありません</div>
 				</c:if>
 		</div>
 		</c:if>
 
 		<c:if test="${empty companies}">
-			<p>企業情報が見つかりません。</p>
+			<div class="red-msg">企業情報が見つかりません。</div>
 		</c:if>
 
 		<div class="bottom-btn-split">

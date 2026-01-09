@@ -30,12 +30,11 @@
 	<main>
 		<!-- ▼検索フォーム -->
 		<form action="company" method="GET">
-			<input type="hidden" name="command" value="CompanyList"> 
+			<input type="hidden" name="command" value="CompanyList">
 			<div class="search">
-			<input
-				type="text" name="companyName" placeholder="企業名で検索"
-				value="${param.companyName}" class="search-box">
-			<button type="submit" class="search-button">検索</button>
+				<input type="text" name="companyName" placeholder="企業名で検索"
+					value="${param.companyName}" class="search-box">
+				<button type="submit" class="search-button">検索</button>
 			</div>
 		</form>
 
@@ -72,7 +71,14 @@
 								</c:otherwise>
 							</c:choose>
 
-							<td>${company.isRequest}</td>
+							<c:choose>
+								<c:when test="${company.isRequest == '申請済み'}">
+									<td class="red-msg">申請済</td>
+								</c:when>
+								<c:otherwise>
+									<td>${company.isRequest}</td>
+								</c:otherwise>
+							</c:choose>
 							<td>${company.graduateCount}</td>
 							<td><a
 								href="company?command=CompanyDetail&companyId=${company.company.companyId}">

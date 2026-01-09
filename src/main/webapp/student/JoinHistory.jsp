@@ -37,7 +37,11 @@
 			<!--				<th>イベントID</th>-->
 			<!--				<th>状態</th>-->
 			<!--			</tr>-->
-
+			<c:if test="${empty events} ">
+				<div class="errormsg">イベントは存在しません。</div>
+			</c:if>
+			
+			
 			<c:forEach var="dto" items="${events}">
 				<c:if test="${dto.event.eventProgress == \"ONGOING\"}">
 					<tr>
