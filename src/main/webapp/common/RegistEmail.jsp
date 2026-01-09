@@ -151,8 +151,11 @@
 										</c:when>
 
 										<c:otherwise>
-										
-											<select name="courseCode" class="department-input">
+											<!-- 学科検索 -->
+											<input type="text" id="courseSearch" placeholder="学科名で検索"
+												style="margin-bottom: 6px;">
+											<select name="courseCode" class="department-input"
+												id="courseSelect">
 												<c:if test="${empty courseCode}">
 													<option value="">学科選択</option>
 												</c:if>
@@ -223,18 +226,38 @@
 	</footer>
 	<!--処理-->
 	<script>
-		const searchInput = document.getElementById("companySearch");
-		const companySelect = document.querySelector("select[name='companyId']");
-		const allOptions = Array.from(companySelect.options);
-	
-		searchInput.addEventListener("input", function() {
-		  const query = this.value.toLowerCase();
-		  
-		  allOptions.forEach(option => {
-		    if(option.value === "") return; // 「企業選択」は常に表示
-		    option.style.display = option.text.toLowerCase().includes(query) ? "" : "none";
-		  });
-		});
+	/* ===== 企業検索 ===== */
+	const searchInput = document.getElementById("companySearch");
+	const companySelect = document.querySelector("select[name='companyId']");
+	const allOptions = Array.from(companySelect.options);
+
+	searchInput.addEventListener("input", function () {
+	  const query = this.value.toLowerCase();
+
+	  allOptions.forEach(option => {
+	    if (option.value === "") return;
+	    option.style.display =
+	      option.text.toLowerCase().includes(query) ? "" : "none";
+	  });
+	});
+
+	/* ===== 学科検索（職員のみ） ===== */
+	const courseSearch = document.getElementById("courseSearch");
+	const courseSelect = document.getElementById("courseSelect");
+
+	if (courseSearch && courseSelect) {
+	  const allCourseOptions = Array.from(courseSelect.options);
+
+	  courseSearch.addEventListener("input", function () {
+	    const query = this.value.toLowerCase();
+
+	    allCourseOptions.forEach(option => {
+	      if (option.value === "") return;
+	      option.style.display =
+	        option.text.toLowerCase().includes(query) ? "" : "none";
+	    });
+	  });
+	} 
 	
 	
 		document.getElementById("jobType").addEventListener("change",
