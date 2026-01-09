@@ -191,6 +191,7 @@ public class EventDBAccess extends DBAccess {
 	}
 
 	public List<EventDTO> getAllEvents(String studentNumber) throws Exception {
+
 		List<EventDTO> list = new ArrayList<>();
 		Connection con = createConnection();
 
@@ -206,7 +207,6 @@ public class EventDBAccess extends DBAccess {
 				"  c.company_name, " +
 				"  COUNT(js.student_number) AS join_count ";
 
-		// studentNumber がある場合のみ joinAvailability を取得
 		if (hasStudentNumber) {
 			sql += ", js2.join_availability ";
 		}
@@ -224,8 +224,14 @@ public class EventDBAccess extends DBAccess {
 					" AND js2.student_number = ? ";
 		}
 
-		sql += "WHERE e.event_progress <> 0 " +
-				"GROUP BY " +
+		/* ▼ ここが肝 */
+		if (hasStudentNumber) {
+			sql += "WHERE e.event_progress IN (1, 2) ";
+		} else {
+			sql += "WHERE e.event_progress <> 0 ";
+		}
+
+		sql += "GROUP BY " +
 				"  e.event_id, " +
 				"  e.event_progress, " +
 				"  e.event_capacity, " +
@@ -252,7 +258,6 @@ public class EventDBAccess extends DBAccess {
 
 				while (rs.next()) {
 
-					// -------- Event --------
 					Event event = new Event();
 					event.setEventId(rs.getInt("event_id"));
 					event.setEventProgress(rs.getInt("event_progress"));
@@ -262,18 +267,15 @@ public class EventDBAccess extends DBAccess {
 					event.setEventEndTime(
 							rs.getTimestamp("event_end_time").toLocalDateTime());
 
-					// -------- Company --------
 					Company company = new Company();
 					company.setCompanyId(rs.getInt("company_id"));
 					company.setCompanyName(rs.getString("company_name"));
 					event.setCompany(company);
 
-					// -------- EventDTO --------
 					EventDTO dto = new EventDTO();
 					dto.setEvent(event);
 					dto.setJoinStudentCount(rs.getInt("join_count"));
 
-					// studentNumber がある場合のみセット
 					if (hasStudentNumber) {
 						Boolean joinAvailability = (Boolean) rs.getObject("join_availability");
 						dto.setJoinAvailability(joinAvailability);
