@@ -119,27 +119,27 @@
 
 					<%-- 参加可否表示 --%>
 					<div class="join-status">
-						<div class="bottom-btn-right">
-							<div class="btn-gap">
-								<c:choose>
+						<c:choose>
 
-									<%-- 参加済み --%>
-									<c:when test="${event.joinAvailability == true}">
+							<%-- 参加済み --%>
+							<c:when test="${event.joinAvailability == true}">
 		参加予定
 	</c:when>
 
-									<%-- 不参加 --%>
-									<c:when test="${event.joinAvailability == false}">
+							<%-- 不参加 --%>
+							<c:when test="${event.joinAvailability == false}">
 		不参加
 	</c:when>
 
-									<%-- 未回答 --%>
-									<c:otherwise>
-										<c:choose>
+							<%-- 未回答 --%>
+							<c:otherwise>
+								<c:choose>
 
-											<%-- 定員未達 --%>
-											<c:when
-												test="${event.joinStudentCount < event.event.eventCapacity}">
+									<%-- 定員未達 --%>
+									<c:when
+										test="${event.joinStudentCount < event.event.eventCapacity}">
+										<div class="bottom-btn-right">
+											<div class="btn-gap">
 												<button type="button"
 													onclick="location.href='event?command=EventJoin&eventId=${event.event.eventId}'">
 													参加</button>
@@ -147,21 +147,20 @@
 												<button type="button"
 													onclick="location.href='event?command=EventNotJoin&eventId=${event.event.eventId}'"
 													class="white-btn">不参加</button>
-											</c:when>
-
-											<%-- 定員到達 --%>
-											<c:otherwise>
-				満員です
+											</div>
+										</div>
+									</c:when>
+									<%-- 定員到達 --%>
+									<c:otherwise>
+				<div class="eventdetail-msg">満員です</div>
 			</c:otherwise>
 
-										</c:choose>
-									</c:otherwise>
-
 								</c:choose>
+							</c:otherwise>
+
+						</c:choose>
 
 
-							</div>
-						</div>
 
 					</div>
 				</c:otherwise>

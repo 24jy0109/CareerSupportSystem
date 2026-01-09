@@ -37,11 +37,11 @@
 			<!--				<th>イベントID</th>-->
 			<!--				<th>状態</th>-->
 			<!--			</tr>-->
-			<c:if test="${empty events} ">
-				<div class="errormsg">イベントは存在しません。</div>
+			<c:if test="${empty requestScope.events}">
+				<div class="red-msg">イベントは存在しません。</div>
 			</c:if>
-			
-			
+
+
 			<c:forEach var="dto" items="${events}">
 				<c:if test="${dto.event.eventProgress == \"ONGOING\"}">
 					<tr>
@@ -75,35 +75,42 @@
 			<!--			</tr>-->
 
 
+			<c:set var="hasHistory" value="false" />
 
 			<c:forEach var="dto" items="${events}">
-				<c:if test="${empty dto.event}">
-					<div class="errormsg">履歴がありません。</div>
-				</c:if>
-
 				<c:if
-					test="${dto.event.eventProgress == \"FINISHED\" || dto.event.eventProgress == \"CANCELED\"}">
+					test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
+					<c:set var="hasHistory" value="true" />
+				</c:if>
+			</c:forEach>
+
+			<c:if test="${not hasHistory}">
+				<div class="errormsg">履歴がありません。</div>
+			</c:if>
+
+			<c:forEach var="dto" items="${events}">
+				<c:if
+					test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
 					<tr>
 						<td>${dto.event.company.companyName}</td>
 						<td><a
 							href="event?command=EventDetail&eventId=${dto.event.eventId}">
 								開催詳細 </a></td>
 						<td><c:choose>
-								<c:when test="${dto.event.eventProgress == \"CANCELED\"}">
-							中止
-						</c:when>
+								<c:when test="${dto.event.eventProgress == 'CANCELED'}">
+						中止
+					</c:when>
 								<c:when test="${dto.joinAvailability}">
-							参加済
-						</c:when>
+						参加済
+					</c:when>
 								<c:otherwise>
-							不参加
-						</c:otherwise>
+						不参加
+					</c:otherwise>
 							</c:choose></td>
 					</tr>
-
 				</c:if>
-
 			</c:forEach>
+
 		</table>
 
 	</main>

@@ -209,6 +209,11 @@
 	border-bottom: none;
 }
 
+.eventdetail-msg{
+	text-align: center;
+	font-size: 20px;
+}
+
 /* ーーー参加一覧/履歴画面（生徒）ーーー */
 
 /* 参加一覧、履歴 */
