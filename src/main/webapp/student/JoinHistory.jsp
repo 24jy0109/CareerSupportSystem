@@ -37,8 +37,8 @@
 			<!--				<th>イベントID</th>-->
 			<!--				<th>状態</th>-->
 			<!--			</tr>-->
-			<c:if test="${empty events} ">
-				<div class="errormsg">イベントは存在しません。</div>
+			<c:if test="${empty requestScope.events}">
+				<div class="red-msg">イベントは存在しません。</div>
 			</c:if>
 			
 			
@@ -75,11 +75,11 @@
 			<!--			</tr>-->
 
 
+			<c:if test="${empty event}">
+				<div class="errormsg">履歴がありません。</div>
+			</c:if>
 
 			<c:forEach var="dto" items="${events}">
-				<c:if test="${empty dto.event}">
-					<div class="errormsg">履歴がありません。</div>
-				</c:if>
 
 				<c:if
 					test="${dto.event.eventProgress == \"FINISHED\" || dto.event.eventProgress == \"CANCELED\"}">
