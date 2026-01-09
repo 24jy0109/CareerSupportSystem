@@ -151,6 +151,7 @@
 										</c:when>
 
 										<c:otherwise>
+										
 											<select name="courseCode" class="department-input">
 												<c:if test="${empty courseCode}">
 													<option value="">学科選択</option>
