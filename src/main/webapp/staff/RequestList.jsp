@@ -47,60 +47,68 @@
 						</c:otherwise>
 					</c:choose>
 
+
 					<div class="event">
 						<div class="event-info">
-							<c:if test="${empty company.events}">
-								<p class="errormsg">対象イベントがありません。</p>
-							</c:if>
+							<div class="event-frex">
+								<div class="field-name">開催情報</div>
+								<table class="detail-table">
 
-							<c:forEach var="ev" items="${company.events}">
-								<div class="event-frex">
+									<c:if test="${empty company.events}">
+										<tr class="noline">
+											<p class="errormsg">対象イベントがありません。</p>
+										</tr>
+									</c:if>
 
-									<div>${ev.eventStartTime.year}/${ev.eventStartTime.monthValue}/${ev.eventStartTime.dayOfMonth}
-										${ev.eventStartTime.hour < 10 ? '0' : ''}${ev.eventStartTime.hour}:${ev.eventStartTime.minute < 10 ? '0' : ''}${ev.eventStartTime.minute}～
-										${ev.eventEndTime.year}/${ev.eventEndTime.monthValue}/${ev.eventEndTime.dayOfMonth}
-										${ev.eventEndTime.hour < 10 ? '0' : ''}${ev.eventEndTime.hour}:${ev.eventEndTime.minute < 10 ? '0' : ''}${ev.eventEndTime.minute}</div>
-									<div>${ev.eventPlace}</div>
-								</div>
-							</c:forEach>
+									<c:forEach var="ev" items="${company.events}">
+										<tr class="noline">
+
+											<td>${ev.eventStartTime.year}/${ev.eventStartTime.monthValue}/${ev.eventStartTime.dayOfMonth}</td>
+											<td>${ev.eventStartTime.hour < 10 ? '0' : ''}${ev.eventStartTime.hour}:${ev.eventStartTime.minute < 10 ? '0' : ''}${ev.eventStartTime.minute}</td>
+											<td>～</td>
+											<td>${ev.eventEndTime.year}/${ev.eventEndTime.monthValue}/${ev.eventEndTime.dayOfMonth}</td>
+											<td>${ev.eventEndTime.hour < 10 ? '0' : ''}${ev.eventEndTime.hour}:${ev.eventEndTime.minute < 10 ? '0' : ''}${ev.eventEndTime.minute}</td>
+											<td>${ev.eventPlace}</td>
+										</tr>
+									</c:forEach>
+								</table>
+							</div>
 						</div>
+
+
 					</div>
+					<c:if test="${empty requests}">
+						<p class="errormsg">リクエストした学生はいません。</p>
+					</c:if>
+					<c:if test="${not empty requests}">
 
-
-				</div>
-				<c:if test="${empty requests}">
-					<p class="errormsg">リクエストした学生はいません。</p>
-				</c:if>
-				<c:if test="${not empty requests}">
-
-					<table class="request-table">
-						<tr class="request-info">
-							<th class="request-h">氏名</th>
-							<th class="request-h">学科</th>
-							<th class="request-h">学籍番号</th>
-							<th class="request-h">リクエスト日時</th>
-						</tr>
-
-						<c:forEach var="req" items="${requests}">
+						<table class="request-table">
 							<tr class="request-info">
-								<td>${req.student.studentName}</td>
-								<td>${req.student.course.courseName}</td>
-								<td>${req.student.studentNumber}</td>
-								<td>${req.requestTime.year}/${req.requestTime.monthValue}/${req.requestTime.dayOfMonth}
-									${req.requestTime.hour < 10 ? '0' : ''}${req.requestTime.hour}:${req.requestTime.minute < 10 ? '0' : ''}${req.requestTime.minute}
-								</td>
+								<th class="request-h">氏名</th>
+								<th class="request-h">学科</th>
+								<th class="request-h">学籍番号</th>
+								<th class="request-h">リクエスト日時</th>
 							</tr>
-						</c:forEach>
 
-					</table>
-				</c:if>
+							<c:forEach var="req" items="${requests}">
+								<tr class="request-info">
+									<td>${req.student.studentName}</td>
+									<td>${req.student.course.courseName}</td>
+									<td>${req.student.studentNumber}</td>
+									<td>${req.requestTime.year}/${req.requestTime.monthValue}/${req.requestTime.dayOfMonth}
+										${req.requestTime.hour < 10 ? '0' : ''}${req.requestTime.hour}:${req.requestTime.minute < 10 ? '0' : ''}${req.requestTime.minute}
+									</td>
+								</tr>
+							</c:forEach>
 
-				<div class="bottom-btn-left">
-					<!-- 戻るボタン　左側 -->
-					<button type="button"
-						onclick="location.href='company?command=CompanyList'">企業一覧に戻る</button>
-				</div>
+						</table>
+					</c:if>
 
+					<div class="bottom-btn-left">
+						<!-- 戻るボタン　左側 -->
+						<button type="button"
+							onclick="location.href='company?command=CompanyList'">企業一覧に戻る</button>
+					</div>
 			</main>
 		</div>
 

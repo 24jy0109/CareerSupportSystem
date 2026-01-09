@@ -88,7 +88,8 @@
 				<c:otherwise>
 					<c:forEach var="company" items="${companies}">
 						<tr class="company-r data-row">
-							<td>${company.company.companyName}</td>
+							<td ><a 
+								href="company?command=CompanyDetail&companyId=${company.company.companyId}" class="company-link">${company.company.companyName}<a></a></td>
 
 							<c:choose>
 								<c:when test="${company.eventProgress == '開催'}">

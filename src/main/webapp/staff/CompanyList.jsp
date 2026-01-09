@@ -46,14 +46,13 @@
 
 			<c:forEach var="companyDTO" items="${companies}">
 				<tr class="company-r">
-					<td>${companyDTO.company.companyName}</td>
+					<td><a 
+						href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}" class="company-link">
+							${companyDTO.company.companyName}</a></td>
 
-					<td>
-						<a
-							href="./graduate?companyId=${companyDTO.company.companyId}&command=editInfo">
-							情報編集
-						</a>
-					</td>
+					<td><a
+						href="./graduate?companyId=${companyDTO.company.companyId}&command=editInfo">
+							情報編集 </a></td>
 
 					<c:choose>
 						<c:when test="${companyDTO.eventProgress == '開催'}">
@@ -64,27 +63,21 @@
 						</c:otherwise>
 					</c:choose>
 
-					<td>
-						<c:choose>
+					<td><c:choose>
 							<c:when test="${companyDTO.requestCount > 0}">
 								<a
 									href="appointment_request?command=RequestList&companyId=${companyDTO.company.companyId}">
-									申請者一覧
-								</a>
+									申請者一覧 </a>
 								<p>${companyDTO.requestCount}人</p>
 							</c:when>
 							<c:otherwise>
 								<p style="padding: 1.25rem 0;">${companyDTO.requestCount}人</p>
 							</c:otherwise>
-						</c:choose>
-					</td>
+						</c:choose></td>
 
-					<td>
-						<a
-							href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}">
-							開催情報登録
-						</a>
-					</td>
+					<td><a
+						href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}">
+							開催情報登録 </a></td>
 				</tr>
 			</c:forEach>
 		</table>
