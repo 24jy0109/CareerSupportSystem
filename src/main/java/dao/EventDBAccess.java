@@ -190,10 +190,11 @@ public class EventDBAccess extends DBAccess {
 		}
 	}
 
-	public List<EventDTO> getAllEvents() throws Exception {
-
+	public List<EventDTO> getAllEvents(String studentNumber) throws Exception {
 		List<EventDTO> list = new ArrayList<>();
 		Connection con = createConnection();
+
+		boolean hasStudentNumber = studentNumber != null && !studentNumber.isEmpty();
 
 		String sql = "SELECT " +
 				"  e.event_id, " +
@@ -203,14 +204,27 @@ public class EventDBAccess extends DBAccess {
 				"  e.event_end_time, " +
 				"  c.company_id, " +
 				"  c.company_name, " +
-				"  COUNT(js.student_number) AS join_count " +
-				"FROM event e " +
+				"  COUNT(js.student_number) AS join_count ";
+
+		// studentNumber がある場合のみ joinAvailability を取得
+		if (hasStudentNumber) {
+			sql += ", js2.join_availability ";
+		}
+
+		sql += "FROM event e " +
 				"JOIN company c " +
 				"  ON e.company_id = c.company_id " +
 				"LEFT JOIN join_student js " +
 				"  ON e.event_id = js.event_id " +
-				" AND js.join_availability = 1 " +
-				"WHERE e.event_progress <> 0 " +
+				" AND js.join_availability = 1 ";
+
+		if (hasStudentNumber) {
+			sql += "LEFT JOIN join_student js2 " +
+					"  ON e.event_id = js2.event_id " +
+					" AND js2.student_number = ? ";
+		}
+
+		sql += "WHERE e.event_progress <> 0 " +
 				"GROUP BY " +
 				"  e.event_id, " +
 				"  e.event_progress, " +
@@ -218,39 +232,55 @@ public class EventDBAccess extends DBAccess {
 				"  e.event_start_time, " +
 				"  e.event_end_time, " +
 				"  c.company_id, " +
-				"  c.company_name " +
-				"ORDER BY " +
+				"  c.company_name ";
+
+		if (hasStudentNumber) {
+			sql += ", js2.join_availability ";
+		}
+
+		sql += "ORDER BY " +
 				"  CASE WHEN e.event_progress = 2 THEN 0 ELSE 1 END, " +
 				"  e.event_start_time ASC";
 
-		try (PreparedStatement ps = con.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()) {
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-			while (rs.next()) {
+			if (hasStudentNumber) {
+				ps.setString(1, studentNumber);
+			}
 
-				// -------- Event --------
-				Event event = new Event();
-				event.setEventId(rs.getInt("event_id"));
-				event.setEventProgress(rs.getInt("event_progress"));
-				event.setEventCapacity(rs.getInt("event_capacity"));
+			try (ResultSet rs = ps.executeQuery()) {
 
-				event.setEventStartTime(
-						rs.getTimestamp("event_start_time").toLocalDateTime());
-				event.setEventEndTime(
-						rs.getTimestamp("event_end_time").toLocalDateTime());
+				while (rs.next()) {
 
-				// -------- Company --------
-				Company company = new Company();
-				company.setCompanyId(rs.getInt("company_id"));
-				company.setCompanyName(rs.getString("company_name"));
-				event.setCompany(company);
+					// -------- Event --------
+					Event event = new Event();
+					event.setEventId(rs.getInt("event_id"));
+					event.setEventProgress(rs.getInt("event_progress"));
+					event.setEventCapacity(rs.getInt("event_capacity"));
+					event.setEventStartTime(
+							rs.getTimestamp("event_start_time").toLocalDateTime());
+					event.setEventEndTime(
+							rs.getTimestamp("event_end_time").toLocalDateTime());
 
-				// -------- EventDTO --------
-				EventDTO dto = new EventDTO();
-				dto.setEvent(event);
-				dto.setJoinStudentCount(rs.getInt("join_count"));
+					// -------- Company --------
+					Company company = new Company();
+					company.setCompanyId(rs.getInt("company_id"));
+					company.setCompanyName(rs.getString("company_name"));
+					event.setCompany(company);
 
-				list.add(dto);
+					// -------- EventDTO --------
+					EventDTO dto = new EventDTO();
+					dto.setEvent(event);
+					dto.setJoinStudentCount(rs.getInt("join_count"));
+
+					// studentNumber がある場合のみセット
+					if (hasStudentNumber) {
+						Boolean joinAvailability = (Boolean) rs.getObject("join_availability");
+						dto.setJoinAvailability(joinAvailability);
+					}
+
+					list.add(dto);
+				}
 			}
 
 		} finally {

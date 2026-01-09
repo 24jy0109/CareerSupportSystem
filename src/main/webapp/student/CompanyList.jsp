@@ -10,6 +10,36 @@
 <link rel="stylesheet" href="./css/layout.css">
 <title>企業リスト</title>
 
+<style>
+.pagination {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.pagination button {
+	color: black;
+	margin: 0 4px;
+	padding: 6px 10px;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	color: #333;
+	cursor: pointer;
+}
+
+.pagination button:hover {
+	background-color: #f2f2f2;
+}
+
+/* 現在ページ */
+.pagination button.active {
+	background-color: #e6f4ea; /* 薄い緑 */
+	border-color: #009A37; /* 濃い緑で枠 */
+	color: #006b2e; /* 文字は濃い緑 */
+	font-weight: 600;
+	cursor: default;
+}
+</style>
 </head>
 <body>
 	<header>
@@ -27,6 +57,7 @@
 			<div class="header-user">ようこそ${name}さん</div>
 		</div>
 	</header>
+
 	<main>
 		<!-- ▼検索フォーム -->
 		<form action="company" method="GET">
@@ -38,7 +69,6 @@
 			</div>
 		</form>
 
-
 		<table class="company-table">
 			<tr class="company-r">
 				<th class="company-h">企業名</th>
@@ -49,22 +79,20 @@
 			</tr>
 
 			<c:choose>
-				<%-- 企業が1件もない場合 --%>
 				<c:when test="${empty companies}">
 					<tr>
 						<td colspan="6" class="center">該当する企業はありません</td>
 					</tr>
 				</c:when>
 
-				<%-- 企業が存在する場合 --%>
 				<c:otherwise>
 					<c:forEach var="company" items="${companies}">
-						<tr class="company-r">
+						<tr class="company-r data-row">
 							<td>${company.company.companyName}</td>
 
 							<c:choose>
 								<c:when test="${company.eventProgress == '開催'}">
-									<td class=held>${company.eventProgress}</td>
+									<td class="held">${company.eventProgress}</td>
 								</c:when>
 								<c:otherwise>
 									<td>${company.eventProgress}</td>
@@ -79,6 +107,7 @@
 									<td>${company.isRequest}</td>
 								</c:otherwise>
 							</c:choose>
+
 							<td>${company.graduateCount}</td>
 							<td><a
 								href="company?command=CompanyDetail&companyId=${company.company.companyId}">
@@ -87,13 +116,73 @@
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
-			</tbody>
 		</table>
+
+		<!-- ▼ ページネーション -->
+		<div id="pagination" class="pagination"></div>
 	</main>
+
 	<footer>
 		<p>
 			<small>&copy; 2024 Example Inc.</small>
 		</p>
 	</footer>
+
+	<script>
+	const rowsPerPage = 10;
+	const rows = document.querySelectorAll(".data-row");
+	const pagination = document.getElementById("pagination");
+	const totalPages = Math.ceil(rows.length / rowsPerPage);
+	let currentPage = 1;
+	const buttons = [];
+
+	function showPage(page) {
+		if (page < 1 || page > totalPages) return;
+
+		currentPage = page;
+		const start = (page - 1) * rowsPerPage;
+		const end = start + rowsPerPage;
+
+		rows.forEach((row, index) => {
+			row.style.display = (index >= start && index < end) ? "" : "none";
+		});
+
+		// ボタンの active 制御
+		buttons.forEach(btn => btn.classList.remove("active"));
+		if (buttons[page - 1]) {
+			buttons[page - 1].classList.add("active");
+		}
+	}
+
+	// ページボタン生成
+	for (let i = 1; i <= totalPages; i++) {
+		const btn = document.createElement("button");
+		btn.textContent = i;
+		btn.onclick = () => showPage(i);
+		buttons.push(btn);
+		pagination.appendChild(btn);
+	}
+
+	// 矢印キー操作
+	document.addEventListener("keydown", function(e) {
+
+		// 入力中は無効
+		const tag = document.activeElement.tagName;
+		if (tag === "INPUT" || tag === "TEXTAREA") return;
+
+		if (e.key === "ArrowRight") {
+			showPage(currentPage + 1);
+		}
+		if (e.key === "ArrowLeft") {
+			showPage(currentPage - 1);
+		}
+	});
+
+	if (rows.length > 0) {
+		showPage(1);
+	}
+</script>
+
+
 </body>
 </html>

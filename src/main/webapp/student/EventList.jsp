@@ -9,27 +9,6 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <title>開催一覧</title>
-<!--<style>-->
-<!--table {-->
-<!--	border-collapse: collapse;-->
-<!--	width: 90%;-->
-<!--	margin: 20px auto;-->
-<!--}-->
-
-<!--th, td {-->
-<!--	border: 1px solid #333;-->
-<!--	padding: 8px;-->
-<!--	text-align: center;-->
-<!--}-->
-
-<!--th {-->
-<!--	background-color: #eee;-->
-<!--}-->
-
-<!--h2 {-->
-<!--	text-align: center;-->
-<!--}-->
-<!--</style>-->
 </head>
 <body>
 	<header class="head-part">
@@ -44,8 +23,8 @@
 		</div>
 
 		<div class="header-user">ようこそ${name}さん</div>
-
 	</header>
+
 	<main>
 		<div>開催詳細から参加登録をしてください。</div>
 
@@ -57,29 +36,40 @@
 			<c:otherwise>
 				<table>
 					<tr>
+						<th>日程</th>
 						<th>企業名</th>
 						<th>残り定員</th>
-						<th>残り定員計算</th>
 						<th>詳細</th>
+						<th>参加状況</th>
 					</tr>
 
 					<c:forEach var="dto" items="${events}">
 						<tr>
+							<td>
+								${dto.event.eventStartTime.year}/${dto.event.eventStartTime.monthValue}/${dto.event.eventStartTime.dayOfMonth}
+							</td>
+
 							<td>${dto.event.company.companyName}</td>
 
 							<td>${dto.event.eventCapacity - dto.joinStudentCount}</td>
-							<td>${dto.event.eventCapacity} - ${dto.joinStudentCount}</td>
 
 							<td><a
 								href="event?command=EventDetail&eventId=${dto.event.eventId}">
 									開催詳細 </a></td>
+
+							<td><c:choose>
+									<c:when test="${dto.joinAvailability == true}">
+										参加
+									</c:when>
+									<c:when test="${dto.joinAvailability == false}">
+										不参加
+									</c:when>
+								</c:choose></td>
 						</tr>
 					</c:forEach>
-
 				</table>
 			</c:otherwise>
 		</c:choose>
-
 	</main>
 </body>
 </html>

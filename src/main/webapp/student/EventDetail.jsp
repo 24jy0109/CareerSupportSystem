@@ -141,15 +141,21 @@ h2, h3 {
 				<%-- 未回答 --%>
 				<c:when test="${event.joinAvailability == null}">
 
-					<%-- 定員未達の場合のみリンク表示 --%>
-					<c:if test="${event.joinStudentCount < event.event.eventCapacity}">
-						<a href="event?command=EventJoin&eventId=${event.event.eventId}">参加</a>
-				&nbsp;|&nbsp;
-				<a href="event?command=EventNotJoin&eventId=${event.event.eventId}">不参加</a>
-					</c:if>
+					<c:choose>
+						<%-- 定員未達 --%>
+						<c:when
+							test="${event.joinStudentCount < event.event.eventCapacity}">
+							<a href="event?command=EventJoin&eventId=${event.event.eventId}">参加</a>
+					&nbsp;|&nbsp;
+					<a href="event?command=EventNotJoin&eventId=${event.event.eventId}">不参加</a>
+						</c:when>
 
-					<%-- 定員到達時は何も表示しない --%>
+						<%-- 定員到達 --%>
+						<c:otherwise>
 					満員です
+				</c:otherwise>
+					</c:choose>
+
 				</c:when>
 
 				<%-- 参加 --%>
@@ -164,9 +170,6 @@ h2, h3 {
 
 			</c:choose>
 		</div>
-
-
-
 	</main>
 </body>
 </html>

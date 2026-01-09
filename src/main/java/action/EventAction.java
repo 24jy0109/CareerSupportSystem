@@ -66,8 +66,17 @@ public class EventAction extends BaseAction {
 
 		switch (action) {
 		case "EventList":
-			list = eventDBA.getAllEvents();
+			// data[1] が存在する場合
+			if (data.length > 1 && data[1] != null && !data[1].isEmpty()) {
+				// data[1] を使った処理
+				list = eventDBA.getAllEvents(data[1]);
+			} else {
+				// data[1] が無い場合
+				list = eventDBA.getAllEvents("");
+			}
+
 			break;
+
 		case "EventDetail":
 			// data[1] eventId
 			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[2]));
