@@ -80,34 +80,30 @@
 										</tr>
 									</c:when>
 									<c:otherwise>
-										<!--									<div class="detail-data">-->
 										<c:forEach var="g" items="${event.graduates}">
 											<tr>
-												<td class="detail-data"><c:if test="${not empty g.graduateStudentNumber}">
+												<td class="detail-data">
+													<c:if test="${not empty g.graduateStudentNumber}">
 														<c:set var="enterYear2"
 															value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
 														<c:set var="graduateYear"
 															value="${enterYear2 + g.course.courseTerm}" />
 														${graduateYear}年卒
-												</c:if></td>
+													</c:if>
+												</td>
 
-
-												<!--									</div>-->
 												<td><div class="detail-data">${g.graduateName}</div></td>
 												<td><div class="detail-data">${g.course.courseName}</div></td>
 												<td>
 													<div class="detail-data">${g.graduateJobCategory}</div>
 												</td>
 											</tr>
-
 										</c:forEach>
 									</c:otherwise>
 								</c:choose>
 							</table>
 						</div>
 					</div>
-
-
 
 					<div class="detail-row">
 						<div class="field-name">定員</div>
@@ -116,35 +112,40 @@
 						<div class="field-name">参加</div>
 						<div class="detail-data">${event.joinStudentCount}名</div>
 
-						<!--						<div class="field-name">不参加</div>-->
-						<!--						<div class="detail-data">19人</div>-->
-
 						<div class="detail-data">
-							<a
-								href="join_student?command=JoinStudentList&eventId=${event.event.eventId}">在校生参加者確認</a>
+							<c:if test="${event.joinStudentCount > 0}">
+								<a
+									href="join_student?command=JoinStudentList&eventId=${event.event.eventId}">
+									在校生参加者確認
+								</a>
+							</c:if>
 						</div>
 					</div>
+
 					<div class="detail-row">
 						<div class="field-name">その他</div>
 						<div class="detail-data">
-							<td>${g.otherInfo}
+							<td>${g.otherInfo}</td>
 						</div>
 					</div>
+				</c:otherwise>
+			</c:choose>
 		</div>
 
 		<div class="bottom-btn-right">
 			<div class="btn-gap">
 				<button type="button"
-					onclick="location.href='event?command=EventEnd&eventId=${event.event.eventId}'">開催終了</button>
+					onclick="location.href='event?command=EventEnd&eventId=${event.event.eventId}'">
+					開催終了
+				</button>
 				<button type="button"
 					onclick="location.href='event?command=EventCancel&eventId=${event.event.eventId}'"
-					class="white-btn">開催中止</button>
+					class="white-btn">
+					開催中止
+				</button>
 			</div>
 		</div>
-		</c:otherwise>
-		</c:choose>
 	</main>
-
 
 	<footer>
 		<p>
