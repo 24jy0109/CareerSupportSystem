@@ -9,6 +9,35 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <title>日程回答確認画面（職員）</title>
 
+<style>
+.pagination {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.pagination button {
+	margin: 0 4px;
+	padding: 6px 10px;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	color: #333;
+	cursor: pointer;
+}
+
+.pagination button:hover {
+	background-color: #f2f2f2;
+}
+
+.pagination button.active {
+	background-color: #e6f4ea;
+	border-color: #009A37;
+	color: #006b2e;
+	font-weight: 600;
+	cursor: default;
+}
+</style>
+
 <script type="text/javascript">
 	function confirmReject(answerId) {
 		if (confirm("この回答を拒否します。\n卒業生へ拒否通知メールが送信されますが、よろしいですか？")) {
@@ -50,7 +79,7 @@
 			</tr>
 
 			<c:forEach var="a" items="${answers}">
-				<form action="event" method="get">
+				<form action="event" method="get" class="answer-row">
 					<tr class="schedule-check-r2">
 						<td>${a.event.company.companyName}</td>
 						<td>${a.graduate.graduateName}</td>
@@ -115,6 +144,8 @@
 				</form>
 			</c:forEach>
 		</table>
+
+		<div id="pagination-answer" class="pagination"></div>
 	</main>
 
 	<footer>
@@ -122,5 +153,71 @@
 			<small>&copy; 2024 Example Inc.</small>
 		</p>
 	</footer>
+
+<script>
+let activePager = null;
+
+function setupPagination(rowSelector, paginationId, rowsPerPage = 10) {
+
+	const rows = document.querySelectorAll(rowSelector);
+	const pagination = document.getElementById(paginationId);
+
+	if (!rows.length) return null;
+
+	const totalPages = Math.ceil(rows.length / rowsPerPage);
+	let currentPage = 1;
+	const buttons = [];
+
+	function showPage(page) {
+		if (page < 1 || page > totalPages) return;
+
+		currentPage = page;
+		const start = (page - 1) * rowsPerPage;
+		const end = start + rowsPerPage;
+
+		rows.forEach((row, index) => {
+			row.style.display = (index >= start && index < end) ? "" : "none";
+		});
+
+		buttons.forEach(btn => btn.classList.remove("active"));
+		if (buttons[page - 1]) {
+			buttons[page - 1].classList.add("active");
+		}
+	}
+
+	for (let i = 1; i <= totalPages; i++) {
+		const btn = document.createElement("button");
+		btn.textContent = i;
+		btn.onclick = () => {
+			activePager = pager;
+			showPage(i);
+		};
+		buttons.push(btn);
+		pagination.appendChild(btn);
+	}
+
+	showPage(1);
+
+	const pager = {
+		next() { showPage(currentPage + 1); },
+		prev() { showPage(currentPage - 1); }
+	};
+
+	return pager;
+}
+
+const answerPager = setupPagination(".answer-row", "pagination-answer", 10);
+activePager = answerPager;
+
+document.addEventListener("keydown", function(e) {
+	const tag = document.activeElement.tagName;
+	if (tag === "INPUT" || tag === "TEXTAREA") return;
+	if (!activePager) return;
+
+	if (e.key === "ArrowRight") activePager.next();
+	if (e.key === "ArrowLeft") activePager.prev();
+});
+</script>
+
 </body>
 </html>
