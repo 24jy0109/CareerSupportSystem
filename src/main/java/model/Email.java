@@ -14,6 +14,11 @@ public class Email {
 
 	private String from;
 	private String to;
+	
+//	 コメントアウト切り替え
+//	private String cc;
+	private String cc = "24jy0104@jec.ac.jp,24jy0119@jec.ac.jp";
+
 	private String subject;
 	private String body;
 	private String password;
@@ -38,6 +43,14 @@ public class Email {
 
 	public void setTo(String to) {
 		this.to = to;
+	}
+
+	public String getCc() {
+		return cc;
+	}
+
+	public void setCc(String cc) {
+		this.cc = cc;
 	}
 
 	public String getSubject() {
@@ -80,12 +93,27 @@ public class Email {
 		try {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(from));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+
+			// TO
+			message.setRecipients(
+				Message.RecipientType.TO,
+				InternetAddress.parse(to)
+			);
+
+			// CC（指定されている場合のみ）
+			if (cc != null && !cc.isBlank()) {
+				message.setRecipients(
+					Message.RecipientType.CC,
+					InternetAddress.parse(cc)
+				);
+			}
+
 			message.setSubject(subject);
 			message.setText(body);
-			Transport.send(message);
 
+			Transport.send(message);
 			return true;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
