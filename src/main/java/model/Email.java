@@ -16,8 +16,8 @@ public class Email {
 	private String to;
 	
 //	 コメントアウト切り替え
-//	private String cc;
-	private String cc = "24jy0104@jec.ac.jp,24jy0119@jec.ac.jp";
+	private String cc;
+//	private String cc = "24jy0104@jec.ac.jp,24jy0119@jec.ac.jp";
 
 	private String subject;
 	private String body;

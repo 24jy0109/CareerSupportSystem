@@ -91,10 +91,13 @@
 
 							<td><c:choose>
 									<c:when test="${dto.joinAvailability == true}">
-										参加
-									</c:when>
+			参加
+		</c:when>
+									<c:when test="${dto.joinAvailability == false}">
+			不参加
+		</c:when>
 									<c:otherwise>
-										不参加
+										<%-- null の場合は何も表示しない --%>
 									</c:otherwise>
 								</c:choose></td>
 						</tr>
