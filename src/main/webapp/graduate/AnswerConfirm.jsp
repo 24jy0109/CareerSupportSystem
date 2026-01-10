@@ -35,7 +35,7 @@
 		<form action="answer" method="post">
 
 			<!-- command だけで戻る／確定を切替 -->
-			<input type="hidden" name="command" value="AnswerRegist"> <input
+			<input type="hidden" name="command" value="RegistAnswer"> <input
 				type="hidden" name="answerId" value="${a.answerId}"> <input
 				type="hidden" name="eventAvailability"
 				value="${a.eventAvailability}"> <input type="hidden"
