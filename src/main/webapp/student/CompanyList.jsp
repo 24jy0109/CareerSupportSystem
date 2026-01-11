@@ -8,38 +8,8 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/pagination.css">
 <title>企業リスト</title>
-
-<style>
-.pagination {
-	text-align: center;
-	margin-top: 20px;
-}
-
-.pagination button {
-	color: black;
-	margin: 0 4px;
-	padding: 6px 10px;
-	border-radius: 4px;
-	border: 1px solid #ccc;
-	background-color: #fff;
-	color: #333;
-	cursor: pointer;
-}
-
-.pagination button:hover {
-	background-color: #f2f2f2;
-}
-
-/* 現在ページ */
-.pagination button.active {
-	background-color: #e6f4ea; /* 薄い緑 */
-	border-color: #009A37; /* 濃い緑で枠 */
-	color: #006b2e; /* 文字は濃い緑 */
-	font-weight: 600;
-	cursor: default;
-}
-</style>
 </head>
 <body>
 	<header>
