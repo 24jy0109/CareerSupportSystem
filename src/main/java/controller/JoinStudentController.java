@@ -62,8 +62,8 @@ public class JoinStudentController extends HttpServlet {
 			try {
 				joinStudents = joinStudentAction.execute(new String[] {command, eventId});
 			} catch (Exception e) {
-				request.setAttribute("error", e.getMessage());
 				nextPage = "staff/AppointMenu.jsp";
+				request.setAttribute("error", e.getMessage());
 			}
 			break;
 		default:

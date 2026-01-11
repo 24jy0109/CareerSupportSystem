@@ -113,11 +113,7 @@ public class AnswerAction extends BaseAction {
 			answers = answerDBA.getAllAnswers();
 			break;
 		case "yesAnswer":
-			try {
 				answers.add(answerDBA.searchAnswerById(Integer.parseInt(data[1]), Integer.parseInt(data[2])));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			break;
 		case "noAnswer":
 		    // Answer取得
@@ -134,6 +130,10 @@ public class AnswerAction extends BaseAction {
 		    // Answer削除
 		    answerDBA.deleteAnswer(answer.getAnswerId());
 		    break;
+		case "deleteAnswer":
+			// Answer削除
+			answerDBA.deleteAnswer(Integer.parseInt(data[1]));
+			break;
 		}
 		return answers;
 	}

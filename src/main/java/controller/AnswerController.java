@@ -67,8 +67,8 @@ public class AnswerController extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			if(answers.getFirst().getEventAvailability() == null) {
+
+			if (answers.getFirst().getEventAvailability() == null) {
 				nextPage = "graduate/Answer.jsp";
 			} else {
 				nextPage = "graduate/CompleteRegistAnswer.jsp";
@@ -90,7 +90,7 @@ public class AnswerController extends HttpServlet {
 
 			data[7] = request.getParameter("thirdChoiceStart");
 			data[8] = request.getParameter("thirdChoiceEnd");
-			
+
 			try {
 				answers = answerAction.execute(data);
 				request.setAttribute("answer", answers.getFirst());
@@ -99,7 +99,8 @@ public class AnswerController extends HttpServlet {
 				request.setAttribute("inputAnswer", e.getAnswer());
 				request.setAttribute("error", e.getMessage());
 			} catch (Exception e) {
-				e.printStackTrace();
+				nextPage = "graduate/Answer.jsp";
+				request.setAttribute("error", e.getMessage());
 			}
 			break;
 		case "AnswerBack":
@@ -118,12 +119,13 @@ public class AnswerController extends HttpServlet {
 
 			data[7] = request.getParameter("thirdChoiceStart");
 			data[8] = request.getParameter("thirdChoiceEnd");
-			
+
 			try {
 				answers = answerAction.execute(data);
 				request.setAttribute("inputAnswer", answers.getFirst());
 			} catch (Exception e) {
-				e.printStackTrace();
+				nextPage = "graduate/Answer.jsp";
+				request.setAttribute("error", e.getMessage());
 			}
 			break;
 		case "RegistAnswer":
@@ -142,7 +144,7 @@ public class AnswerController extends HttpServlet {
 
 			data[7] = request.getParameter("thirdChoiceStart");
 			data[8] = request.getParameter("thirdChoiceEnd");
-			
+
 			try {
 				answers = answerAction.execute(data);
 			} catch (ValidationException e) {
@@ -150,7 +152,8 @@ public class AnswerController extends HttpServlet {
 				request.setAttribute("inputAnswer", e.getAnswer());
 				request.setAttribute("error", e.getMessage());
 			} catch (Exception e) {
-				e.printStackTrace();
+				nextPage = "graduate/Answer.jsp";
+				request.setAttribute("error", e.getMessage());
 			}
 			break;
 		case "ScheduleAnswerCheck":
@@ -163,7 +166,8 @@ public class AnswerController extends HttpServlet {
 			try {
 				answers = answerAction.execute(new String[] { command });
 			} catch (Exception e) {
-				e.printStackTrace();
+				request.setAttribute("error", e.getMessage());
+				nextPage = "staff/AppointMenu.jsp";
 			}
 			break;
 		case "noAnswer":
@@ -176,7 +180,23 @@ public class AnswerController extends HttpServlet {
 			try {
 				answers = answerAction.execute(new String[] { command, answerId });
 			} catch (Exception e) {
-				e.printStackTrace();
+				request.setAttribute("error", e.getMessage());
+				nextPage = "staff/AppointMenu.jsp";
+			}
+			response.sendRedirect("answer?command=ScheduleAnswerCheck");
+			return;
+		case "deleteAnswer":
+			// セッションがstaffではない
+			if (role != "staff") {
+				response.sendRedirect("login");
+				return;
+			}
+			answerId = request.getParameter("answerId");
+			try {
+				answers = answerAction.execute(new String[] { command, answerId });
+			} catch (Exception e) {
+				request.setAttribute("error", e.getMessage());
+				nextPage = "staff/AppointMenu.jsp";
 			}
 			response.sendRedirect("answer?command=ScheduleAnswerCheck");
 			return;

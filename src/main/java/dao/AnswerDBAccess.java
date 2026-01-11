@@ -62,6 +62,12 @@ public class AnswerDBAccess extends DBAccess {
 					answer.setAnswerId(rs.getInt(1));
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、イベント回答情報の回答情報の登録に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 
 		return answer;
@@ -70,7 +76,7 @@ public class AnswerDBAccess extends DBAccess {
 	// ===================================================================================
 	// UPDATE
 	// ===================================================================================
-	public void updateAnswer(Answer answer) {
+	public void updateAnswer(Answer answer) throws Exception {
 
 		String sql = "UPDATE answer SET "
 				+ "event_availability = ?, "
@@ -109,14 +115,19 @@ public class AnswerDBAccess extends DBAccess {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、イベント回答情報の更新に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
 
-	public List<Answer> getAllAnswers() {
+	public List<Answer> getAllAnswers() throws Exception {
 		List<Answer> list = new ArrayList<>();
 
 		String sql = "SELECT "
 				+ "a.answer_id, "
+				+ "a.event_availability, "
 				+ "c.company_name, "
 				+ "g.graduate_name, "
 				+ "a.first_choice_start_time, a.first_choice_end_time, "
@@ -137,6 +148,13 @@ public class AnswerDBAccess extends DBAccess {
 			while (rs.next()) {
 				Answer answer = new Answer();
 				answer.setAnswerId(rs.getInt("answer_id"));
+
+				// ----- Event Availability -----
+				Boolean availability = rs.getBoolean("event_availability");
+				if (rs.wasNull()) {
+					availability = null;
+				}
+				answer.setEventAvailability(availability);
 
 				// ----- Graduate -----
 				Graduate graduate = new Graduate();
@@ -179,118 +197,122 @@ public class AnswerDBAccess extends DBAccess {
 
 				list.add(answer);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、イベント回答情報の取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 
 		return list;
 	}
 
-
 	public Answer searchAnswerById(int answerId) throws Exception {
-	    String sql =
-	        "SELECT "
-	      + " a.answer_id, a.event_availability, "
-	      + " a.first_choice_start_time, a.first_choice_end_time, "
-	      + " a.second_choice_start_time, a.second_choice_end_time, "
-	      + " a.third_choice_start_time, a.third_choice_end_time, "
+		String sql = "SELECT "
+				+ " a.answer_id, a.event_availability, "
+				+ " a.first_choice_start_time, a.first_choice_end_time, "
+				+ " a.second_choice_start_time, a.second_choice_end_time, "
+				+ " a.third_choice_start_time, a.third_choice_end_time, "
 
-	      + " e.event_id, e.event_place, e.event_start_time, e.event_end_time, "
-	      + " e.event_capacity, e.event_progress, "
+				+ " e.event_id, e.event_place, e.event_start_time, e.event_end_time, "
+				+ " e.event_capacity, e.event_progress, "
 
-	      + " s.staff_id, s.staff_name, s.staff_email, "
+				+ " s.staff_id, s.staff_name, s.staff_email, "
 
-	      + " g.graduate_student_number, g.graduate_name, "
-	      + " g.graduate_email, g.graduate_job_category, g.graduate_other_info "
+				+ " g.graduate_student_number, g.graduate_name, "
+				+ " g.graduate_email, g.graduate_job_category, g.graduate_other_info "
 
-	      + "FROM answer a "
-	      + "JOIN event e ON a.event_id = e.event_id "
-	      + "JOIN staff s ON e.staff_id = s.staff_id "
-	      + "JOIN graduate g ON a.graduate_student_number = g.graduate_student_number "
-	      + "WHERE a.answer_id = ?";
+				+ "FROM answer a "
+				+ "JOIN event e ON a.event_id = e.event_id "
+				+ "JOIN staff s ON e.staff_id = s.staff_id "
+				+ "JOIN graduate g ON a.graduate_student_number = g.graduate_student_number "
+				+ "WHERE a.answer_id = ?";
 
-	    Answer answer = null;
+		Answer answer = null;
 
-	    try (
-	        Connection con = createConnection();
-	        PreparedStatement ps = con.prepareStatement(sql)
-	    ) {
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
-	        ps.setInt(1, answerId);
+			ps.setInt(1, answerId);
 
-	        try (ResultSet rs = ps.executeQuery()) {
+			try (ResultSet rs = ps.executeQuery()) {
 
-	            if (rs.next()) {
+				if (rs.next()) {
 
-	                // ===== Answer =====
-	                answer = new Answer();
-	                answer.setAnswerId(rs.getInt("answer_id"));
+					// ===== Answer =====
+					answer = new Answer();
+					answer.setAnswerId(rs.getInt("answer_id"));
 
-	                Boolean availability = rs.getBoolean("event_availability");
-	                if (rs.wasNull()) {
-	                    availability = null;
-	                }
-	                answer.setEventAvailability(availability);
+					Boolean availability = rs.getBoolean("event_availability");
+					if (rs.wasNull()) {
+						availability = null;
+					}
+					answer.setEventAvailability(availability);
 
-	                answer.setFirstChoiceStartTime(
-	                        toLocalDateTime(rs.getTimestamp("first_choice_start_time")));
-	                answer.setFirstChoiceEndTime(
-	                        toLocalDateTime(rs.getTimestamp("first_choice_end_time")));
+					answer.setFirstChoiceStartTime(
+							toLocalDateTime(rs.getTimestamp("first_choice_start_time")));
+					answer.setFirstChoiceEndTime(
+							toLocalDateTime(rs.getTimestamp("first_choice_end_time")));
 
-	                answer.setSecondChoiceStartTime(
-	                        toLocalDateTime(rs.getTimestamp("second_choice_start_time")));
-	                answer.setSecondChoiceEndTime(
-	                        toLocalDateTime(rs.getTimestamp("second_choice_end_time")));
+					answer.setSecondChoiceStartTime(
+							toLocalDateTime(rs.getTimestamp("second_choice_start_time")));
+					answer.setSecondChoiceEndTime(
+							toLocalDateTime(rs.getTimestamp("second_choice_end_time")));
 
-	                answer.setThirdChoiceStartTime(
-	                        toLocalDateTime(rs.getTimestamp("third_choice_start_time")));
-	                answer.setThirdChoiceEndTime(
-	                        toLocalDateTime(rs.getTimestamp("third_choice_end_time")));
+					answer.setThirdChoiceStartTime(
+							toLocalDateTime(rs.getTimestamp("third_choice_start_time")));
+					answer.setThirdChoiceEndTime(
+							toLocalDateTime(rs.getTimestamp("third_choice_end_time")));
 
-	                // ===== Staff =====
-	                Staff staff = new Staff();
-	                staff.setStaffId(rs.getInt("staff_id"));
-	                staff.setStaffName(rs.getString("staff_name"));
-	                staff.setStaffEmail(rs.getString("staff_email"));
+					// ===== Staff =====
+					Staff staff = new Staff();
+					staff.setStaffId(rs.getInt("staff_id"));
+					staff.setStaffName(rs.getString("staff_name"));
+					staff.setStaffEmail(rs.getString("staff_email"));
 
-	                // ===== Event =====
-	                Event event = new Event();
-	                event.setEventId(rs.getInt("event_id"));
-	                event.setEventPlace(rs.getString("event_place"));
-	                event.setEventStartTime(
-	                        toLocalDateTime(rs.getTimestamp("event_start_time")));
-	                event.setEventEndTime(
-	                        toLocalDateTime(rs.getTimestamp("event_end_time")));
-	                event.setEventCapacity(rs.getInt("event_capacity"));
-	                event.setEventProgress(rs.getInt("event_progress"));
-	                event.setStaff(staff);
+					// ===== Event =====
+					Event event = new Event();
+					event.setEventId(rs.getInt("event_id"));
+					event.setEventPlace(rs.getString("event_place"));
+					event.setEventStartTime(
+							toLocalDateTime(rs.getTimestamp("event_start_time")));
+					event.setEventEndTime(
+							toLocalDateTime(rs.getTimestamp("event_end_time")));
+					event.setEventCapacity(rs.getInt("event_capacity"));
+					event.setEventProgress(rs.getInt("event_progress"));
+					event.setStaff(staff);
 
-	                answer.setEvent(event);
+					answer.setEvent(event);
 
-	                // ===== Graduate =====
-	                Graduate graduate = new Graduate();
-	                graduate.setGraduateStudentNumber(
-	                        rs.getString("graduate_student_number"));
-	                graduate.setGraduateName(rs.getString("graduate_name"));
-	                graduate.setGraduateEmail(rs.getString("graduate_email"));
-	                graduate.setGraduateJobCategory(
-	                        rs.getString("graduate_job_category"));
-	                graduate.setOtherInfo(
-	                        rs.getString("graduate_other_info"));
+					// ===== Graduate =====
+					Graduate graduate = new Graduate();
+					graduate.setGraduateStudentNumber(
+							rs.getString("graduate_student_number"));
+					graduate.setGraduateName(rs.getString("graduate_name"));
+					graduate.setGraduateEmail(rs.getString("graduate_email"));
+					graduate.setGraduateJobCategory(
+							rs.getString("graduate_job_category"));
+					graduate.setOtherInfo(
+							rs.getString("graduate_other_info"));
 
-	                answer.setGraduate(graduate);
-	            }
-	        }
-	    }
+					answer.setGraduate(graduate);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、イベント回答情報の取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
+		}
 
-	    return answer;
+		return answer;
 	}
 
-
-
 	public Answer searchAnswerById(int answerId, int choice) throws Exception {
-		Connection con = createConnection();
+
 		Answer answer = null;
 
 		String timeSelect;
@@ -312,7 +334,10 @@ public class AnswerDBAccess extends DBAccess {
 				"JOIN company c ON g.company_id = c.company_id " +
 				"WHERE a.answer_id = ?";
 
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
 			ps.setInt(1, answerId);
 
 			try (ResultSet rs = ps.executeQuery()) {
@@ -329,8 +354,6 @@ public class AnswerDBAccess extends DBAccess {
 					Company company = new Company();
 					company.setCompanyId(rs.getInt("company_id"));
 					company.setCompanyName(rs.getString("company_name"));
-
-					// Graduate に Company をセット
 					grad.setCompany(company);
 
 					// イベント
@@ -345,38 +368,48 @@ public class AnswerDBAccess extends DBAccess {
 					if (choice == 1) {
 						st = rs.getTimestamp("first_choice_start_time");
 						et = rs.getTimestamp("first_choice_end_time");
-						if (st != null)
+						if (st != null) {
 							answer.setFirstChoiceStartTime(st.toLocalDateTime());
-						if (et != null)
+						}
+						if (et != null) {
 							answer.setFirstChoiceEndTime(et.toLocalDateTime());
+						}
 
 					} else if (choice == 2) {
 						st = rs.getTimestamp("second_choice_start_time");
 						et = rs.getTimestamp("second_choice_end_time");
-						if (st != null)
+						if (st != null) {
 							answer.setSecondChoiceStartTime(st.toLocalDateTime());
-						if (et != null)
+						}
+						if (et != null) {
 							answer.setSecondChoiceEndTime(et.toLocalDateTime());
+						}
 
 					} else {
 						st = rs.getTimestamp("third_choice_start_time");
 						et = rs.getTimestamp("third_choice_end_time");
-						if (st != null)
+						if (st != null) {
 							answer.setThirdChoiceStartTime(st.toLocalDateTime());
-						if (et != null)
+						}
+						if (et != null) {
 							answer.setThirdChoiceEndTime(et.toLocalDateTime());
+						}
 					}
 				}
 			}
-		} finally {
-			if (con != null)
-				con.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、イベント回答情報の取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 
 		return answer;
 	}
 
-	public void deleteAnswer(int answerId) {
+	public void deleteAnswer(int answerId) throws Exception {
 		String sql = "DELETE FROM answer WHERE answer_id = ?";
 
 		try (
@@ -387,18 +420,27 @@ public class AnswerDBAccess extends DBAccess {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、イベント回答情報の削除に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
-	
-	public void deleteAnswerByEventId(int eventId) throws Exception {
-	    String sql = "DELETE FROM answer WHERE event_id = ?";
 
-	    try (
-	        Connection con = createConnection();
-	        PreparedStatement ps = con.prepareStatement(sql)
-	    ) {
-	        ps.setInt(1, eventId);
-	        ps.executeUpdate();
-	    }
+	public void deleteAnswerByEventId(int eventId) throws Exception {
+		String sql = "DELETE FROM answer WHERE event_id = ?";
+
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, eventId);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、イベント回答情報の削除に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
+		}
 	}
 }
