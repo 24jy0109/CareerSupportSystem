@@ -20,30 +20,31 @@ import model.Request;
 @WebServlet("/appointment_request")
 public class AppointmentRequestController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    public AppointmentRequestController() {
-        super();
-    }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public AppointmentRequestController() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doPost(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// リクエスト情報に対する文字コードの設定する
 		request.setCharacterEncoding("UTF-8");
 
 		// 各画面から送信されるリクエストパラメータ"command"の値を取得する
 		String command = request.getParameter("command");
 
-
 		// sessionから値を取得
 		HttpSession session = request.getSession();
 		String studentNumber = (String) session.getAttribute("studentNumber");
 		String role = (String) session.getAttribute("role");
-		
+
 		List<Request> list = new ArrayList<>();
-		
+
 		// Test
 		System.out.println(studentNumber);
 		System.out.println(role);
@@ -55,30 +56,32 @@ public class AppointmentRequestController extends HttpServlet {
 			response.sendRedirect("login");
 			return;
 		}
-		
+
 		AppointmentRequestAction appointmentRequestAction = new AppointmentRequestAction();
-		
+
 		// 次画面用の変数
 		String nextPage = null;
 		// リクエストパラメータ"command", sessionのroleの値に対応した処理を実行する
 		if (role.equals("staff")) {
 			// 職員の遷移
-			switch(command) {
+			switch (command) {
 			case "RequestList":
 				nextPage = "staff/RequestList.jsp";
 				String companyId = (String) request.getParameter("companyId");
 				try {
-					list = appointmentRequestAction.execute(new String[] { command, "", companyId});
+					list = appointmentRequestAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 				if (list == null || list.isEmpty()) {
 					try {
-						List<CompanyDTO> companies = new CompanyAction().execute(new String[] { "CompanyName", "", companyId });
+						List<CompanyDTO> companies = new CompanyAction()
+								.execute(new String[] { "CompanyName", "", companyId });
 						request.setAttribute("showCompany", companies.getFirst());
 					} catch (Exception e) {
-						e.printStackTrace();
+						request.setAttribute("error", e.getMessage());
+						nextPage = "staff/AppointMenu.jsp";
 					}
 				}
 
@@ -91,15 +94,16 @@ public class AppointmentRequestController extends HttpServlet {
 			case "CancelRequest":
 				String companyId = (String) request.getParameter("companyId");
 				try {
-					appointmentRequestAction.execute(new String[] { command, studentNumber, companyId});
+					appointmentRequestAction.execute(new String[] { command, studentNumber, companyId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					request.setAttribute("error", e.getMessage());
+					nextPage = "student/AppointMenu.jsp";
 				}
 				response.sendRedirect("company?command=CompanyList");
 				return;
 			}
 		}
-		
+
 		request.setAttribute("requests", list);
 		// 次のページへの転送
 		RequestDispatcher rd = request.getRequestDispatcher(nextPage);
