@@ -71,7 +71,8 @@ public class AppointmentRequestController extends HttpServlet {
 				try {
 					list = appointmentRequestAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					request.setAttribute("error", e.getMessage());
+					nextPage = "staff/AppointMenu.jsp";
 				}
 
 				if (list == null || list.isEmpty()) {

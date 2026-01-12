@@ -70,7 +70,9 @@ public class CompanyController extends HttpServlet {
 				try {
 					companies = companyAction.execute(new String[] { "CompanyList", "", companyName });
 				} catch (Exception e) {
-					e.printStackTrace();
+					request.setAttribute("error", e.getMessage());
+					nextPage = "staff/AppointMenu.jsp";
+					return;
 				}
 				break;
 
@@ -85,7 +87,9 @@ public class CompanyController extends HttpServlet {
 						result = companyAction.execute(
 								new String[] { "findCompanyName", companyId, "" });
 					} catch (Exception e) {
-						e.printStackTrace();
+						request.setAttribute("error", e.getMessage());
+						nextPage = "staff/AppointMenu.jsp";
+						return;
 					}
 
 					if (!result.isEmpty()) {
@@ -109,7 +113,9 @@ public class CompanyController extends HttpServlet {
 				try {
 					list = dbAccess.findSimilarCompany(name); // DAOで曖昧検索
 				} catch (Exception e) {
-					e.printStackTrace();
+					request.setAttribute("error", e.getMessage());
+					nextPage = "staff/AppointMenu.jsp";
+					return;
 				}
 
 				// JSONに変換して返す
@@ -166,7 +172,9 @@ public class CompanyController extends HttpServlet {
 					try {
 						exists = db.existsCompanyName(companyName);
 					} catch (Exception e) {
-						e.printStackTrace();
+						request.setAttribute("error", e.getMessage());
+						nextPage = "staff/AppointMenu.jsp";
+						return;
 					}
 
 					if (exists) {
@@ -180,7 +188,9 @@ public class CompanyController extends HttpServlet {
 						try {
 							similarList = db.findSimilarCompany(normalizedCompanyName);
 						} catch (Exception e) {
-							e.printStackTrace();
+							request.setAttribute("error", e.getMessage());
+							nextPage = "staff/AppointMenu.jsp";
+							return;
 						}
 
 						if (!similarList.isEmpty()) {
@@ -209,7 +219,9 @@ public class CompanyController extends HttpServlet {
 					try {
 						exists = db.existsCompanyName(companyName);
 					} catch (Exception e) {
-						e.printStackTrace();
+						request.setAttribute("error", e.getMessage());
+						nextPage = "staff/AppointMenu.jsp";
+						return;
 					}
 
 					if (exists) {
@@ -242,7 +254,9 @@ public class CompanyController extends HttpServlet {
 								new String[] { "CompanyUpdate", companyId, companyName });
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					request.setAttribute("error", e.getMessage());
+					nextPage = "staff/AppointMenu.jsp";
+					return;
 				}
 
 				break;
@@ -260,7 +274,9 @@ public class CompanyController extends HttpServlet {
 				try {
 					companies = companyAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					request.setAttribute("error", e.getMessage());
+					nextPage = "staff/AppointMenu.jsp";
+					return;
 				}
 				break;
 
@@ -276,7 +292,9 @@ public class CompanyController extends HttpServlet {
 				try {
 					companies = companyAction.execute(new String[] { "CompanyList", studentNumber, companyName });
 				} catch (Exception e) {
-					e.printStackTrace();
+					request.setAttribute("error", e.getMessage());
+					nextPage = "student/AppointMenu.jsp";
+					return;
 				}
 				break;
 			case "CompanyDetail":
@@ -285,7 +303,9 @@ public class CompanyController extends HttpServlet {
 				try {
 					companies = companyAction.execute(new String[] { "CompanyDetail", studentNumber, companyId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					request.setAttribute("error", e.getMessage());
+					nextPage = "student/AppointMenu.jsp";
+					return;
 				}
 				break;
 
