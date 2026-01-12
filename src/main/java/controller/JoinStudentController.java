@@ -7,7 +7,6 @@ import java.util.List;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -19,7 +18,7 @@ import model.JoinStudent;
  * Servlet implementation class GraduateController
  */
 @WebServlet("/join_student")
-public class JoinStudentController extends HttpServlet {
+public class JoinStudentController extends BaseController {
 	private static final long serialVersionUID = 1L;
 
 	public JoinStudentController() {
@@ -64,6 +63,7 @@ public class JoinStudentController extends HttpServlet {
 			} catch (Exception e) {
 				nextPage = "staff/AppointMenu.jsp";
 				request.setAttribute("error", e.getMessage());
+				return;
 			}
 			break;
 		default:

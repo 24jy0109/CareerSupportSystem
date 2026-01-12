@@ -8,7 +8,6 @@ import java.util.List;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -18,7 +17,7 @@ import dao.CompanyDBAccess;
 import dto.CompanyDTO;
 
 @WebServlet("/company")
-public class CompanyController extends HttpServlet {
+public class CompanyController extends BaseController {
 	private static final long serialVersionUID = 1L;
 
 	public CompanyController() {
@@ -70,8 +69,7 @@ public class CompanyController extends HttpServlet {
 				try {
 					companies = companyAction.execute(new String[] { "CompanyList", "", companyName });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -87,8 +85,7 @@ public class CompanyController extends HttpServlet {
 						result = companyAction.execute(
 								new String[] { "findCompanyName", companyId, "" });
 					} catch (Exception e) {
-						request.setAttribute("error", e.getMessage());
-						nextPage = "staff/AppointMenu.jsp";
+						handleException(e, request, response, "staff/AppointMenu.jsp");
 						return;
 					}
 
@@ -113,8 +110,7 @@ public class CompanyController extends HttpServlet {
 				try {
 					list = dbAccess.findSimilarCompany(name); // DAOで曖昧検索
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 
@@ -172,8 +168,7 @@ public class CompanyController extends HttpServlet {
 					try {
 						exists = db.existsCompanyName(companyName);
 					} catch (Exception e) {
-						request.setAttribute("error", e.getMessage());
-						nextPage = "staff/AppointMenu.jsp";
+						handleException(e, request, response, "staff/AppointMenu.jsp");
 						return;
 					}
 
@@ -188,8 +183,7 @@ public class CompanyController extends HttpServlet {
 						try {
 							similarList = db.findSimilarCompany(normalizedCompanyName);
 						} catch (Exception e) {
-							request.setAttribute("error", e.getMessage());
-							nextPage = "staff/AppointMenu.jsp";
+							handleException(e, request, response, "staff/AppointMenu.jsp");
 							return;
 						}
 
@@ -219,8 +213,7 @@ public class CompanyController extends HttpServlet {
 					try {
 						exists = db.existsCompanyName(companyName);
 					} catch (Exception e) {
-						request.setAttribute("error", e.getMessage());
-						nextPage = "staff/AppointMenu.jsp";
+						handleException(e, request, response, "staff/AppointMenu.jsp");
 						return;
 					}
 
@@ -254,8 +247,7 @@ public class CompanyController extends HttpServlet {
 								new String[] { "CompanyUpdate", companyId, companyName });
 					}
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 
@@ -274,8 +266,7 @@ public class CompanyController extends HttpServlet {
 				try {
 					companies = companyAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -292,8 +283,7 @@ public class CompanyController extends HttpServlet {
 				try {
 					companies = companyAction.execute(new String[] { "CompanyList", studentNumber, companyName });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "student/AppointMenu.jsp";
+					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -303,8 +293,7 @@ public class CompanyController extends HttpServlet {
 				try {
 					companies = companyAction.execute(new String[] { "CompanyDetail", studentNumber, companyId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "student/AppointMenu.jsp";
+					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
 				break;

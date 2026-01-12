@@ -7,7 +7,6 @@ import java.util.List;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -18,7 +17,7 @@ import dto.CompanyDTO;
 import model.Request;
 
 @WebServlet("/appointment_request")
-public class AppointmentRequestController extends HttpServlet {
+public class AppointmentRequestController extends BaseController {
 	private static final long serialVersionUID = 1L;
 
 	public AppointmentRequestController() {
@@ -71,9 +70,10 @@ public class AppointmentRequestController extends HttpServlet {
 				try {
 					list = appointmentRequestAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
+				
 
 				if (list == null || list.isEmpty()) {
 					try {
@@ -83,6 +83,7 @@ public class AppointmentRequestController extends HttpServlet {
 					} catch (Exception e) {
 						request.setAttribute("error", e.getMessage());
 						nextPage = "staff/AppointMenu.jsp";
+						return;
 					}
 				}
 
@@ -97,8 +98,8 @@ public class AppointmentRequestController extends HttpServlet {
 				try {
 					appointmentRequestAction.execute(new String[] { command, studentNumber, companyId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "student/AppointMenu.jsp";
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 				response.sendRedirect("company?command=CompanyList");
 				return;

@@ -7,7 +7,6 @@ import java.util.List;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +21,7 @@ import exception.ValidationException;
 import model.Answer;
 
 @WebServlet("/event")
-public class EventController extends HttpServlet {
+public class EventController extends BaseController {
 	private static final long serialVersionUID = 1L;
 
 	public EventController() {
@@ -79,8 +78,7 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -112,14 +110,12 @@ public class EventController extends HttpServlet {
 					try {
 						events = eventAction.execute(new String[] { "RegistEventForm", "", data[2] });
 					} catch (Exception e1) {
-						request.setAttribute("error", e1.getMessage());
-						nextPage = "staff/AppointMenu.jsp";
+						handleException(e1, request, response, "staff/AppointMenu.jsp");
 						return;
 					}
 					nextPage = "staff/RegistEventInfo.jsp";
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -146,16 +142,14 @@ public class EventController extends HttpServlet {
 					events = eventAction.execute(data);
 					request.setAttribute("inputEvent", events.getFirst().getEvent());
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 
 				try {
 					events = eventAction.execute(new String[] { "RegistEventForm", "", data[2] });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -181,8 +175,7 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(data);
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 
@@ -194,8 +187,7 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, "", graduateStudentNumber });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -213,8 +205,7 @@ public class EventController extends HttpServlet {
 				try {
 					emails = emailAction.execute(data);
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				request.setAttribute("email", emails.getFirst());
@@ -234,16 +225,14 @@ public class EventController extends HttpServlet {
 					emails = emailAction.execute(data);
 					request.setAttribute("email", emails.getFirst());
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 
 				try {
 					events = eventAction.execute(new String[] { "ScheduleArrangeSendForm", "", data[2] });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				break;
