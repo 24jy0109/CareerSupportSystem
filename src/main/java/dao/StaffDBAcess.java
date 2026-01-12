@@ -10,43 +10,41 @@ import model.Staff;
 
 public class StaffDBAcess extends DBAccess {
 	public void insertStaff(Staff staff) throws Exception {
-		//データベース接続
-		Connection con = createConnection();
 
-		String select_sql = "SELECT staff_email FROM staff WHERE staff_email = ?";
-		PreparedStatement select_pstate = con.prepareStatement(select_sql);
-		select_pstate.setString(1, staff.getStaffEmail());
-		ResultSet rs;
-		try {
-			//SQL実行
-			rs = select_pstate.executeQuery();
-		} catch (Exception e) {
-			throw new Exception(e);
-		}
+		String selectSql = "SELECT staff_email FROM staff WHERE staff_email = ?";
+		String insertSql = "INSERT INTO staff (staff_name, staff_email) VALUES (?, ?)";
 
-		if (!rs.next()) {
-			String insert_sql = "INSERT INTO staff (staff_name, staff_email) VALUES "
-					+ "(?, ?)";
-			PreparedStatement insert_pstate = con.prepareStatement(insert_sql);
+		try (Connection con = createConnection()) {
 
-			insert_pstate.setString(1, staff.getStaffName());
-			insert_pstate.setString(2, staff.getStaffEmail());
-			try {
-				//SQL実行
-				insert_pstate.executeUpdate();
-				rs.close();
-				insert_pstate.close();
-			} catch (Exception e) {
-				throw new Exception(e);
+			try (
+					PreparedStatement selectPs = con.prepareStatement(selectSql)) {
+
+				selectPs.setString(1, staff.getStaffEmail());
+
+				try (ResultSet rs = selectPs.executeQuery()) {
+
+					if (!rs.next()) {
+
+						try (PreparedStatement insertPs = con.prepareStatement(insertSql)) {
+							insertPs.setString(1, staff.getStaffName());
+							insertPs.setString(2, staff.getStaffEmail());
+							insertPs.executeUpdate();
+						}
+					}
+				}
 			}
-		}
 
-		//DB接続を切断
-		select_pstate.close();
-		closeConnection(con);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、職員情報の登録に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
+		}
 	}
 
 	public List<Staff> getAllStaffs() throws Exception {
+
 		List<Staff> staffList = new ArrayList<>();
 
 		String sql = "SELECT staff_id, staff_name, staff_email FROM staff";
@@ -54,7 +52,7 @@ public class StaffDBAcess extends DBAccess {
 		try (
 				Connection con = createConnection();
 				PreparedStatement ps = con.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery();) {
+				ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
 				Staff staff = new Staff(
@@ -64,36 +62,45 @@ public class StaffDBAcess extends DBAccess {
 				staffList.add(staff);
 			}
 
+			return staffList;
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、職員一覧の取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
-
-		return staffList;
 	}
 
 	public Staff searchStaffById(int staffId) throws Exception {
 
-	    Staff staff = null;
-	    String sql = "SELECT staff_id, staff_name, staff_email FROM staff WHERE staff_id = ?";
+		Staff staff = null;
+		String sql = "SELECT staff_id, staff_name, staff_email FROM staff WHERE staff_id = ?";
 
-	    try (
-	        Connection con = createConnection();
-	        PreparedStatement ps = con.prepareStatement(sql)
-	    ) {
-	        ps.setInt(1, staffId);
+		try (
+				Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
-	        try (ResultSet rs = ps.executeQuery()) {
-	            if (rs.next()) {
-	                staff = new Staff();
-	                staff.setStaffId(rs.getInt("staff_id"));
-	                staff.setStaffName(rs.getString("staff_name"));
-	                staff.setStaffEmail(rs.getString("staff_email"));
-	            }
-	        }
-	    }
+			ps.setInt(1, staffId);
 
-	    return staff; // 見つからなければ null
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					staff = new Staff();
+					staff.setStaffId(rs.getInt("staff_id"));
+					staff.setStaffName(rs.getString("staff_name"));
+					staff.setStaffEmail(rs.getString("staff_email"));
+				}
+			}
+
+			return staff;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、職員情報の取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
+		}
 	}
-
 }

@@ -12,11 +12,9 @@ import model.Graduate;
 import model.Staff;
 
 public class GraduateDBAccess extends DBAccess {
-
 	// 既存卒業生の担当スタッフを変更 or 設定する
 	public void setStaff(Graduate graduate) throws Exception {
-		Connection con = createConnection();
-		try {
+		try (Connection con = createConnection()) {
 			String sql = "UPDATE graduate "
 					+ "SET staff_id = ? "
 					+ "WHERE graduate_student_number = ?";
@@ -25,16 +23,18 @@ public class GraduateDBAccess extends DBAccess {
 				ps.setString(2, graduate.getGraduateStudentNumber());
 				ps.executeUpdate();
 			}
-		} finally {
-			if (con != null)
-				con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"卒業生の担当スタッフ設定処理中にエラーが発生しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
 
 	// 卒業生の担当スタッフを外す（staff_id を NULL にする）
 	public void removeStaff(Graduate graduate) throws Exception {
-		Connection con = createConnection();
-		try {
+		try (Connection con = createConnection()) {
 			String sql = "UPDATE graduate "
 					+ "SET staff_id = NULL "
 					+ "WHERE graduate_student_number = ?";
@@ -42,28 +42,30 @@ public class GraduateDBAccess extends DBAccess {
 				ps.setString(1, graduate.getGraduateStudentNumber());
 				ps.executeUpdate();
 			}
-		} finally {
-			if (con != null)
-				con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"卒業生の担当スタッフ解除処理中にエラーが発生しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
 
 	public Graduate searchGraduateByGraduateStudentNumber(String graduateStudentNumber) throws Exception {
-		Connection con = createConnection();
-
 		// company と staff を JOIN
-		String sql = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_email, " +
-				"g.graduate_other_info, g.graduate_job_category, " +
-				"g.company_id, c.company_name, " +
-				"g.staff_id, s.staff_name, s.staff_email, " +
-				"g.course_code, co.course_name " +
-				"FROM graduate g " +
-				"LEFT JOIN company c ON g.company_id = c.company_id " +
-				"LEFT JOIN staff s ON g.staff_id = s.staff_id " +
-				"LEFT JOIN course co ON g.course_code = co.course_code " +
-				"WHERE g.graduate_student_number = ?";
+		String sql = "SELECT g.graduate_student_number, g.graduate_name, g.graduate_email, "
+				+ "g.graduate_other_info, g.graduate_job_category, "
+				+ "g.company_id, c.company_name, "
+				+ "g.staff_id, s.staff_name, s.staff_email, "
+				+ "g.course_code, co.course_name "
+				+ "FROM graduate g "
+				+ "LEFT JOIN company c ON g.company_id = c.company_id "
+				+ "LEFT JOIN staff s ON g.staff_id = s.staff_id "
+				+ "LEFT JOIN course co ON g.course_code = co.course_code "
+				+ "WHERE g.graduate_student_number = ?";
 
-		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+		try (Connection con = createConnection();
+				PreparedStatement pstmt = con.prepareStatement(sql)) {
 
 			pstmt.setString(1, graduateStudentNumber);
 			ResultSet rs = pstmt.executeQuery();
@@ -107,15 +109,16 @@ public class GraduateDBAccess extends DBAccess {
 				return g;
 			}
 
-		} finally {
-			if (con != null)
-				con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"卒業生情報の取得処理中にエラーが発生しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
-
 		return null;
 	}
 
-	// 変更したここから
 	public List<Graduate> searchGraduatesByGraduateStudentNumbers(
 			String[] graduateStudentNumbers) throws Exception {
 
@@ -179,112 +182,174 @@ public class GraduateDBAccess extends DBAccess {
 					list.add(g);
 				}
 			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"卒業生情報の取得処理中にエラーが発生しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 
 		return list;
 	}
-	// 変更したここまで
 
 	public List<Graduate> findAll() throws Exception {
 
 		List<Graduate> list = new ArrayList<>();
 
-		Connection con = createConnection();
+		try {
+			Connection con = createConnection();
 
-		String sql = "SELECT * FROM graduate";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ResultSet rs = ps.executeQuery();
+			try {
+				String sql = "SELECT * FROM graduate";
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery();
 
-		while (rs.next()) {
-			Graduate g = new Graduate();
-			//	        g.setGraduateId(rs.getInt("graduate_id"));
-			g.setGraduateName(rs.getString("graduate_name"));
-			list.add(g);
+				try {
+					while (rs.next()) {
+						Graduate g = new Graduate();
+						// g.setGraduateId(rs.getInt("graduate_id"));
+						g.setGraduateName(rs.getString("graduate_name"));
+						list.add(g);
+					}
+				} finally {
+					rs.close();
+					ps.close();
+				}
+
+			} finally {
+				con.close();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"卒業生一覧の取得処理中にエラーが発生しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
-
-		rs.close();
-		ps.close();
-		con.close();
 
 		return list;
 	}
 
-	public void insertGraduate(Graduate graduate) {
-		String sql = "INSERT INTO graduate (company_id, staff_id, course_code, graduate_student_number, graduate_name, graduate_email, graduate_other_info, graduate_job_category) "
+	public void insertGraduate(Graduate graduate) throws Exception {
+
+		String sql = "INSERT INTO graduate "
+				+ "(company_id, staff_id, course_code, graduate_student_number, "
+				+ " graduate_name, graduate_email, graduate_other_info, graduate_job_category) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		Connection con = null;
-		PreparedStatement ps = null;
 
 		try {
-			con = createConnection();
-			ps = con.prepareStatement(sql);
+			Connection con = createConnection();
 
-			ps.setInt(1, graduate.getCompany().getCompanyId());
-			ps.setNull(2, java.sql.Types.INTEGER); // staff_id を NULL
-			ps.setString(3, graduate.getCourse().getCourseCode());
-			ps.setString(4, graduate.getGraduateStudentNumber());
-			ps.setString(5, graduate.getGraduateName());
-			ps.setString(6, graduate.getGraduateEmail());
-			ps.setString(7, graduate.getOtherInfo());
-			ps.setString(8, graduate.getGraduateJobCategory());
+			try {
+				PreparedStatement ps = con.prepareStatement(sql);
 
-			ps.executeUpdate();
+				try {
+					ps.setInt(1, graduate.getCompany().getCompanyId());
+					ps.setNull(2, java.sql.Types.INTEGER); // staff_id を NULL
+					ps.setString(3, graduate.getCourse().getCourseCode());
+					ps.setString(4, graduate.getGraduateStudentNumber());
+					ps.setString(5, graduate.getGraduateName());
+					ps.setString(6, graduate.getGraduateEmail());
+					ps.setString(7, graduate.getOtherInfo());
+					ps.setString(8, graduate.getGraduateJobCategory());
+
+					ps.executeUpdate();
+
+				} finally {
+					ps.close();
+				}
+
+			} finally {
+				con.close();
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("DB登録中にエラーが発生しました：" + e.getMessage());
-
-		} finally {
-			try {
-				closeConnection(con);
-			} catch (Exception e) {
-				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
-			}
+			throw new Exception(
+					"卒業生情報の登録処理中にエラーが発生しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
 
-	public boolean updateGraduate(Graduate graduate) {
-		String sql = "UPDATE graduate SET company_id = ?, course_code = ?, graduate_name = ?, graduate_email = ?, "
-				+ "graduate_other_info = ?, graduate_job_category = ? "
+	public boolean updateGraduate(Graduate graduate) throws Exception {
+
+		String sql = "UPDATE graduate SET "
+				+ "company_id = ?, "
+				+ "course_code = ?, "
+				+ "graduate_name = ?, "
+				+ "graduate_email = ?, "
+				+ "graduate_other_info = ?, "
+				+ "graduate_job_category = ? "
 				+ "WHERE graduate_student_number = ?";
 
-		try (Connection con = createConnection();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+		try {
+			Connection con = createConnection();
 
-			ps.setInt(1, graduate.getCompany().getCompanyId());
-			ps.setString(2, graduate.getCourse().getCourseCode());
-			ps.setString(3, graduate.getGraduateName());
-			ps.setString(4, graduate.getGraduateEmail());
-			ps.setString(5, graduate.getOtherInfo());
-			ps.setString(6, graduate.getGraduateJobCategory());
-			ps.setString(7, graduate.getGraduateStudentNumber());
+			try {
+				PreparedStatement ps = con.prepareStatement(sql);
 
-			int count = ps.executeUpdate();
-			return count > 0; // 更新件数が0より大きければ成功
+				try {
+					ps.setInt(1, graduate.getCompany().getCompanyId());
+					ps.setString(2, graduate.getCourse().getCourseCode());
+					ps.setString(3, graduate.getGraduateName());
+					ps.setString(4, graduate.getGraduateEmail());
+					ps.setString(5, graduate.getOtherInfo());
+					ps.setString(6, graduate.getGraduateJobCategory());
+					ps.setString(7, graduate.getGraduateStudentNumber());
+
+					int count = ps.executeUpdate();
+					return count > 0;
+
+				} finally {
+					ps.close();
+				}
+
+			} finally {
+				con.close();
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			throw new Exception(
+					"卒業生情報の更新処理中にエラーが発生しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
 
 	public void deleteGraduate(String graduateStudentNumber) throws Exception {
-		Connection con = null;
-		PreparedStatement ps = null;
 
 		System.out.println(
 				"DELETE対象=[" + graduateStudentNumber + "] length=" + graduateStudentNumber.length());
 
 		try {
-			con = createConnection();
-			String sql = "DELETE FROM graduate WHERE graduate_student_number = ?";
-			ps = con.prepareStatement(sql);
-			ps.setString(1, graduateStudentNumber);
-			ps.executeUpdate();
-		} finally {
-			if (ps != null)
-				ps.close();
+			Connection con = createConnection();
+
+			try {
+				String sql = "DELETE FROM graduate WHERE graduate_student_number = ?";
+				PreparedStatement ps = con.prepareStatement(sql);
+
+				try {
+					ps.setString(1, graduateStudentNumber);
+					ps.executeUpdate();
+				} finally {
+					ps.close();
+				}
+
+			} finally {
+				con.close();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"卒業生情報の削除処理中にエラーが発生しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
 

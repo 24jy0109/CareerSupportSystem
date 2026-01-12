@@ -25,6 +25,38 @@
 		}
 		return false;
 	}
+
+	function injectChoice(form, answerId) {
+
+		// 該当 answerId の radio を全取得
+		const radios = document.querySelectorAll(
+			'input[type="radio"][name="choice_' + answerId + '"]'
+		);
+
+		let selected = null;
+
+		radios.forEach(r => {
+			if (r.checked) selected = r.value;
+		});
+
+		// 未選択防止
+		if (selected === null) {
+			alert("希望日時を選択してください。");
+			return false;
+		}
+
+		// hidden が無ければ作る
+		let hidden = form.querySelector('input[name="choice"]');
+		if (!hidden) {
+			hidden = document.createElement("input");
+			hidden.type = "hidden";
+			hidden.name = "choice";
+			form.appendChild(hidden);
+		}
+
+		hidden.value = selected;
+		return true; // submit 継続
+	}
 </script>
 </head>
 
@@ -102,7 +134,8 @@
 						</c:choose></td>
 
 					<td>
-						<form action="event" method="get">
+						<form action="event" method="get"
+							onsubmit="return injectChoice(this, ${a.answerId});">
 							<c:choose>
 								<c:when test="${a.eventAvailability}">
 									<input type="hidden" name="command" value="yesAnswer">

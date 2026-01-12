@@ -171,7 +171,7 @@ public class GraduateController extends BaseController {
 					graduateStudentNumber = request.getParameter("graduateStudentNumber");
 					jobType = request.getParameter("jobType");
 					otherInfo = request.getParameter("otherInfo");
-
+					
 					// 会社名・学科名を再取得
 					try {
 						List<Graduate> gList = graduateAction.execute(new String[] { "findCompanyName", companyId });
@@ -227,8 +227,9 @@ public class GraduateController extends BaseController {
 					List<Graduate> gList = graduateAction.execute(new String[] { "findCompanyName", companyId });
 					companyName = gList.get(0).getCompany().getCompanyName();
 				} catch (Exception e) {
-					handleException(e, request, response, "staff/AppointMenu.jsp");
-					return;
+					e.printStackTrace();
+//					handleException(e, request, response, "staff/AppointMenu.jsp");
+//					return;
 				}
 
 				try {
@@ -252,6 +253,7 @@ public class GraduateController extends BaseController {
 				try {
 					courses = new CourseDBAccess().getAllCourses();
 				} catch (Exception e) {
+					e.printStackTrace();
 					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}

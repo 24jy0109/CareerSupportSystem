@@ -61,8 +61,7 @@ public class JoinStudentController extends BaseController {
 			try {
 				joinStudents = joinStudentAction.execute(new String[] {command, eventId});
 			} catch (Exception e) {
-				nextPage = "staff/AppointMenu.jsp";
-				request.setAttribute("error", e.getMessage());
+				handleException(e, request, response, "staff/AppointMenu.jsp");
 				return;
 			}
 			break;

@@ -246,8 +246,7 @@ public class EventController extends BaseController {
 				try {
 					new GraduateAction().execute(data);
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 
@@ -258,8 +257,7 @@ public class EventController extends BaseController {
 				try {
 					events = eventAction.execute(data);
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				response.sendRedirect("event?command=RegistEventForm&companyId=" + data[6]);
@@ -269,8 +267,7 @@ public class EventController extends BaseController {
 				try {
 					events = eventAction.execute(new String[] { command, "" });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -280,8 +277,7 @@ public class EventController extends BaseController {
 				try {
 					events = eventAction.execute(new String[] { command, "", eventId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				request.setAttribute("event", events.getFirst());
@@ -292,12 +288,11 @@ public class EventController extends BaseController {
 				data[0] = command;
 				data[1] = request.getParameter("answerId");
 				data[2] = request.getParameter("choice");
-
+				
 				try {
 					answers = new AnswerAction().execute(data);
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				Answer answer = answers.getFirst();
@@ -306,8 +301,7 @@ public class EventController extends BaseController {
 				try {
 					events = eventAction.execute(new String[] { "RegistEventForm", "", companyId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -316,8 +310,7 @@ public class EventController extends BaseController {
 				try {
 					eventAction.execute(new String[] { command, eventId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				response.sendRedirect("event?command=EventList");
@@ -327,8 +320,7 @@ public class EventController extends BaseController {
 				try {
 					eventAction.execute(new String[] { command, eventId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "staff/AppointMenu.jsp";
+					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
 				response.sendRedirect("event?command=EventList");
@@ -342,8 +334,7 @@ public class EventController extends BaseController {
 				try {
 					events = eventAction.execute(new String[] { command, studentNumber });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "student/AppointMenu.jsp";
+					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
 				break;
@@ -353,8 +344,7 @@ public class EventController extends BaseController {
 				try {
 					events = eventAction.execute(new String[] { command, studentNumber, eventId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "student/AppointMenu.jsp";
+					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
 				request.setAttribute("event", events.getFirst());
@@ -364,8 +354,7 @@ public class EventController extends BaseController {
 				try {
 					events = eventAction.execute(new String[] { command, studentNumber, eventId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "student/AppointMenu.jsp";
+					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
 				response.sendRedirect("event?command=JoinHistory");
@@ -375,8 +364,7 @@ public class EventController extends BaseController {
 				try {
 					eventAction.execute(new String[] { command, studentNumber, eventId });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "student/AppointMenu.jsp";
+					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
 				response.sendRedirect("event?command=JoinHistory");
@@ -386,11 +374,9 @@ public class EventController extends BaseController {
 				try {
 					events = eventAction.execute(new String[] { command, studentNumber });
 				} catch (Exception e) {
-					request.setAttribute("error", e.getMessage());
-					nextPage = "student/AppointMenu.jsp";
+					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
-
 				break;
 			}
 		}
