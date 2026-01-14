@@ -83,7 +83,8 @@
 										<!--									<div class="detail-data">-->
 										<c:forEach var="g" items="${event.graduates}">
 											<tr>
-												<td class="detail-data"><c:if test="${not empty g.graduateStudentNumber}">
+												<td class="detail-data"><c:if
+														test="${not empty g.graduateStudentNumber}">
 														<c:set var="enterYear2"
 															value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
 														<c:set var="graduateYear"
