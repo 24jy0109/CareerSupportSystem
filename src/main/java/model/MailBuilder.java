@@ -27,6 +27,9 @@ public class MailBuilder {
 
   %s
 
+■ 開催ページ
+  %s
+
 ご不明な点がございましたら、上記担当職員までお問い合わせください。
 """;
 
@@ -66,6 +69,9 @@ public class MailBuilder {
   %s
 
   %s
+  
+■ 開催ページ
+  %s
 
 ご不明な点がございましたら、上記担当職員までお問い合わせください。
 """;
@@ -81,7 +87,8 @@ public class MailBuilder {
   氏名: %s
   メール: %s
 
-詳細は管理画面よりご確認ください。
+■ 回答確認ページ
+  %s
 """;
     
     private static final String ANSWER_SELF_TEMPLATE =
@@ -140,7 +147,8 @@ public class MailBuilder {
 				event.getEventPlace(),
 				event.getEventCapacity(),
 				event.getStaff().getStaffName(),
-				event.getStaff().getStaffEmail());
+				event.getStaff().getStaffEmail(),
+				"http://localhost:8080/CareerSupportSystem/event?command=EventDetail&eventId=" + event.getEventId());
 
 		// 備考はあるときだけ差し込む
 		if (event.getEventOtherInfo() != null && !event.getEventOtherInfo().isBlank()) {
@@ -221,7 +229,8 @@ public class MailBuilder {
             event.getEventCapacity(),
             notes,
             event.getStaff().getStaffName(),
-            event.getStaff().getStaffEmail()
+            event.getStaff().getStaffEmail(),
+            "http://localhost:8080/CareerSupportSystem/event?command=EventDetail&eventId=" + event.getEventId()
         );
     }
     
@@ -274,7 +283,8 @@ public class MailBuilder {
             availability,
             choices.toString(),
             grad.getGraduateName(),
-            grad.getGraduateEmail()
+            grad.getGraduateEmail(),
+            "http://localhost:8080/CareerSupportSystem/answer?command=ScheduleAnswerCheck"
         );
     }
     
