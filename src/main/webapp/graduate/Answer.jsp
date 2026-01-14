@@ -126,7 +126,8 @@
 
 			</div>
 
-			<input type="submit" class="submit-btn" value="回答する">
+			<input type="submit" class="submit-btn" value="確認">
+
 		</form>
 	</main>
 

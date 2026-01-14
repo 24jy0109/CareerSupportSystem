@@ -163,9 +163,12 @@
 													onclick="location.href='event?command=EventJoin&eventId=${event.event.eventId}'">
 													参加</button>
 
-												<button type="button"
-													onclick="location.href='event?command=EventNotJoin&eventId=${event.event.eventId}'"
-													class="white-btn">不参加</button>
+												<c:if test="${event.studentRequested}">
+													<button type="button"
+														onclick="location.href='event?command=EventNotJoin&eventId=${event.event.eventId}'"
+														class="white-btn">不参加</button>
+												</c:if>
+
 											</div>
 										</div>
 									</c:when>

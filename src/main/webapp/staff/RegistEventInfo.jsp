@@ -188,7 +188,7 @@
 					<div class="bottom-btn-split">
 						<button type="button" onclick="location.href='${backUrl}'">
 							${backLabel}</button>
-						<input type="submit" class="event-btn" value="開催">
+						<input type="submit" class="event-btn" value="確認">
 					</div>
 
 				</form>
