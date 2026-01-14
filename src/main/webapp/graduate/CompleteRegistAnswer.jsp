@@ -1,17 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="model.Answer"%>
-<%@ page import="java.util.List"%>
-<%@ page import="java.time.format.DateTimeFormatter"%>
-<%
-List<Answer> answers = (List<Answer>) request.getAttribute("answers");
-Answer answer = null;
-if (answers != null && !answers.isEmpty()) {
-	answer = answers.get(0); // 登録された Answer を取得
-}
-
-DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,25 +7,7 @@ DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>Submission Complete</title>
-<style>
-body {
-	font-family: Arial;
-	margin: 40px;
-}
-
-.box {
-	border: 1px solid #ccc;
-	padding: 20px;
-	width: 400px;
-	border-radius: 8px;
-	background: #f8f8f8;
-}
-
-.label {
-	font-weight: bold;
-}
-</style>
+<title>就職先登録完了画面（在校生/職員）</title>
 </head>
 <body>
 	<header>
@@ -46,70 +16,28 @@ body {
 				<img src="img/rogo.png" alt="アイコン">
 			</div>
 
-			<div class="header-title"
-				onclick="location.href='mypage?command=AppointmentMenu'">
+			<div class="header-title">
 				<div class="title-jp">就活サポート</div>
 				<div class="title-en">Career Support</div>
 			</div>
-
-			<div class="header-user">ようこそ${name}さん</div>
 		</div>
 	</header>
+	<main>
+		<div class="complete-screen">
+			<p class="complete-msg">回答完了しました！</p>
+			<p>
+				<img src="./img/complete_regist_job.png">
+			</p>
+			<p>ご回答内容を正常に受け付けました。</p>
+			<p>登録内容は、ご登録のメールアドレス宛に送信しております。</p>
+		</div>
 
-	<h1>Submission Complete</h1>
+	</main>
 
-	<div class="box">
-		<%
-		if (answer != null) {
-		%>
+	<footer>
 		<p>
-			<span class="label">Answer ID:</span>
-			<%=answer.getAnswerId()%></p>
-
-		<p>
-			<span class="label">Graduate:</span>
-			<%=answer.getGraduate() != null ? answer.getGraduate().getGraduateName() : "未設定"%>
+			<small>&copy; 2024 Example Inc.</small>
 		</p>
-		<p>
-			<span class="label">Student Number:</span>
-			<%=answer.getGraduate() != null ? answer.getGraduate().getGraduateStudentNumber() : "未設定"%>
-		</p>
-
-		<p>
-			<span class="label">Availability:</span>
-			<%=answer.getEventAvailability() != null ? answer.getEventAvailability() : "未設定"%>
-		</p>
-
-		<p>
-			<span class="label">First Choice:</span>
-			<%=answer.getFirstChoiceStartTime() != null ? dtf.format(answer.getFirstChoiceStartTime()) : ""%>
-			～
-			<%=answer.getFirstChoiceEndTime() != null ? dtf.format(answer.getFirstChoiceEndTime()) : ""%>
-		</p>
-
-		<p>
-			<span class="label">Second Choice:</span>
-			<%=answer.getSecondChoiceStartTime() != null ? dtf.format(answer.getSecondChoiceStartTime()) : ""%>
-			～
-			<%=answer.getSecondChoiceEndTime() != null ? dtf.format(answer.getSecondChoiceEndTime()) : ""%>
-		</p>
-
-		<p>
-			<span class="label">Third Choice:</span>
-			<%=answer.getThirdChoiceStartTime() != null ? dtf.format(answer.getThirdChoiceStartTime()) : ""%>
-			～
-			<%=answer.getThirdChoiceEndTime() != null ? dtf.format(answer.getThirdChoiceEndTime()) : ""%>
-		</p>
-		<%
-		} else {
-		%>
-		<p>No answer information was found.</p>
-		<%
-		}
-		%>
-	</div>
-
-	<br>
-
+	</footer>
 </body>
 </html>

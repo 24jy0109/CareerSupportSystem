@@ -72,7 +72,7 @@ public class MailBuilder {
     
     private static final String ANSWER_TEMPLATE =
 """
-%s さんより、以下の開催について回答がありました。
+%s 様より、以下の開催について回答がありました。
 
 ■ 参加可否
   %s
@@ -84,6 +84,23 @@ public class MailBuilder {
 詳細は管理画面よりご確認ください。
 """;
     
+    private static final String ANSWER_SELF_TEMPLATE =
+"""
+%s 様
+
+以下の内容で、イベント参加についてのご回答を受け付けました。
+
+■ 参加可否
+  %s
+
+%s■ 担当者情報
+  氏名: %s
+  メール: %s
+
+
+ご不明な点がございましたら、担当職員までお問い合わせください。
+""";
+
     private static final String NO_ANSWER_TEMPLATE =
 """
 %s 様
@@ -260,6 +277,63 @@ public class MailBuilder {
             grad.getGraduateEmail()
         );
     }
+    
+    /**
+     * 回答者本人向け 回答内容確認メール本文生成
+     */
+    public static String buildAnswerSelfNotification(Answer answer) {
+
+        String availability =
+            Boolean.TRUE.equals(answer.getEventAvailability())
+                ? "出席する"
+                : "出席しない";
+
+        // 希望日時（出席する場合のみ）
+        StringBuilder choices = new StringBuilder();
+        if (Boolean.TRUE.equals(answer.getEventAvailability())) {
+
+            if (answer.getFirstChoiceStartTime() != null) {
+                choices.append("■ 希望日時\n");
+                choices.append("  【第1希望】 ")
+                       .append(answer.getFirstChoiceStartTime().format(EVENT_FMT))
+                       .append(" ～ ")
+                       .append(answer.getFirstChoiceEndTime().format(EVENT_FMT))
+                       .append("\n");
+            }
+
+            if (answer.getSecondChoiceStartTime() != null) {
+                if (choices.length() == 0) choices.append("■ 希望日時\n");
+                choices.append("  【第2希望】 ")
+                       .append(answer.getSecondChoiceStartTime().format(EVENT_FMT))
+                       .append(" ～ ")
+                       .append(answer.getSecondChoiceEndTime().format(EVENT_FMT))
+                       .append("\n");
+            }
+
+            if (answer.getThirdChoiceStartTime() != null) {
+                if (choices.length() == 0) choices.append("■ 希望日時\n");
+                choices.append("  【第3希望】 ")
+                       .append(answer.getThirdChoiceStartTime().format(EVENT_FMT))
+                       .append(" ～ ")
+                       .append(answer.getThirdChoiceEndTime().format(EVENT_FMT))
+                       .append("\n");
+            }
+
+            choices.append("\n");
+        }
+
+        Graduate grad = answer.getGraduate();
+
+        return String.format(
+            ANSWER_SELF_TEMPLATE,
+            grad.getGraduateName(),
+            availability,
+            choices.toString(),
+            answer.getEvent().getStaff().getStaffName(),
+            answer.getEvent().getStaff().getStaffEmail()
+        );
+    }
+
     
     /**
      * 卒業生宛拒否通知メール本文
