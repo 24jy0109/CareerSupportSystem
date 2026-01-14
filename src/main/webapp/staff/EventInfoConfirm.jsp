@@ -127,7 +127,7 @@
 				<button type="submit"
 					onclick="document.getElementById('commandField').value='RegistEventBack'">
 					戻る</button>
-				<button type="submit">確定</button>
+				<button type="submit">開催</button>
 			</div>
 		</form>
 

@@ -178,4 +178,36 @@ public class RequestDBAccess extends DBAccess {
 
 		return emails;
 	}
+
+	public Boolean isStudentRequestedCompany(int companyId, String studentNumber) throws Exception {
+
+		String sql = "SELECT 1 " +
+				"FROM request " +
+				"WHERE company_id = ? AND student_number = ?";
+
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, companyId);
+			ps.setString(2, studentNumber);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				// レコードが存在する = 申請済み
+				if (rs.next()) {
+					return true;
+				}
+
+				// レコードなし = 未申請
+				return false;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、企業申請状況の取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
+		}
+	}
 }

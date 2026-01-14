@@ -139,7 +139,7 @@
 
 			</div>
 
-			<input type="submit" value="回答する">
+			<input type="submit" value="確認">
 		</form>
 	</main>
 

@@ -94,7 +94,7 @@
 				">
 					戻る</button>
 
-				<button type="submit">確定</button>
+				<button type="submit">回答</button>
 			</div>
 
 		</form>
