@@ -5,7 +5,6 @@ import java.io.IOException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +13,7 @@ import action.LoginAction;
 import model.Key;
 
 @WebServlet("/login")
-public class LoginController extends HttpServlet {
+public class LoginController extends BaseController {
 	private static final long serialVersionUID = 1L;
 
 	public LoginController() {
@@ -66,9 +65,7 @@ public class LoginController extends HttpServlet {
 				session.setAttribute("email", staff[2]);
 				session.setAttribute("role", staff[3]);
 			} catch (Exception e) {
-				request.setAttribute("error", e.getMessage());
-				RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
-				rd.forward(request, response);
+				handleException(e, request, response, "staff/AppointMenu.jsp");
 				return;
 			}
 			response.sendRedirect("mypage?command=AppointmentMenu");

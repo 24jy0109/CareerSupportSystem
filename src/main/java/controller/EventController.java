@@ -7,7 +7,6 @@ import java.util.List;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +21,7 @@ import exception.ValidationException;
 import model.Answer;
 
 @WebServlet("/event")
-public class EventController extends HttpServlet {
+public class EventController extends BaseController {
 	private static final long serialVersionUID = 1L;
 
 	public EventController() {
@@ -79,7 +78,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, "", companyId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				break;
 			case "RegistEventConfirm":
@@ -110,11 +110,13 @@ public class EventController extends HttpServlet {
 					try {
 						events = eventAction.execute(new String[] { "RegistEventForm", "", data[2] });
 					} catch (Exception e1) {
-						e1.printStackTrace();
+						handleException(e1, request, response, "staff/AppointMenu.jsp");
+						return;
 					}
 					nextPage = "staff/RegistEventInfo.jsp";
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				break;
 			case "RegistEventBack":
@@ -140,13 +142,15 @@ public class EventController extends HttpServlet {
 					events = eventAction.execute(data);
 					request.setAttribute("inputEvent", events.getFirst().getEvent());
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
-				
+
 				try {
 					events = eventAction.execute(new String[] { "RegistEventForm", "", data[2] });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				break;
 			case "RegistEvent":
@@ -171,7 +175,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(data);
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 
 				response.sendRedirect("event?command=EventList");
@@ -182,7 +187,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, "", graduateStudentNumber });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				break;
 			case "ScheduleArrangeEmailConfirm":
@@ -199,7 +205,8 @@ public class EventController extends HttpServlet {
 				try {
 					emails = emailAction.execute(data);
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				request.setAttribute("email", emails.getFirst());
 				break;
@@ -213,18 +220,20 @@ public class EventController extends HttpServlet {
 				data[4] = (String) request.getParameter("mailTitle");
 				data[5] = (String) request.getParameter("mailBody");
 				data[6] = (String) request.getParameter("companyId");
-				
+
 				try {
 					emails = emailAction.execute(data);
 					request.setAttribute("email", emails.getFirst());
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 
 				try {
 					events = eventAction.execute(new String[] { "ScheduleArrangeSendForm", "", data[2] });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				break;
 			case "SendScheduleArrangeEmail":
@@ -237,7 +246,8 @@ public class EventController extends HttpServlet {
 				try {
 					new GraduateAction().execute(data);
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 
 				data[4] = (String) request.getParameter("mailTitle");
@@ -247,7 +257,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(data);
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				response.sendRedirect("event?command=RegistEventForm&companyId=" + data[6]);
 				return;
@@ -256,7 +267,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, "" });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				break;
 			case "EventDetail":
@@ -265,7 +277,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, "", eventId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				request.setAttribute("event", events.getFirst());
 				break;
@@ -279,7 +292,8 @@ public class EventController extends HttpServlet {
 				try {
 					answers = new AnswerAction().execute(data);
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				Answer answer = answers.getFirst();
 				request.setAttribute("inputEvent", answer.toInputEvent());
@@ -287,7 +301,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { "RegistEventForm", "", companyId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				break;
 			case "EventEnd":
@@ -295,7 +310,8 @@ public class EventController extends HttpServlet {
 				try {
 					eventAction.execute(new String[] { command, eventId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				response.sendRedirect("event?command=EventList");
 				return;
@@ -304,7 +320,8 @@ public class EventController extends HttpServlet {
 				try {
 					eventAction.execute(new String[] { command, eventId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				response.sendRedirect("event?command=EventList");
 				return;
@@ -317,7 +334,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, studentNumber });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 				break;
 			case "EventDetail":
@@ -326,7 +344,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, studentNumber, eventId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 				request.setAttribute("event", events.getFirst());
 				break;
@@ -335,7 +354,8 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, studentNumber, eventId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 				response.sendRedirect("event?command=JoinHistory");
 				return;
@@ -344,7 +364,8 @@ public class EventController extends HttpServlet {
 				try {
 					eventAction.execute(new String[] { command, studentNumber, eventId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 				response.sendRedirect("event?command=JoinHistory");
 				return;
@@ -353,9 +374,9 @@ public class EventController extends HttpServlet {
 				try {
 					events = eventAction.execute(new String[] { command, studentNumber });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
-				
 				break;
 			}
 		}

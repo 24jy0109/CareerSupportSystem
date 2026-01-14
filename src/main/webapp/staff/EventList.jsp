@@ -9,36 +9,8 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/pagination.css">
 <title>開催一覧/履歴（職員）</title>
-
-<style>
-.pagination {
-	text-align: center;
-	margin: 20px 0;
-}
-
-.pagination button {
-	margin: 0 4px;
-	padding: 6px 10px;
-	border-radius: 4px;
-	border: 1px solid #ccc;
-	background-color: #fff;
-	color: #333;
-	cursor: pointer;
-}
-
-.pagination button:hover {
-	background-color: #f2f2f2;
-}
-
-.pagination button.active {
-	background-color: #e6f4ea;
-	border-color: #009A37;
-	color: #006b2e;
-	font-weight: 600;
-	cursor: default;
-}
-</style>
 </head>
 
 <body>

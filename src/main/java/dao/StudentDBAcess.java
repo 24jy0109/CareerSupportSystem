@@ -38,7 +38,11 @@ public class StudentDBAcess extends DBAccess {
 						try {
 							insert_pstate.executeUpdate();
 						} catch (Exception e) {
-							throw new Exception("学生情報の登録処理に失敗しました。", e);
+							e.printStackTrace();
+							throw new Exception(
+									"データベースの処理中にエラーが発生し、学生情報の登録に失敗しました。<br>"
+											+ "お手数ですが、管理者までお問い合わせください。",
+									e);
 						}
 					}
 				}
@@ -49,11 +53,15 @@ public class StudentDBAcess extends DBAccess {
 			// すでに業務メッセージが設定されている場合はそのまま投げる
 			if (e.getMessage() != null &&
 				(e.getMessage().contains("学生情報"))) {
+				e.printStackTrace();
 				throw e;
 			}
 
 			// それ以外は存在確認失敗としてまとめる
-			throw new Exception("学生情報の存在確認に失敗しました。", e);
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、学生情報の取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
 }

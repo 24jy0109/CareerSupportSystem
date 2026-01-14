@@ -14,145 +14,168 @@ import model.Request;
 import model.Student;
 
 public class RequestDBAccess extends DBAccess {
+
 	public List<Request> requestStudentList(int companyId) throws Exception {
-		Connection con = createConnection();
-	    List<Request> list = new ArrayList<>();
+		List<Request> list = new ArrayList<>();
 
-	    // ① リクエスト学生一覧を取得するSQL
-	    String sqlReq =
-	        "SELECT r.request_time, "
-	      + "s.student_number, s.student_name, s.student_email, "
-	      + "c.company_id, c.company_name, "
-	      + "co.course_code, co.course_name, co.course_term "
-	      + "FROM request r "
-	      + "JOIN student s ON r.student_number = s.student_number "
-	      + "JOIN course co ON s.course_code = co.course_code "
-	      + "JOIN company c ON r.company_id = c.company_id "
-	      + "WHERE r.company_id = ? "
-	      + "ORDER BY r.request_time DESC";
+		String sqlReq = "SELECT r.request_time, "
+				+ "s.student_number, s.student_name, s.student_email, "
+				+ "c.company_id, c.company_name, "
+				+ "co.course_code, co.course_name, co.course_term "
+				+ "FROM request r "
+				+ "JOIN student s ON r.student_number = s.student_number "
+				+ "JOIN course co ON s.course_code = co.course_code "
+				+ "JOIN company c ON r.company_id = c.company_id "
+				+ "WHERE r.company_id = ? "
+				+ "ORDER BY r.request_time DESC";
 
-	    // ② event_progress = 2 のイベントだけ取得するSQL
-	    String sqlEvent =
-	        "SELECT event_id, event_start_time, event_end_time, event_place "
-	      + "FROM event "
-	      + "WHERE company_id = ? AND event_progress = 2";
+		String sqlEvent = "SELECT event_id, event_start_time, event_end_time, event_place "
+				+ "FROM event "
+				+ "WHERE company_id = ? AND event_progress = 2";
 
-	        // ------------------------------
-	        // ② Company の events を作る
-	        // ------------------------------
-	        ArrayList<Event> eventList = new ArrayList<>();
+		try (Connection con = createConnection()) {
 
-	        try (PreparedStatement psEv = con.prepareStatement(sqlEvent)) {
-	            psEv.setInt(1, companyId);
+			// ------------------------------
+			// event_progress = 2 の Event 一覧
+			// ------------------------------
+			ArrayList<Event> eventList = new ArrayList<>();
 
-	            try (ResultSet rsEv = psEv.executeQuery()) {
-	                while (rsEv.next()) {
-	                    Event ev = new Event();
-	                    ev.setEventId(rsEv.getInt("event_id"));
+			try (PreparedStatement psEv = con.prepareStatement(sqlEvent)) {
+				psEv.setInt(1, companyId);
 
-	                    Timestamp st = rsEv.getTimestamp("event_start_time");
-	                    if (st != null) ev.setEventStartTime(st.toLocalDateTime());
+				try (ResultSet rsEv = psEv.executeQuery()) {
+					while (rsEv.next()) {
+						Event ev = new Event();
+						ev.setEventId(rsEv.getInt("event_id"));
 
-	                    Timestamp et = rsEv.getTimestamp("event_end_time");
-	                    if (et != null) ev.setEventEndTime(et.toLocalDateTime());
+						Timestamp st = rsEv.getTimestamp("event_start_time");
+						if (st != null)
+							ev.setEventStartTime(st.toLocalDateTime());
 
-	                    ev.setEventPlace(rsEv.getString("event_place"));
+						Timestamp et = rsEv.getTimestamp("event_end_time");
+						if (et != null)
+							ev.setEventEndTime(et.toLocalDateTime());
 
-	                    eventList.add(ev);
-	                }
-	            }
-	        }
+						ev.setEventPlace(rsEv.getString("event_place"));
+						eventList.add(ev);
+					}
+				}
+			}
 
-	        // ------------------------------
-	        // ③ request と student を取得
-	        // ------------------------------
-	        try (PreparedStatement ps = con.prepareStatement(sqlReq)) {
-	            ps.setInt(1, companyId);
+			// ------------------------------
+			// Request + Student 一覧
+			// ------------------------------
+			try (PreparedStatement ps = con.prepareStatement(sqlReq)) {
+				ps.setInt(1, companyId);
 
-	            try (ResultSet rs = ps.executeQuery()) {
-	                while (rs.next()) {
-	                    // ----- Course -----
-	                    Course course = new Course();
-	                    course.setCourseName(rs.getString("course_name"));
+				try (ResultSet rs = ps.executeQuery()) {
+					while (rs.next()) {
 
-	                    // ----- Student -----
-	                    Student student = new Student();
-	                    student.setStudentNumber(rs.getString("student_number"));
-	                    student.setStudentName(rs.getString("student_name"));
-	                    student.setCourse(course);
+						Course course = new Course();
+						course.setCourseName(rs.getString("course_name"));
 
-	                    // ----- Company -----
-	                    Company company = new Company();
-	                    company.setCompanyId(rs.getInt("company_id"));
-	                    company.setCompanyName(rs.getString("company_name"));
-	                    company.setEvents(eventList);   // <--- ★ここ重要：progress=2 の event だけ
+						Student student = new Student();
+						student.setStudentNumber(rs.getString("student_number"));
+						student.setStudentName(rs.getString("student_name"));
+						student.setCourse(course);
 
-	                    // ----- Request -----
-	                    Request req = new Request();
-	                    req.setstudent(student);
-	                    req.setcompany(company);
-	                    req.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
+						Company company = new Company();
+						company.setCompanyId(rs.getInt("company_id"));
+						company.setCompanyName(rs.getString("company_name"));
+						company.setEvents(eventList);
 
-	                    list.add(req);
-	                }
-	            }
-	        }
-	        return list;
-	    }
+						Request req = new Request();
+						req.setstudent(student);
+						req.setcompany(company);
+						req.setRequestTime(
+								rs.getTimestamp("request_time").toLocalDateTime());
 
+						list.add(req);
+					}
+				}
+			}
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、リクエスト学生一覧の取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
+		}
+
+		return list;
+	}
 
 	public void insertRequest(int companyId, String studentNumber) throws Exception {
-		Connection con = createConnection();
-		try {
-			String sql = "INSERT INTO request (company_id, student_number) VALUES (?, ?)";
-			try (PreparedStatement ps = con.prepareStatement(sql)) {
-				ps.setInt(1, companyId);
-				ps.setString(2, studentNumber);
-				ps.executeUpdate();
-			}
-		} finally {
-			if (con != null)
-				con.close();
+
+		String sql = "INSERT INTO request (company_id, student_number) "
+				+ "VALUES (?, ?)";
+
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, companyId);
+			ps.setString(2, studentNumber);
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、リクエストの登録に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
 
 	public void cancelRequest(int companyId, String studentNumber) throws Exception {
-		Connection con = createConnection();
-		try {
-			String sql = "DELETE FROM request WHERE company_id = ? AND student_number = ?";
-			try (PreparedStatement ps = con.prepareStatement(sql)) {
-				ps.setInt(1, companyId);
-				ps.setString(2, studentNumber);
-				ps.executeUpdate();
-			}
-		} finally {
-			if (con != null)
-				con.close();
+
+		String sql = "DELETE FROM request "
+				+ "WHERE company_id = ? AND student_number = ?";
+
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, companyId);
+			ps.setString(2, studentNumber);
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、リクエストの取消に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
 		}
 	}
 
 	public List<String> searchEmailsByCompanyId(int companyId) throws Exception {
-	    Connection con = createConnection();
-	    List<String> emails = new ArrayList<>();
 
-	    String sql = "SELECT s.student_email FROM request r "
-	               + "JOIN student s ON r.student_number = s.student_number "
-	               + "WHERE r.company_id = ?";
+		List<String> emails = new ArrayList<>();
 
-	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+		String sql = "SELECT s.student_email "
+				+ "FROM request r "
+				+ "JOIN student s ON r.student_number = s.student_number "
+				+ "WHERE r.company_id = ?";
 
-	        pstmt.setInt(1, companyId);
-	        ResultSet rs = pstmt.executeQuery();
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
 
-	        while (rs.next()) {
-	            emails.add(rs.getString("student_email"));
-	        }
+			ps.setInt(1, companyId);
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					emails.add(rs.getString("student_email"));
+				}
+			}
 
-	    return emails;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"データベースの処理中にエラーが発生し、メールアドレスの取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
+		}
+
+		return emails;
 	}
 }

@@ -5,7 +5,6 @@ import java.io.IOException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -13,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import action.LoginAction;
 
 @WebServlet("/callback")
-public class CallbackController extends HttpServlet {
+public class CallbackController extends BaseController {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,13 +47,13 @@ public class CallbackController extends HttpServlet {
 			response.sendRedirect("mypage?command=AppointmentMenu");
 
 		} catch (Exception e) {
-			// 開発者向けログ
 			e.printStackTrace();
 
 			// ユーザー向けエラーメッセージ
 			request.setAttribute("error", e.getMessage());
 			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 			rd.forward(request, response);
+			return;
 		}
 	}
 }
