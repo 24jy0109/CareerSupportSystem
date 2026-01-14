@@ -260,6 +260,7 @@ public class EventController extends BaseController {
 					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
+				setFlashMessage(request, FLASH_SUCCESS, "メールを送信しました。");
 				response.sendRedirect("event?command=RegistEventForm&companyId=" + data[6]);
 				return;
 			case "EventList":
@@ -288,7 +289,7 @@ public class EventController extends BaseController {
 				data[0] = command;
 				data[1] = request.getParameter("answerId");
 				data[2] = request.getParameter("choice");
-				
+
 				try {
 					answers = new AnswerAction().execute(data);
 				} catch (Exception e) {
@@ -357,6 +358,7 @@ public class EventController extends BaseController {
 					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
+				setFlashMessage(request, FLASH_SUCCESS, "参加登録しました。");
 				response.sendRedirect("event?command=JoinHistory");
 				return;
 			case "EventNotJoin":
@@ -367,6 +369,7 @@ public class EventController extends BaseController {
 					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
+				setFlashMessage(request, FLASH_SUCCESS, "不参加登録しました。");
 				response.sendRedirect("event?command=JoinHistory");
 				return;
 			case "JoinHistory":

@@ -154,6 +154,6 @@
 	}
 </script>
 
-
+<jsp:include page="/common/flashMessage.jsp" />
 </body>
 </html>

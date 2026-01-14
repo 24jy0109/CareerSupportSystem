@@ -101,6 +101,19 @@ public class AppointmentRequestController extends BaseController {
 					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
+		        if ("ApplyRequest".equals(command)) {
+		            setFlashMessage(
+		                request,
+		                FLASH_SUCCESS,
+		                "申請しました。"
+		            );
+		        } else if ("CancelRequest".equals(command)) {
+		            setFlashMessage(
+		                request,
+		                FLASH_SUCCESS,
+		                "申請を取り消しました。"
+		            );
+		        }
 				response.sendRedirect("company?command=CompanyList");
 				return;
 			}

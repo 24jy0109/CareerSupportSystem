@@ -39,17 +39,13 @@
 				<c:if test="${dto.event.eventProgress == 'ONGOING'}">
 					<tr class="join-current-row">
 						<td>${dto.event.company.companyName}</td>
-						<td>
-							<a href="event?command=EventDetail&eventId=${dto.event.eventId}">
-								開催詳細
-							</a>
-						</td>
-						<td>
-							<c:choose>
+						<td><a
+							href="event?command=EventDetail&eventId=${dto.event.eventId}">
+								開催詳細 </a></td>
+						<td><c:choose>
 								<c:when test="${dto.joinAvailability}">参加</c:when>
 								<c:otherwise>不参加</c:otherwise>
-							</c:choose>
-						</td>
+							</c:choose></td>
 					</tr>
 				</c:if>
 			</c:forEach>
@@ -64,21 +60,18 @@
 
 		<table>
 			<c:forEach var="dto" items="${events}">
-				<c:if test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
+				<c:if
+					test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
 					<tr class="join-history-row">
 						<td>${dto.event.company.companyName}</td>
-						<td>
-							<a href="event?command=EventDetail&eventId=${dto.event.eventId}">
-								開催詳細
-							</a>
-						</td>
-						<td>
-							<c:choose>
+						<td><a
+							href="event?command=EventDetail&eventId=${dto.event.eventId}">
+								開催詳細 </a></td>
+						<td><c:choose>
 								<c:when test="${dto.event.eventProgress == 'CANCELED'}">中止</c:when>
 								<c:when test="${dto.joinAvailability}">参加済</c:when>
 								<c:otherwise>不参加</c:otherwise>
-							</c:choose>
-						</td>
+							</c:choose></td>
 					</tr>
 				</c:if>
 			</c:forEach>
@@ -161,6 +154,6 @@
 		}
 	});
 	</script>
-
+	<jsp:include page="/common/flashMessage.jsp" />
 </body>
 </html>
