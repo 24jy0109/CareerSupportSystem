@@ -140,7 +140,7 @@
 								<c:when test="${a.eventAvailability}">
 									<input type="hidden" name="command" value="yesAnswer">
 									<input type="hidden" name="answerId" value="${a.answerId}">
-									<input type="submit" value="決定" class="decision-button">
+									<input type="submit" value="企画" class="decision-button">
 									<button type="button" class="cancel-button"
 										onclick="return confirmReject(${a.answerId});">見送</button>
 								</c:when>

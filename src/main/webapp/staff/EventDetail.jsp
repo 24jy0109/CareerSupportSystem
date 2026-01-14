@@ -82,15 +82,14 @@
 									<c:otherwise>
 										<c:forEach var="g" items="${event.graduates}">
 											<tr>
-												<td class="detail-data">
-													<c:if test="${not empty g.graduateStudentNumber}">
+												<td class="detail-data"><c:if
+														test="${not empty g.graduateStudentNumber}">
 														<c:set var="enterYear2"
 															value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
 														<c:set var="graduateYear"
 															value="${enterYear2 + g.course.courseTerm}" />
 														${graduateYear}年卒
-													</c:if>
-												</td>
+													</c:if></td>
 
 												<td><div class="detail-data">${g.graduateName}</div></td>
 												<td><div class="detail-data">${g.course.courseName}</div></td>
@@ -116,8 +115,7 @@
 							<c:if test="${event.joinStudentCount > 0}">
 								<a
 									href="join_student?command=JoinStudentList&eventId=${event.event.eventId}">
-									在校生参加者確認
-								</a>
+									在校生参加者確認 </a>
 							</c:if>
 						</div>
 					</div>
@@ -137,17 +135,17 @@
 				<button type="button"
 					onclick="location.href='event?command=EventList'">開催一覧/履歴に戻る</button>
 			</div>
-		
+
 			<div class="btn-gap">
 				<button type="button"
-					onclick="location.href='event?command=EventEnd&eventId=${event.event.eventId}'">
-					開催終了
-				</button>
+					onclick="if (confirm('開催終了。\nこの操作は取り消せませんが、よろしいですか？')) { location.href='event?command=EventEnd&eventId=${event.event.eventId}'; }">
+					開催終了</button>
+
+
 				<button type="button"
-					onclick="location.href='event?command=EventCancel&eventId=${event.event.eventId}'"
-					class="white-btn">
-					開催中止
-				</button>
+					onclick="if (confirm('中止します。\nこの操作は取り消せません。\n\nまた、参加予定の在校生・卒業生へ中止通知メールが送信されますが、よろしいですか？')) { location.href='event?command=EventCancel&eventId=${event.event.eventId}'; }"
+					class="white-btn">開催中止</button>
+
 			</div>
 		</div>
 	</main>
