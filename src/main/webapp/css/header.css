@@ -12,7 +12,7 @@ body {
 /* ヘッダー部分 */
 .head-part {
     display: grid;
-    grid-template-columns: 5% 50% 1fr;
+    grid-template-columns: 10% 45% 1fr;
     align-items: center;
     gap: 10%;
     height: 140px;

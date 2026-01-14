@@ -5,7 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<!--<link rel="stylesheet" href="./css/appointment.css">-->
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <title>企業登録画面（職員）</title>
@@ -32,11 +31,11 @@
 		<form action="company" method="post">
 			<input type="hidden" name="companyId" value="${companyId}"> <input
 				type="hidden" name="command" value="CompanyRegisterNext">
-			<div class="left-screen">
-				<span class="leftscreen-title">企業登録</span>
 
+			<div class="center-screen">
+				<span class="center-title">企業登録</span>
 				<c:if test="${not empty error}">
-					<p style="color: red">${error}</p>
+					<p style="color: red" class="center-msg">${error}</p>
 				</c:if>
 
 				<div class="company-register-flame">
@@ -56,7 +55,7 @@
 				</div>
 			</div>
 
-			<div class="bottom-btn-right buttom-btn-narrow">
+			<div class="bottom-btn-center">
 				<button type="submit" name="command" value="CompanyRegisterNext">確認</button>
 			</div>
 		</form>
@@ -99,10 +98,9 @@
 .company-register-flame {
 	width: 700px;
 	height: 250px;
-	background-color: #a9e2bd;
+<!--	background-color: #a9e2bd;-->
 	border: 1px solid #009a36;
-	border-radius: 6px;
-	margin-top: 20px;
+	border-radius: 3px;
 }
 
 #compay-name {
