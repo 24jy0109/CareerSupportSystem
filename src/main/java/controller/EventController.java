@@ -178,7 +178,7 @@ public class EventController extends BaseController {
 					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
-
+				setFlashMessage(request, FLASH_SUCCESS, "イベントを開催しました。");
 				response.sendRedirect("event?command=EventList");
 				return;
 			case "ScheduleArrangeSendForm":
