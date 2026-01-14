@@ -67,5 +67,6 @@
 			<small>&copy; 2024 Example Inc.</small>
 		</p>
 	</footer>
+	<jsp:include page="/common/flashMessage.jsp" />
 </body>
 </html>

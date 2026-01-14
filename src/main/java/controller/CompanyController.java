@@ -242,9 +242,11 @@ public class CompanyController extends BaseController {
 					if (companyId == null || companyId.isEmpty()) {
 						companyAction.execute(
 								new String[] { "CompanyRegister", "", companyName });
+						setFlashMessage(request, FLASH_SUCCESS, "企業情報を登録しました。");
 					} else {
 						companyAction.execute(
 								new String[] { "CompanyUpdate", companyId, companyName });
+						setFlashMessage(request, FLASH_SUCCESS, "企業情報を更新しました。");
 					}
 				} catch (Exception e) {
 					handleException(e, request, response, "staff/AppointMenu.jsp");

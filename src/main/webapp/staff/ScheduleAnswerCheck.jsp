@@ -12,7 +12,7 @@
 
 <script type="text/javascript">
 	function confirmReject(answerId) {
-		if (confirm("この回答を削除します。\n卒業生へ削除通知メールが送信されますが、よろしいですか？")) {
+		if (confirm("この回答を見送ります。\n卒業生へ開催見送りメールが送信され、回答は削除されますがよろしいですか？")) {
 			location.href = "answer?command=noAnswer&answerId=" + answerId;
 		}
 		return false;
@@ -92,8 +92,8 @@
 
 			<c:forEach var="a" items="${answers}">
 				<tr class="schedule-check-r2 answer-row">
-					<td>${a.event.company.companyName}</td>
-					<td>${a.graduate.graduateName}</td>
+					<td></td>
+					<td></td>
 
 					<td><c:if test="${a.eventAvailability}">
 							<label> <input type="radio" name="choice_${a.answerId}"
@@ -109,8 +109,8 @@
 				</tr>
 
 				<tr class="schedule-check-r3">
-					<td></td>
-					<td></td>
+					<td>${a.event.company.companyName}</td>
+					<td>${a.graduate.graduateName}</td>
 
 					<td><c:choose>
 							<c:when test="${!a.eventAvailability}">
@@ -142,7 +142,7 @@
 									<input type="hidden" name="answerId" value="${a.answerId}">
 									<input type="submit" value="決定" class="decision-button">
 									<button type="button" class="cancel-button"
-										onclick="return confirmReject(${a.answerId});">拒否</button>
+										onclick="return confirmReject(${a.answerId});">見送</button>
 								</c:when>
 								<c:otherwise>
 									<button type="button" class="cancel-button"
@@ -247,5 +247,6 @@ document.addEventListener("keydown", function(e) {
 });
 </script>
 
+	<jsp:include page="/common/flashMessage.jsp" />
 </body>
 </html>

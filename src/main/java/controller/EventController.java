@@ -314,6 +314,7 @@ public class EventController extends BaseController {
 					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
+				setFlashMessage(request, FLASH_SUCCESS, "開催終了しました。");
 				response.sendRedirect("event?command=EventList");
 				return;
 			case "EventCancel":
@@ -324,6 +325,7 @@ public class EventController extends BaseController {
 					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
 				}
+				setFlashMessage(request, FLASH_SUCCESS, "イベントの開催をキャンセルしました。");
 				response.sendRedirect("event?command=EventList");
 				return;
 			}

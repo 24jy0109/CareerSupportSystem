@@ -182,6 +182,7 @@ public class AnswerController extends BaseController {
 				handleException(e, request, response, "staff/AppointMenu.jsp");
 				return;
 			}
+			setFlashMessage(request, FLASH_SUCCESS, "開催を見送りました。");
 			response.sendRedirect("answer?command=ScheduleAnswerCheck");
 			return;
 		case "deleteAnswer":
@@ -197,6 +198,7 @@ public class AnswerController extends BaseController {
 				handleException(e, request, response, "staff/AppointMenu.jsp");
 				return;
 			}
+			setFlashMessage(request, FLASH_SUCCESS, "回答を削除しました。");
 			response.sendRedirect("answer?command=ScheduleAnswerCheck");
 			return;
 		default:
