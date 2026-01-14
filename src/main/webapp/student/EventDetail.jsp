@@ -90,7 +90,7 @@
 
 
 												<!--									</div>-->
-									
+
 												<td><div class="detail-data">${g.course.courseName}</div></td>
 												<td>
 													<div class="detail-data">${g.graduateJobCategory}</div>
@@ -117,19 +117,32 @@
 						<div class="detail-data">${event.event.eventOtherInfo}</div>
 					</div>
 
+
+
+
 					<%-- 参加可否表示 --%>
 					<div class="join-status">
 						<c:choose>
 
 							<%-- 参加済み --%>
 							<c:when test="${event.joinAvailability == true}">
-		<div class="eventdetail-msg">参加予定</div>
-	</c:when>
+								<div class="eventdetail-msg">参加予定</div>
+								<div class="bottom-btn-left">
+									<div>
+										<button type="button" onclick="history.back()">戻る</button>
+									</div>
+								</div>
+							</c:when>
 
 							<%-- 不参加 --%>
 							<c:when test="${event.joinAvailability == false}">
-		<div class="eventdetail-msg">不参加</div>
-	</c:when>
+								<div class="eventdetail-msg">不参加</div>
+								<div class="bottom-btn-left">
+									<div>
+										<button type="button" onclick="history.back()">戻る</button>
+									</div>
+								</div>
+							</c:when>
 
 							<%-- 未回答 --%>
 							<c:otherwise>
@@ -138,8 +151,14 @@
 									<%-- 定員未達 --%>
 									<c:when
 										test="${event.joinStudentCount < event.event.eventCapacity}">
-										<div class="bottom-btn-right">
+										<%-- 戻るボタンと参加・不参加ボタン --%>
+										<div class="bottom-btn-split">
+											<div>
+												<button type="button" onclick="history.back()">戻る</button>
+											</div>
+
 											<div class="btn-gap">
+
 												<button type="button"
 													onclick="location.href='event?command=EventJoin&eventId=${event.event.eventId}'">
 													参加</button>
@@ -152,12 +171,15 @@
 									</c:when>
 									<%-- 定員到達 --%>
 									<c:otherwise>
-				<div class="eventdetail-msg">満員です</div>
-			</c:otherwise>
-
+										<div class="bottom-btn-left">
+											<div>
+												<button type="button" onclick="history.back()">戻る</button>
+											</div>
+										</div>
+										<div class="eventdetail-msg">満員です</div>
+									</c:otherwise>
 								</c:choose>
 							</c:otherwise>
-
 						</c:choose>
 
 

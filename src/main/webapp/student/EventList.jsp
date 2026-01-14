@@ -29,7 +29,7 @@
 	</header>
 
 	<main>
-		<div>開催詳細から参加登録をしてください。</div>
+		<div class="page-msg">開催詳細から参加登録をしてください。</div>
 
 		<c:choose>
 			<c:when test="${empty events}">

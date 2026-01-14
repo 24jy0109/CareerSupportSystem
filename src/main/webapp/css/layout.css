@@ -225,7 +225,7 @@ button:hover {
 /* 列幅の指定 */
 /*項目名*/
 .registscreen-table td:nth-child(1) {
-	width: 20%;
+	width: 30%;
 }
 
 /*入力欄*/
