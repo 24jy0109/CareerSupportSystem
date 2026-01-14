@@ -28,14 +28,18 @@
 	<main>
 
 		<h2 class="page-title">卒業生アポイントメント</h2>
-
+		<c:if test="${not empty error}">
+			<p class="red-msg complete-screen">${error}</p>
+		</c:if>
 		<div class="apo-menu-staff">
 
-			<div class="menu-item" onclick="location.href='company?command=CompanyList'">
+			<div class="menu-item"
+				onclick="location.href='company?command=CompanyList'">
 				<img src="img/company.png" alt="企業一覧(申請)"> <span>企業一覧（申請）</span>
 			</div>
 
-			<div class="menu-item" onclick="location.href='event?command=EventList'">
+			<div class="menu-item"
+				onclick="location.href='event?command=EventList'">
 				<img src="img/history.png" alt="開催一覧/履歴"> <span>開催一覧/履歴</span>
 			</div>
 
@@ -44,7 +48,8 @@
 				<img src="img/company_register.png" alt="企業登録"> <span>企業登録</span>
 			</div>
 
-			<div class="menu-item" onclick="location.href='graduate?command=RegistEmail'">
+			<div class="menu-item"
+				onclick="location.href='graduate?command=RegistEmail'">
 				<img src="img/user_add.png" alt="連絡先登録"> <span>連絡先登録</span>
 			</div>
 

@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +19,6 @@ public class JoinStudentDBAccess extends DBAccess {
 
         List<JoinStudent> list = new ArrayList<>();
 
-        Connection con = createConnection();
-
         String sql =
             "SELECT " +
             "  c.company_id, c.company_name, " +
@@ -33,7 +32,9 @@ public class JoinStudentDBAccess extends DBAccess {
             "WHERE js.event_id = ? " +
             "AND js.join_availability = 1";
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = createConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setInt(1, eventId);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -67,8 +68,13 @@ public class JoinStudentDBAccess extends DBAccess {
                     list.add(joinStudent);
                 }
             }
-        } finally {
-            if (con != null) con.close();
+
+        } catch (SQLException e) {
+            // ログ出力
+        	e.printStackTrace();
+            // 上位にスロー
+            throw new Exception("データベースの処理中にエラーが発生し、イベント参加者情報を取得できませんでした。<br>"
+            		+ "お手数ですが、管理者までお問い合わせください。", e);
         }
 
         return list;

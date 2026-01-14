@@ -5,11 +5,13 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<!--<link rel="stylesheet" href="./css/appointment.css">-->
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/pagination.css">
 <title>企業一覧申請状況付き（職員）</title>
+
 </head>
+
 <body>
 	<header class="head-part">
 		<div id="h-left">
@@ -36,7 +38,7 @@
 		</form>
 
 		<table class="company-table">
-			<tr class="company-r">
+			<tr class="company-r company-header">
 				<th class="company-h">企業名</th>
 				<th class="company-h"></th>
 				<th class="company-h">状況</th>
@@ -45,10 +47,10 @@
 			</tr>
 
 			<c:forEach var="companyDTO" items="${companies}">
-				<tr class="company-r">
-					<td><a 
-						href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}" class="company-link">
-							${companyDTO.company.companyName}</a></td>
+				<tr class="company-r company-row">
+					<td><a
+						href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}"
+						class="company-link"> ${companyDTO.company.companyName} </a></td>
 
 					<td><a
 						href="./graduate?companyId=${companyDTO.company.companyId}&command=editInfo">
@@ -81,6 +83,8 @@
 				</tr>
 			</c:forEach>
 		</table>
+
+		<div id="pagination-company" class="pagination"></div>
 	</main>
 
 	<footer>
@@ -88,5 +92,75 @@
 			<small>&copy; 2024 Example Inc.</small>
 		</p>
 	</footer>
+
+	<script>
+	let activePager = null;
+
+	function setupPagination(rowSelector, paginationId, rowsPerPage = 10) {
+
+		const rows = document.querySelectorAll(rowSelector);
+		const pagination = document.getElementById(paginationId);
+
+		if (!rows.length) return null;
+
+		const totalPages = Math.ceil(rows.length / rowsPerPage);
+		let currentPage = 1;
+		const buttons = [];
+
+		function showPage(page) {
+			if (page < 1 || page > totalPages) return;
+
+			currentPage = page;
+			const start = (page - 1) * rowsPerPage;
+			const end = start + rowsPerPage;
+
+			rows.forEach((row, index) => {
+				row.style.display = (index >= start && index < end) ? "" : "none";
+			});
+
+			buttons.forEach(btn => btn.classList.remove("active"));
+			if (buttons[page - 1]) {
+				buttons[page - 1].classList.add("active");
+			}
+		}
+
+		for (let i = 1; i <= totalPages; i++) {
+			const btn = document.createElement("button");
+			btn.textContent = i;
+			btn.onclick = () => {
+				activePager = pager;
+				showPage(i);
+			};
+			buttons.push(btn);
+			pagination.appendChild(btn);
+		}
+
+		showPage(1);
+
+		const pager = {
+			next() { showPage(currentPage + 1); },
+			prev() { showPage(currentPage - 1); }
+		};
+
+		return pager;
+	}
+
+	const companyPager = setupPagination(".company-row", "pagination-company", 10);
+	activePager = companyPager;
+
+	document.addEventListener("keydown", function(e) {
+
+		const tag = document.activeElement.tagName;
+		if (tag === "INPUT" || tag === "TEXTAREA") return;
+		if (!activePager) return;
+
+		if (e.key === "ArrowRight") {
+			activePager.next();
+		}
+		if (e.key === "ArrowLeft") {
+			activePager.prev();
+		}
+	});
+	</script>
 </body>
 </html>

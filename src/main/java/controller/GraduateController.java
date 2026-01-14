@@ -7,7 +7,6 @@ import java.util.List;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -23,7 +22,7 @@ import model.Graduate;
  * Servlet implementation class GraduateController
  */
 @WebServlet("/graduate")
-public class GraduateController extends HttpServlet {
+public class GraduateController extends BaseController {
 	private static final long serialVersionUID = 1L;
 
 	public GraduateController() {
@@ -97,7 +96,8 @@ public class GraduateController extends HttpServlet {
 				try {
 					graduateAction.execute(new String[] { "AssignStaff", "", graduateStudentNumber, staffId });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				response.sendRedirect("company?command=RegistEvent&companyId=" + companyId);
 				return;
@@ -156,7 +156,8 @@ public class GraduateController extends HttpServlet {
 								otherInfo = g.getOtherInfo();
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							handleException(e, request, response, "staff/AppointMenu.jsp");
+							return;
 						}
 					}
 				}
@@ -170,20 +171,22 @@ public class GraduateController extends HttpServlet {
 					graduateStudentNumber = request.getParameter("graduateStudentNumber");
 					jobType = request.getParameter("jobType");
 					otherInfo = request.getParameter("otherInfo");
-
+					
 					// 会社名・学科名を再取得
 					try {
 						List<Graduate> gList = graduateAction.execute(new String[] { "findCompanyName", companyId });
 						companyName = gList.get(0).getCompany().getCompanyName();
 					} catch (Exception e) {
-						e.printStackTrace();
+						handleException(e, request, response, "staff/AppointMenu.jsp");
+						return;
 					}
 
 					try {
 						List<Graduate> gList = graduateAction.execute(new String[] { "findCourseName", courseCode });
 						courseName = gList.get(0).getCourse().getCourseName();
 					} catch (Exception e) {
-						e.printStackTrace();
+						handleException(e, request, response, "staff/AppointMenu.jsp");
+						return;
 					}
 
 					nextPage = "/common/RegistEmail.jsp";
@@ -211,7 +214,8 @@ public class GraduateController extends HttpServlet {
 								courseName = tmp.get(0).getCourse().getCourseName();
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							handleException(e, request, response, "staff/AppointMenu.jsp");
+							return;
 						}
 					}
 					// 新規の場合は空のまま
@@ -224,20 +228,24 @@ public class GraduateController extends HttpServlet {
 					companyName = gList.get(0).getCompany().getCompanyName();
 				} catch (Exception e) {
 					e.printStackTrace();
+//					handleException(e, request, response, "staff/AppointMenu.jsp");
+//					return;
 				}
 
 				try {
 					List<Graduate> gList = graduateAction.execute(new String[] { "findCourseName", courseCode });
 					courseName = gList.get(0).getCourse().getCourseName();
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 
 				// 企業一覧読み込み
 				try {
 					companies = companyAction.execute(new String[] { "CompanyList", "", "" });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				request.setAttribute("companies", companies);
 
@@ -246,6 +254,8 @@ public class GraduateController extends HttpServlet {
 					courses = new CourseDBAccess().getAllCourses();
 				} catch (Exception e) {
 					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				request.setAttribute("courses", courses);
 
@@ -298,23 +308,21 @@ public class GraduateController extends HttpServlet {
 					try {
 						companies = companyAction.execute(new String[] { "CompanyList", "", "" });
 					} catch (Exception e) {
-						// TODO 自動生成された catch ブロック
-						e.printStackTrace();
+						handleException(e, request, response, "staff/AppointMenu.jsp");
+						return;
 					}
 					try {
 						courses = new CourseDBAccess().getAllCourses();
 					} catch (Exception e) {
-						// TODO 自動生成された catch ブロック
-						e.printStackTrace();
+						handleException(e, request, response, "staff/AppointMenu.jsp");
+						return;
 					}
 
-					
-
 					// JSPへ渡す値
-					
+
 					request.setAttribute("companies", companies);
 					request.setAttribute("courses", courses);
-					
+
 					request.setAttribute("companyId", companyId); // 登録処理用
 					request.setAttribute("companyName", companyName); // 表示用
 
@@ -328,7 +336,6 @@ public class GraduateController extends HttpServlet {
 					request.setAttribute("graduateEmail", graduateEmail);
 					request.setAttribute("otherInfo", otherInfo);
 
-					
 					nextPage = "/common/RegistEmail.jsp";
 					break;
 				}
@@ -337,18 +344,16 @@ public class GraduateController extends HttpServlet {
 					graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
 					companyName = graduate.get(0).getCompany().getCompanyName();
 				} catch (Exception e) {
-					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				try {
 					graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
 					courseName = graduate.get(0).getCourse().getCourseName();
 				} catch (Exception e) {
-					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
-				
-
 
 				//学籍番号が既にあるかチェック！
 				updateMode = request.getParameter("updateMode");
@@ -363,7 +368,8 @@ public class GraduateController extends HttpServlet {
 						exists = graduateAction.execute(
 								new String[] { "findGraduateStudentNumber", graduateStudentNumber });
 					} catch (Exception e) {
-						e.printStackTrace();
+						handleException(e, request, response, "staff/AppointMenu.jsp");
+						return;
 					}
 
 					if (exists != null && !exists.isEmpty()) {
@@ -425,8 +431,8 @@ public class GraduateController extends HttpServlet {
 				try {
 					graduateAction.execute(registEmailInfo);
 				} catch (Exception e) {
-					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				} // ← requestを渡す！
 
 				break;
@@ -449,9 +455,9 @@ public class GraduateController extends HttpServlet {
 					}
 
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
-
 				break;
 			case "deleteGraduate":
 				graduateStudentNumber = request.getParameter("graduateStudentNumber");
@@ -463,7 +469,8 @@ public class GraduateController extends HttpServlet {
 					graduateAction.execute(
 							new String[] { "deleteGraduate", graduateStudentNumber });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				request.setAttribute("companyId", companyId);
 				try {
@@ -473,13 +480,12 @@ public class GraduateController extends HttpServlet {
 					if (list != null && !list.isEmpty()) {
 						request.setAttribute("companyDTO", list.get(0));
 					}
-
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "staff/AppointMenu.jsp");
+					return;
 				}
 				nextPage = "staff/EditInfo.jsp";
 				break;
-
 			}
 		} else {
 			// 学生の遷移
@@ -515,8 +521,8 @@ public class GraduateController extends HttpServlet {
 						graduate = graduateAction.execute(
 								new String[] { "findCompanyName", companyId });
 					} catch (Exception e) {
-						// TODO 自動生成された catch ブロック
-						e.printStackTrace();
+						handleException(e, request, response, "student/AppointMenu.jsp");
+						return;
 					}
 					companyName = graduate.get(0).getCompany().getCompanyName();
 
@@ -525,8 +531,8 @@ public class GraduateController extends HttpServlet {
 						graduate = graduateAction.execute(
 								new String[] { "findCourseName", courseCode });
 					} catch (Exception e) {
-						// TODO 自動生成された catch ブロック
-						e.printStackTrace();
+						handleException(e, request, response, "student/AppointMenu.jsp");
+						return;
 					}
 					courseName = graduate.get(0).getCourse().getCourseName();
 
@@ -542,12 +548,13 @@ public class GraduateController extends HttpServlet {
 					request.setAttribute("otherInfo", info);
 
 					request.setAttribute("fromConfirm", fromConfirm);
-					
+
 					// 企業一覧読み込み
 					try {
 						companies = companyAction.execute(new String[] { "CompanyList", "", "" });
 					} catch (Exception e) {
-						e.printStackTrace();
+						handleException(e, request, response, "student/AppointMenu.jsp");
+						return;
 					}
 					request.setAttribute("companies", companies);
 
@@ -558,8 +565,8 @@ public class GraduateController extends HttpServlet {
 				try {
 					list = graduateAction.execute(new String[] { "findStudentNumber", studentNumber });
 				} catch (Exception e) {
-					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 
 				//				String check;
@@ -581,24 +588,26 @@ public class GraduateController extends HttpServlet {
 						request.setAttribute("fromConfirm", fromConfirm);
 
 					} catch (Exception e) {
-						// TODO 自動生成された catch ブロック
-						e.printStackTrace();
+						handleException(e, request, response, "student/AppointMenu.jsp");
+						return;
 					}
 
 					try {
 						graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
 						companyName = graduate.get(0).getCompany().getCompanyName();
 					} catch (Exception e) {
-						e.printStackTrace();
-						companyName = ""; // 念のため初期化
+						handleException(e, request, response, "student/AppointMenu.jsp");
+						return;
 					}
 
 					try {
 						graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
 						courseName = graduate.get(0).getCourse().getCourseName();
 					} catch (Exception e) {
-						e.printStackTrace();
+//						handleException(e, request, response, "student/AppointMenu.jsp");
 						courseName = ""; // 念のため初期化
+						e.printStackTrace();
+//						return;
 					}
 
 				} else {
@@ -619,8 +628,10 @@ public class GraduateController extends HttpServlet {
 							graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
 							companyName = graduate.get(0).getCompany().getCompanyName();
 						} catch (Exception e) {
+//							handleException(e, request, response, "student/AppointMenu.jsp");
+							courseName = ""; // 念のため初期化
 							e.printStackTrace();
-							companyName = ""; // 念のため初期化
+//							return;
 						}
 					} else {
 						// 初回表示
@@ -635,8 +646,10 @@ public class GraduateController extends HttpServlet {
 							graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
 							courseName = graduate.get(0).getCourse().getCourseName();
 						} catch (Exception e) {
-							e.printStackTrace();
+//							handleException(e, request, response, "student/AppointMenu.jsp");
 							courseName = ""; // 念のため初期化
+							e.printStackTrace();
+//							return;
 						}
 					} else {
 						// 初回表示
@@ -649,7 +662,8 @@ public class GraduateController extends HttpServlet {
 				try {
 					companies = companyAction.execute(new String[] { "CompanyList", "", "" });
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 				request.setAttribute("companies", companies);
 
@@ -657,7 +671,8 @@ public class GraduateController extends HttpServlet {
 				try {
 					courses = new CourseDBAccess().getAllCourses();
 				} catch (Exception e) {
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 				request.setAttribute("courses", courses);
 
@@ -704,8 +719,8 @@ public class GraduateController extends HttpServlet {
 					graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
 					companyName = graduate.get(0).getCompany().getCompanyName();
 				} catch (Exception e) {
-					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 				try {
 					graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
@@ -719,8 +734,8 @@ public class GraduateController extends HttpServlet {
 						courseName = ""; // graduate が空リストの場合
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
-					courseName = ""; // 例外時も初期化
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				}
 
 				System.err.println(fromConfirm);
@@ -733,7 +748,8 @@ public class GraduateController extends HttpServlet {
 						exists = graduateAction
 								.execute(new String[] { "findGraduateStudentNumber", graduateStudentNumber });
 					} catch (Exception e) {
-						e.printStackTrace();
+						handleException(e, request, response, "student/AppointMenu.jsp");
+						return;
 					}
 
 					if (exists != null && !exists.isEmpty()) {
@@ -796,8 +812,8 @@ public class GraduateController extends HttpServlet {
 				try {
 					graduateAction.execute(registEmailInfo);
 				} catch (Exception e) {
-					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
+					handleException(e, request, response, "student/AppointMenu.jsp");
+					return;
 				} // ← requestを渡す！
 
 				break;

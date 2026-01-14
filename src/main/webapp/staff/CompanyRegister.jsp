@@ -5,7 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<!--<link rel="stylesheet" href="./css/appointment.css">-->
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <title>企業登録画面（職員）</title>
@@ -32,44 +31,46 @@
 		<form action="company" method="post">
 			<input type="hidden" name="companyId" value="${companyId}"> <input
 				type="hidden" name="command" value="CompanyRegisterNext">
-			<div class="left-screen">
-				<span class="leftscreen-title">企業登録</span>
 
+			<div class="center-screen">
+				<span class="center-title">企業登録</span>
 				<c:if test="${not empty error}">
-					<p style="color: red">${error}</p>
+					<p style="color: red" class="center-msg">${error}</p>
 				</c:if>
 
 				<div class="company-register-flame">
 					<table class="registscreen-table">
 						<tr>
 							<td>
-								<div>企業名</div>
+								<div id="compay-name">企業名</div>
 							</td>
 							<td><input type="text" id="companyName" name="companyName"
 								class="company-input" value="${companyName}"
 								placeholder="${empty companyName ? '企業名を入力' : ''}"></td>
 						</tr>
 					</table>
-					<p>(株)は使えません</p>
-
-					<!-- 類似企業表示 -->
-					<div id="similarCompanies">
-						<c:if test="${not empty similarCompanies}">
-							<ul>
-								<c:forEach var="dto" items="${similarCompanies}">
-									<li>${dto.company.companyName}</li>
-								</c:forEach>
-							</ul>
-						</c:if>
-					</div>
+					<div class="warning-stock">(株)
+						は入力できません。会社名は「株式会社〇〇」もしくは「○○株式会社」としてください。</div>
 
 				</div>
 			</div>
 
-			<div class="bottom-btn-right buttom-btn-narrow">
+			<div class="bottom-btn-center">
 				<button type="submit" name="command" value="CompanyRegisterNext">確認</button>
 			</div>
 		</form>
+
+		<!-- 類似企業表示 -->
+		<div>もしかして…</div>
+		<div id="similarCompanies">
+			<c:if test="${not empty similarCompanies}">
+				<ul>
+					<c:forEach var="dto" items="${similarCompanies}">
+						<li>${dto.company.companyName}</li>
+					</c:forEach>
+				</ul>
+			</c:if>
+		</div>
 
 	</main>
 
@@ -81,6 +82,36 @@
 
 
 </body>
+
+<!-- 直書きCSS -->
+<style>
+.warning-stock {
+	color: #555; /* 強すぎないグレー */
+	font-size: 0.9em; /* 少し小さめ */
+	margin-top: 5px; /* 上とのスペース */
+	margin-left: 10px; /* 左少しスペース */
+	padding-left: 10px; /* 入力欄との微調整 */
+	font-style: italic; /* 柔らかい印象 */
+}
+
+/* フレームの大きさを変える */
+.company-register-flame {
+	width: 700px;
+	height: 250px;
+<!--	background-color: #a9e2bd;-->
+	border: 1px solid #009a36;
+	border-radius: 3px;
+}
+
+#compay-name {
+	text-align: center;
+}
+
+li {
+	font-size: 20px;
+}
+</style>
+
 <script>
 const input = document.getElementById('companyName'); // id を付けた
 const similarDiv = document.getElementById('similarCompanies');
