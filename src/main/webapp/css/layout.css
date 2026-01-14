@@ -184,6 +184,23 @@ button:hover {
 }
 
 
+.submit-btn{
+	font-size: 15px;
+	color: white;
+	background-color: #009A37;
+	border: none;
+	padding: 10px 20px;
+	box-sizing: border-box;
+	height: 45px;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.submit-btn:hover {
+	opacity: 0.7;
+}
+
+
 /* 画面を２分割するとき */
 /* 2分割する */
 .split-screen {
