@@ -105,9 +105,14 @@ public class AnswerAction extends BaseAction {
 		    // メール生成
 		    title = "【イベント回答】参加可否・希望日時のご連絡";
 		    body = MailBuilder.buildAnswerNotification(answer);
-
 		    // メール送信
 		    sendMail(answer.getEvent().getStaff().getStaffEmail(), title, body);
+		    
+		    title = "【イベント回答】参加可否・希望日時のご登録";
+		    body = MailBuilder.buildAnswerSelfNotification(answer);
+		    // メール送信
+		    sendMail(answer.getGraduate().getGraduateEmail(), title, body);
+
 		    break;
 		case "ScheduleAnswerCheck":
 			answers = answerDBA.getAllAnswers();

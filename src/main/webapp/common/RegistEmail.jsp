@@ -214,8 +214,15 @@
 			</div>
 
 
-			<div class="bottom-btn-right">
-				<button type="submit">確認</button>
+			<div class="bottom-btn-split">
+				<div>
+					<button type="button"
+						onclick="location.href='mypage?command=AppointmentMenu'">メニューに戻る</button>
+				</div>
+
+				<div class="btn-gap">
+					<button type="submit">確認</button>
+				</div>
 			</div>
 		</form>
 

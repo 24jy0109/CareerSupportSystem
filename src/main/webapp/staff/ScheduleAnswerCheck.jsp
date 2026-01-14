@@ -27,25 +27,20 @@
 	}
 
 	function injectChoice(form, answerId) {
-
-		// 該当 answerId の radio を全取得
 		const radios = document.querySelectorAll(
 			'input[type="radio"][name="choice_' + answerId + '"]'
 		);
 
 		let selected = null;
-
 		radios.forEach(r => {
 			if (r.checked) selected = r.value;
 		});
 
-		// 未選択防止
 		if (selected === null) {
 			alert("希望日時を選択してください。");
 			return false;
 		}
 
-		// hidden が無ければ作る
 		let hidden = form.querySelector('input[name="choice"]');
 		if (!hidden) {
 			hidden = document.createElement("input");
@@ -55,7 +50,7 @@
 		}
 
 		hidden.value = selected;
-		return true; // submit 継続
+		return true;
 	}
 </script>
 </head>
@@ -83,98 +78,106 @@
 		</c:if>
 
 		<table class="schedule-check-table">
-			<tr class="schedule-check-r">
-				<th class="schedule-check-h">企業名</th>
-				<th class="schedule-check-h">名前</th>
-				<th class="schedule-check-h">回答</th>
-				<th class="schedule-check-h"></th>
-			</tr>
-
-			<c:forEach var="a" items="${answers}">
-				<tr class="schedule-check-r2 answer-row">
-					<td></td>
-					<td></td>
-
-					<td><c:if test="${a.eventAvailability}">
-							<label> <input type="radio" name="choice_${a.answerId}"
-								value="1" required> 第1希望
-								${a.firstChoiceStartTime.year}/${a.firstChoiceStartTime.monthValue}/${a.firstChoiceStartTime.dayOfMonth}
-								${a.firstChoiceStartTime.hour < 10 ? '0' : ''}${a.firstChoiceStartTime.hour}:
-								${a.firstChoiceStartTime.minute < 10 ? '0' : ''}${a.firstChoiceStartTime.minute}～
-								${a.firstChoiceEndTime.hour < 10 ? '0' : ''}${a.firstChoiceEndTime.hour}:
-								${a.firstChoiceEndTime.minute < 10 ? '0' : ''}${a.firstChoiceEndTime.minute}
-							</label>
-						</c:if></td>
-					<td></td>
-				</tr>
-
-				<tr class="schedule-check-r3">
-					<td>${a.event.company.companyName}</td>
-					<td>${a.graduate.graduateName}</td>
-
-					<td><c:choose>
-							<c:when test="${!a.eventAvailability}">
-								不参加
-							</c:when>
-
-							<c:when test="${a.secondChoiceStartTime != null}">
-								<label> <input type="radio" name="choice_${a.answerId}"
-									value="2"> 第2希望
-									${a.secondChoiceStartTime.year}/${a.secondChoiceStartTime.monthValue}/${a.secondChoiceStartTime.dayOfMonth}
-									${a.secondChoiceStartTime.hour < 10 ? '0' : ''}${a.secondChoiceStartTime.hour}:
-									${a.secondChoiceStartTime.minute < 10 ? '0' : ''}${a.secondChoiceStartTime.minute}～
-									${a.secondChoiceEndTime.hour < 10 ? '0' : ''}${a.secondChoiceEndTime.hour}:
-									${a.secondChoiceEndTime.minute < 10 ? '0' : ''}${a.secondChoiceEndTime.minute}
-								</label>
-							</c:when>
-
-							<c:otherwise>
-								第2希望 なし
-							</c:otherwise>
-						</c:choose></td>
-
-					<td>
-						<form action="event" method="get"
-							onsubmit="return injectChoice(this, ${a.answerId});">
-							<c:choose>
-								<c:when test="${a.eventAvailability}">
-									<input type="hidden" name="command" value="yesAnswer">
-									<input type="hidden" name="answerId" value="${a.answerId}">
-									<input type="submit" value="決定" class="decision-button">
-									<button type="button" class="cancel-button"
-										onclick="return confirmReject(${a.answerId});">見送</button>
-								</c:when>
-								<c:otherwise>
-									<button type="button" class="cancel-button"
-										onclick="return confirmDelete(${a.answerId});">削除</button>
-								</c:otherwise>
-							</c:choose>
-						</form>
-					</td>
-				</tr>
-
+			<thead>
 				<tr class="schedule-check-r">
-					<td></td>
-					<td></td>
-					<td><c:if test="${a.eventAvailability}">
-							<c:choose>
-								<c:when test="${a.thirdChoiceStartTime != null}">
+					<th class="schedule-check-h">企業名</th>
+					<th class="schedule-check-h">名前</th>
+					<th class="schedule-check-h">回答</th>
+					<th class="schedule-check-h"></th>
+				</tr>
+			</thead>
+
+			<!-- ★ 1回答 = 1 tbody -->
+			<c:forEach var="a" items="${answers}">
+				<tbody class="answer-block">
+
+					<!-- 第1希望 -->
+					<tr class="schedule-check-r2">
+						<td></td>
+						<td></td>
+						<td><c:if test="${a.eventAvailability}">
+								<label> <input type="radio" name="choice_${a.answerId}"
+									value="1"> 第1希望
+									${a.firstChoiceStartTime.year}/${a.firstChoiceStartTime.monthValue}/${a.firstChoiceStartTime.dayOfMonth}
+									${a.firstChoiceStartTime.hour < 10 ? '0' : ''}${a.firstChoiceStartTime.hour}:
+									${a.firstChoiceStartTime.minute < 10 ? '0' : ''}${a.firstChoiceStartTime.minute}～
+									${a.firstChoiceEndTime.hour < 10 ? '0' : ''}${a.firstChoiceEndTime.hour}:
+									${a.firstChoiceEndTime.minute < 10 ? '0' : ''}${a.firstChoiceEndTime.minute}
+								</label>
+							</c:if></td>
+						<td></td>
+					</tr>
+
+					<!-- 基本情報＋操作 -->
+					<tr class="schedule-check-r3">
+						<td>${a.event.company.companyName}</td>
+						<td>${a.graduate.graduateName}</td>
+						<td><c:choose>
+								<c:when test="${!a.eventAvailability}">
+									不参加
+								</c:when>
+
+								<c:when test="${a.secondChoiceStartTime != null}">
 									<label> <input type="radio" name="choice_${a.answerId}"
-										value="3"> 第3希望
-										${a.thirdChoiceStartTime.year}/${a.thirdChoiceStartTime.monthValue}/${a.thirdChoiceStartTime.dayOfMonth}
-										${a.thirdChoiceStartTime.hour < 10 ? '0' : ''}${a.thirdChoiceStartTime.hour}:
-										${a.thirdChoiceStartTime.minute < 10 ? '0' : ''}${a.thirdChoiceStartTime.minute}～
-										${a.thirdChoiceEndTime.hour < 10 ? '0' : ''}${a.thirdChoiceEndTime.hour}:
-										${a.thirdChoiceEndTime.minute < 10 ? '0' : ''}${a.thirdChoiceEndTime.minute}
+										value="2"> 第2希望
+										${a.secondChoiceStartTime.year}/${a.secondChoiceStartTime.monthValue}/${a.secondChoiceStartTime.dayOfMonth}
+										${a.secondChoiceStartTime.hour < 10 ? '0' : ''}${a.secondChoiceStartTime.hour}:
+										${a.secondChoiceStartTime.minute < 10 ? '0' : ''}${a.secondChoiceStartTime.minute}～
+										${a.secondChoiceEndTime.hour < 10 ? '0' : ''}${a.secondChoiceEndTime.hour}:
+										${a.secondChoiceEndTime.minute < 10 ? '0' : ''}${a.secondChoiceEndTime.minute}
 									</label>
 								</c:when>
+
 								<c:otherwise>
-									第3希望 なし
+									第2希望 なし
 								</c:otherwise>
-							</c:choose>
-						</c:if></td>
-					<td></td>
-				</tr>
+							</c:choose></td>
+
+						<td>
+							<form action="event" method="get"
+								onsubmit="return injectChoice(this, ${a.answerId});">
+								<c:choose>
+									<c:when test="${a.eventAvailability}">
+										<input type="hidden" name="command" value="yesAnswer">
+										<input type="hidden" name="answerId" value="${a.answerId}">
+										<input type="submit" value="企画" class="decision-button">
+										<button type="button" class="cancel-button"
+											onclick="return confirmReject(${a.answerId});">見送</button>
+									</c:when>
+									<c:otherwise>
+										<button type="button" class="cancel-button"
+											onclick="return confirmDelete(${a.answerId});">削除</button>
+									</c:otherwise>
+								</c:choose>
+							</form>
+						</td>
+					</tr>
+
+					<!-- 第3希望 -->
+					<tr class="schedule-check-r">
+						<td></td>
+						<td></td>
+						<td><c:if test="${a.eventAvailability}">
+								<c:choose>
+									<c:when test="${a.thirdChoiceStartTime != null}">
+										<label> <input type="radio"
+											name="choice_${a.answerId}" value="3"> 第3希望
+											${a.thirdChoiceStartTime.year}/${a.thirdChoiceStartTime.monthValue}/${a.thirdChoiceStartTime.dayOfMonth}
+											${a.thirdChoiceStartTime.hour < 10 ? '0' : ''}${a.thirdChoiceStartTime.hour}:
+											${a.thirdChoiceStartTime.minute < 10 ? '0' : ''}${a.thirdChoiceStartTime.minute}～
+											${a.thirdChoiceEndTime.hour < 10 ? '0' : ''}${a.thirdChoiceEndTime.hour}:
+											${a.thirdChoiceEndTime.minute < 10 ? '0' : ''}${a.thirdChoiceEndTime.minute}
+										</label>
+									</c:when>
+									<c:otherwise>
+										第3希望 なし
+									</c:otherwise>
+								</c:choose>
+							</c:if></td>
+						<td></td>
+					</tr>
+
+				</tbody>
 			</c:forEach>
 		</table>
 
@@ -190,12 +193,12 @@
 	<script>
 let activePager = null;
 
-function setupPagination(rowSelector, paginationId, rowsPerPage = 10) {
-	const rows = document.querySelectorAll(rowSelector);
+function setupPagination(blockSelector, paginationId, rowsPerPage = 10) {
+	const blocks = document.querySelectorAll(blockSelector);
 	const pagination = document.getElementById(paginationId);
-	if (!rows.length) return null;
+	if (!blocks.length) return null;
 
-	const totalPages = Math.ceil(rows.length / rowsPerPage);
+	const totalPages = Math.ceil(blocks.length / rowsPerPage);
 	let currentPage = 1;
 	const buttons = [];
 
@@ -206,8 +209,9 @@ function setupPagination(rowSelector, paginationId, rowsPerPage = 10) {
 		const start = (page - 1) * rowsPerPage;
 		const end = start + rowsPerPage;
 
-		rows.forEach((row, index) => {
-			row.style.display = (index >= start && index < end) ? "" : "none";
+		blocks.forEach((block, index) => {
+			block.style.display =
+				(index >= start && index < end) ? "" : "none";
 		});
 
 		buttons.forEach(btn => btn.classList.remove("active"));
@@ -235,7 +239,7 @@ function setupPagination(rowSelector, paginationId, rowsPerPage = 10) {
 	return pager;
 }
 
-const answerPager = setupPagination(".answer-row", "pagination-answer", 10);
+const answerPager = setupPagination(".answer-block", "pagination-answer", 10);
 activePager = answerPager;
 
 document.addEventListener("keydown", function(e) {

@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 
 <html>
 <head>
@@ -55,7 +57,7 @@
 											<td>～</td>
 											<td>
 												${event.eventEndTime.year}/${event.eventEndTime.monthValue}/${event.eventEndTime.dayOfMonth}</td>
-											
+
 											<td>${event.eventEndTime.hour < 10 ? '0' : ''}${event.eventEndTime.hour}:${event.eventEndTime.minute
 												< 10 ? '0' : ''}${event.eventEndTime.minute}</td>
 											</td>
@@ -86,7 +88,13 @@
 						<tbody>
 							<c:forEach var="grad" items="${companyDTO.company.graduates}">
 								<tr>
-									<td>${grad.course.courseTerm}</td>
+									<td><c:if test="${not empty  grad.graduateStudentNumber}">
+											<c:set var="enterYear2"
+												value="${fn:substring(grad.graduateStudentNumber, 0, 2)}" />
+											<c:set var="graduateYear"
+												value="${enterYear2 + grad.course.courseTerm}" />
+														${graduateYear}年卒
+												</c:if></td>
 									<td>${grad.course.courseName}</td>
 									<td>${grad.graduateJobCategory}</td>
 								</tr>
@@ -94,7 +102,7 @@
 						</tbody>
 					</table>
 				</c:if>
-				<c:if test="${empty companyDTO.company.graduates}" >
+				<c:if test="${empty companyDTO.company.graduates}">
 					<div class="red-msg">卒業生情報はありません</div>
 				</c:if>
 		</div>

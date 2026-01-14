@@ -83,6 +83,7 @@ public class EventAction extends BaseAction {
 			eventDTO = eventDBA.searchEventById(Integer.parseInt(data[2]));
 			if (data[1] != "") {
 				eventDTO.setJoinAvailability(eventDBA.isStudentJoinedEvent(Integer.parseInt(data[2]), data[1]));
+				eventDTO.setStudentRequested((eventDBA.isStudentJoinedEvent(eventDTO.getEvent().getCompany().getCompanyId(), data[1])));
 			}
 			list.add(eventDTO);
 			break;

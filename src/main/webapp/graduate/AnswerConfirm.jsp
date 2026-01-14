@@ -18,8 +18,7 @@
 				<img src="img/rogo.png" alt="アイコン">
 			</div>
 
-			<div class="header-title"
-				onclick="location.href='mypage?command=AppointmentMenu'">
+			<div class="header-title">
 				<div class="title-jp">就活サポート</div>
 				<div class="title-en">Career Support</div>
 			</div>
@@ -95,7 +94,7 @@
 				">
 					戻る</button>
 
-				<button type="submit">確定</button>
+				<button type="submit">回答</button>
 			</div>
 
 		</form>

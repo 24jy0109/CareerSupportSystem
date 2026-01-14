@@ -55,8 +55,16 @@
 				</div>
 			</div>
 
-			<div class="bottom-btn-center">
-				<button type="submit" name="command" value="CompanyRegisterNext">確認</button>
+			<%-- 戻るボタンと確認ボタン --%>
+			<div class="bottom-btn-split">
+				<div>
+					<button type="button" onclick="location.href='mypage?command=AppointmentMenu'">メニューに戻る</button>
+				</div>
+
+				<div class="btn-gap">
+
+					<button type="submit" name="command" value="CompanyRegisterNext">確認</button>
+				</div>
 			</div>
 		</form>
 
@@ -97,8 +105,8 @@
 /* フレームの大きさを変える */
 .company-register-flame {
 	width: 700px;
-	height: 250px;
-<!--	background-color: #a9e2bd;-->
+	height: 250px; <!--
+	background-color: #a9e2bd; -->
 	border: 1px solid #009a36;
 	border-radius: 3px;
 }
