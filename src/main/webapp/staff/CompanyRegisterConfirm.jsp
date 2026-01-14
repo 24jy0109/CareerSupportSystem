@@ -38,8 +38,8 @@
 	<main>
 		<form action="company" method="POST">
 			<input type="hidden" name="companyId" value="${companyId}">
-			<div class="left-screen">
-				<span class="leftscreen-title">企業登録</span>
+			<div class="center-screen">
+				<span class="center-title">企業登録</span>
 				<div class="company-register-flame">
 					<table class="registscreen-table">
 						<tr>

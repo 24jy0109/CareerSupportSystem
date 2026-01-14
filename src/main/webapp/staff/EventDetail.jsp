@@ -132,7 +132,12 @@
 			</c:choose>
 		</div>
 
-		<div class="bottom-btn-right">
+		<div class="bottom-btn-split">
+			<div>
+				<button type="button"
+					onclick="location.href='event?command=EventList'">開催一覧/履歴に戻る</button>
+			</div>
+		
 			<div class="btn-gap">
 				<button type="button"
 					onclick="location.href='event?command=EventEnd&eventId=${event.event.eventId}'">
