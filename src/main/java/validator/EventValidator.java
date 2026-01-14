@@ -25,6 +25,12 @@ public class EventValidator {
 		if (event.getEventCapacity() <= 0) {
 			throw new ValidationException("定員は1以上で入力してください", event);
 		}
+
+		// ④ 場所（文字数チェック）
+		validatePlace(event);
+		
+		// ⑤ その他情報（文字数チェック）
+		validateOtherInfo(event);
 	}
 
 	private static void validateTime(Event event) throws ValidationException {
@@ -37,6 +43,22 @@ public class EventValidator {
 
 		if (!start.toLocalDate().equals(end.toLocalDate())) {
 			throw new ValidationException("日付を跨ぐイベントは登録できません", event);
+		}
+	}
+
+	private static void validatePlace(Event event) throws ValidationException {
+		String eventPlace = event.getEventPlace();
+		
+		if (eventPlace != null && eventPlace.length() > 30) {
+			throw new ValidationException("場所は30文字以内で入力してください", event);
+		}
+	}
+	
+	private static void validateOtherInfo(Event event) throws ValidationException {
+		String otherInfo = event.getEventOtherInfo();
+
+		if (otherInfo != null && otherInfo.length() > 256) {
+			throw new ValidationException("その他は256文字以内で入力してください", event);
 		}
 	}
 }
