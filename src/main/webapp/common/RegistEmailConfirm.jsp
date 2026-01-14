@@ -9,38 +9,6 @@
 <link rel="stylesheet" href="./css/layout.css">
 <title>連絡先登録確認画面（在校生/職員）</title>
 </head>
-<!--<body>-->
-<!--	<form action="graduate" method="post">-->
-
-<!--		<p>会社名：${companyName}</p>-->
-<!--		<input type="hidden" name="companyId" value="${companyId}"> <input-->
-<!--			type="hidden" name="companyName" value="${companyName}">-->
-
-
-<!--		<p>職種：${jobType}</p>-->
-<!--		<input type="hidden" name="jobType" value="${jobType}">-->
-
-<!--		<p>氏名：${graduateName}</p>-->
-<!--		<input type="hidden" name="graduateName" value="${graduateName}">-->
-
-<!--		<p>学科：${courseName}</p>-->
-<!--		<input type="hidden" name="courseCode" value="${courseCode}">-->
-<!--		<input type="hidden" name="courseName" value="${courseName}">-->
-
-<!--		<p>学籍番号：${graduateStudentNumber}</p>-->
-<!--		<input type="hidden" name="graduateStudentNumber"-->
-<!--			value="${graduateStudentNumber}">-->
-
-<!--		<p>メールアドレス：${graduateEmail}</p>-->
-<!--		<input type="hidden" name="graduateEmail" value="${graduateEmail}">-->
-
-<!--		<p>その他：${otherInfo}</p>-->
-<!--		<input type="hidden" name="otherInfo" value="${otherInfo}"> <input-->
-<!--			type="hidden" name="fromConfirm" value="${fromConfirm}">-->
-<!--		<button type="submit" name="command" value="RegistEmail">編集する</button>-->
-<!--		<button type="submit" name="command" value="RegistEmailConfirm">登録する</button>-->
-<!--	</form>-->
-<!--</body>-->
 <body>
 	<header>
 		<div class="head-part">
@@ -72,7 +40,8 @@
 								</td>
 								<td>${companyName}<input type="hidden" name="companyId"
 									value="${companyId}"> <input type="hidden"
-									name="companyName" value="${companyName}"></td>
+									name="companyName" value="${companyName}">
+								</td>
 							</tr>
 							<tr>
 								<td>
@@ -92,8 +61,15 @@
 								<td>
 									<div>氏名</div>
 								</td>
-								<td>${graduateName}<input type="hidden" name="graduateName"
-									value="${graduateName}"></td>
+								<td><c:choose>
+										<c:when test="${isStudent}">
+								        ${name}
+								      </c:when>
+										<c:otherwise>
+								        ${graduateName}
+								      </c:otherwise>
+									</c:choose></td>
+
 							</tr>
 
 							<tr>

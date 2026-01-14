@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>連絡先登録画面（在校生/職員）<</title>
+<title>連絡先情報入力画面（在校生/職員）<</title>
 
 
 </head>
@@ -76,7 +76,10 @@
 												${companyDTO.company.companyName}</option>
 										</c:forEach>
 
-								</select></td>
+								</select>
+									<div id="noCompanyMessage"
+										style="display: none; color: red; margin-top: 6px; font-size: 0.9em;">
+										該当する企業はございません</div></td>
 							</tr>
 
 							<tr>
@@ -127,7 +130,7 @@
 								<td><div>氏名</div></td>
 								<td><c:choose>
 										<c:when test="${isStudent}">
-										        ${graduateName}
+										        ${name}
 										        <input type="hidden" name="graduateName"
 												value="${graduateName}">
 										</c:when>
@@ -174,9 +177,9 @@
 								<td><div>学籍番号</div></td>
 								<td><c:choose>
 										<c:when test="${isStudent}">
-								        ${graduateStudentNumber}
+								        ${studentNumber}
 								        <input type="hidden" name="graduateStudentNumber"
-												value="${graduateStudentNumber}">
+												value="${studentNumber}">
 										</c:when>
 										<c:otherwise>
 											<input type="text" name="graduateStudentNumber"
@@ -227,19 +230,32 @@
 	<!--処理-->
 	<script>
 	/* ===== 企業検索 ===== */
-	const searchInput = document.getElementById("companySearch");
-	const companySelect = document.querySelector("select[name='companyId']");
-	const allOptions = Array.from(companySelect.options);
+		const searchInput = document.getElementById("companySearch");
+		const companySelect = document.querySelector("select[name='companyId']");
+		const allOptions = Array.from(companySelect.options);
+		const noCompanyMessage = document.getElementById("noCompanyMessage");
+		
+		searchInput.addEventListener("input", function () {
+		  const query = this.value.toLowerCase();
+		  let visibleCount = 0;
+		
+		  allOptions.forEach(option => {
+		    if (option.value === "") return; // 「企業選択」は無視
+		
+		    const isMatch = option.text.toLowerCase().includes(query);
+		    option.style.display = isMatch ? "" : "none";
+		
+		    if (isMatch) visibleCount++;
+		  });
+		
+		  // 表示できる企業がなければメッセージ表示
+		  if (visibleCount === 0 && query !== "") {
+		    noCompanyMessage.style.display = "block";
+		  } else {
+		    noCompanyMessage.style.display = "none";
+		  }
+		});
 
-	searchInput.addEventListener("input", function () {
-	  const query = this.value.toLowerCase();
-
-	  allOptions.forEach(option => {
-	    if (option.value === "") return;
-	    option.style.display =
-	      option.text.toLowerCase().includes(query) ? "" : "none";
-	  });
-	});
 
 	/* ===== 学科検索（職員のみ） ===== */
 	const courseSearch = document.getElementById("courseSearch");
