@@ -10,7 +10,7 @@
 <title>卒業生アポイントメント画面（職員）</title>
 </head>
 <body>
-	<header>
+	<header >
 		<div class="head-part">
 			<div id="h-left">
 				<img src="img/rogo.png" alt="アイコン">

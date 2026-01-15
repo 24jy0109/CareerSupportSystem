@@ -471,7 +471,7 @@
 
 /* フレームの大きさを変える */
 .company-register-flame {
-	width: 450px;
+	width: 80%;
 	height: 200px;
 /*	background-color: #a9e2bd;*/
 	border: 2px solid #009a36;

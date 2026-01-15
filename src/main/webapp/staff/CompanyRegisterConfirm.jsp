@@ -56,7 +56,7 @@
 				</div>
 			</div>
 
-			<div class="bottom-btn-split">
+			<div class="bottom-btn-smallsplit">
 				<button type="submit" name="command" value="CompanyRegisterBack">戻る</button>
 				<button type="submit" name="command" value="CompanyRegisterConfirm">登録</button>
 			</div>

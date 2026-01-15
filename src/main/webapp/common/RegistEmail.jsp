@@ -214,10 +214,22 @@
 			</div>
 
 
+			<!-- 戻るボタン -->
+			<c:choose>
+				<c:when test="${not empty graduateStudentNumber}">
+					<c:set var="backUrl"
+						value="graduate?companyId=${companyId}&command=editInfo" />
+					<c:set var="backLabel" value="情報編集に戻る" />
+				</c:when>
+				<c:otherwise>
+					<c:set var="backUrl" value="mypage?command=AppointmentMenu" />
+					<c:set var="backLabel" value="メニューに戻る" />
+				</c:otherwise>
+			</c:choose>
+
 			<div class="bottom-btn-split">
 				<div>
-					<button type="button"
-						onclick="location.href='mypage?command=AppointmentMenu'">メニューに戻る</button>
+					<button type="button" onclick="location.href='${backUrl}'" >${backLabel}</button>
 				</div>
 
 				<div class="btn-gap">

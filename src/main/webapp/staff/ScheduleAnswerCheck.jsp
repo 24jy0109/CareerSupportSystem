@@ -5,8 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/companylist.css">
+<link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/pagination.css">
 <title>日程回答確認画面（職員）</title>
 
