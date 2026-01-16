@@ -280,3 +280,7 @@ input {
 textarea {
 	border: 1px solid #009A37;
 }
+
+.center-msg{
+	text-align: center;
+}
