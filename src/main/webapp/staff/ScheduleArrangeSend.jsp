@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/companylist.css">
-<title>日程調整メール作成</title>
+<title>日程調整連絡作成画面</title>
 </head>
 <body>
 	<header>
@@ -114,7 +114,7 @@
 			</div>
 
 			<div class="bottom-btn-right schedulearrange-button">
-				<input type="submit" value="日程確認送信" class="schedulearrange-button">
+				<input type="submit" value="送信確認" class="schedulearrange-button">
 			</div>
 		</form>
 
