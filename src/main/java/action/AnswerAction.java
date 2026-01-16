@@ -25,6 +25,7 @@ public class AnswerAction extends BaseAction {
 
 		Staff staff = new Staff();
 		Graduate graduate = new Graduate();
+		GraduateDBAccess graduateDBA = new GraduateDBAccess();
 
 		Email mail = new Email();
 		boolean result;
@@ -133,14 +134,16 @@ public class AnswerAction extends BaseAction {
 		    // メール送信
 		    sendMail(graduate.getGraduateEmail(), "【イベント開催見送りのご連絡】", body);
 
-		    new GraduateDBAccess().removeStaff(graduate);
+		    graduateDBA.removeStaff(graduate);
 		    
 		    // Answer削除
 		    answerDBA.deleteAnswer(answer.getAnswerId());
 		    break;
 		case "deleteAnswer":
+			answer = answerDBA.searchAnswerById(Integer.parseInt(data[1]));
+			graduateDBA.removeStaff(answer.getGraduate());
 			// Answer削除
-			answerDBA.deleteAnswer(Integer.parseInt(data[1]));
+			answerDBA.deleteAnswer(answer.getAnswerId());
 			break;
 		}
 		return answers;
