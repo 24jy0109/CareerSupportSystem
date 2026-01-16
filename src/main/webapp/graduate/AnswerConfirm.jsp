@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>イベント回答 確認</title>
+<title>イベント回答フォーム確認画面</title>
 </head>
 
 <body>

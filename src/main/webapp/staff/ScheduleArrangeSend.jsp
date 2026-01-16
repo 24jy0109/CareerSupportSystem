@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/companylist.css">
-<title>日程調整連絡作成画面</title>
+<title>日程調整メール作成画面</title>
 </head>
 <body>
 	<header>

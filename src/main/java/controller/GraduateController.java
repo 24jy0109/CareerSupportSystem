@@ -402,6 +402,10 @@ public class GraduateController extends BaseController {
 				request.setAttribute("graduateEmail", graduateEmail);
 				request.setAttribute("otherInfo", otherInfo);
 
+				fromConfirm = request.getParameter("fromConfirm");
+				System.out.println("fromConfirm➡" + fromConfirm);
+				System.out.println("updateMode➡" + updateMode);
+				System.out.println(graduateName);
 				break;
 
 			//				連絡先情報をデータベースに登録

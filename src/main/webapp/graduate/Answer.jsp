@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/companylist.css">
-<title>イベント回答フォーム</title>
+<title>イベント回答フォーム画面</title>
 
 <script>
 	function toggleTimeFields() {
@@ -64,17 +64,23 @@
 				<!-- 参加可否 -->
 				<label>参加可否</label><br>
 				<div class="answer-row">
-					<input type="radio" name="eventAvailability" value="true"
+
+					<input type="radio" id="attend" name="eventAvailability"
+						value="true"
 						<c:if test="${inputAnswer == null || inputAnswer.eventAvailability}">
-					checked
-				</c:if>
-						onchange="toggleTimeFields()"> 出席する <input type="radio"
-						name="eventAvailability" value="false"
+					            checked
+					        </c:if>
+						onchange="toggleTimeFields()"> <label for="attend">出席する</label>
+
+					<input type="radio" id="absent" name="eventAvailability"
+						value="false"
 						<c:if test="${inputAnswer != null && !inputAnswer.eventAvailability}">
-					checked
-				</c:if>
-						onchange="toggleTimeFields()"> 出席しない
+					            checked
+					        </c:if>
+						onchange="toggleTimeFields()"> <label for="absent">出席しない</label>
+
 				</div>
+
 				<br>
 
 				<div id="time-area">
