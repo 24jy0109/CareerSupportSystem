@@ -58,19 +58,24 @@
 					<div class="flame">
 						<table class="registscreen-table">
 							<tr>
-								<td>
-									<div>氏名</div>
-								</td>
-								<td><c:choose>
-										<c:when test="${isStudent}">
-								        ${name}
-								      </c:when>
-										<c:otherwise>
-								        ${graduateName}
-								      </c:otherwise>
-									</c:choose></td>
-
+							  <td><div>氏名</div></td>
+							  <td>
+							    <c:choose>
+							      <!-- 在校生 -->
+							      <c:when test="${isStudent}">
+							        ${name}
+							        <input type="hidden" name="graduateName" value="${name}">
+							      </c:when>
+							
+							      <!-- 職員 -->
+							      <c:otherwise>
+							        ${graduateName}
+							        <input type="hidden" name="graduateName" value="${graduateName}">
+							      </c:otherwise>
+							    </c:choose>
+							  </td>
 							</tr>
+
 
 							<tr>
 								<td>

@@ -46,42 +46,55 @@
 				<th class="company-h">開催詳細/登録</th>
 			</tr>
 
-			<c:forEach var="companyDTO" items="${companies}">
-				<tr class="company-r company-row">
-					<td><a
-						href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}"
-						class="company-link"> ${companyDTO.company.companyName} </a></td>
+			<c:choose>
+				<c:when test="${empty companies}">
+					<tr>
+						<td colspan="5" style="text-align: center; padding: 2rem;">
+							該当する企業がありません</td>
+					</tr>
+				</c:when>
 
-					<td><a
-						href="./graduate?companyId=${companyDTO.company.companyId}&command=editInfo">
-							情報編集 </a></td>
+				<c:otherwise>
+					<c:forEach var="companyDTO" items="${companies}">
+						<tr class="company-r company-row">
+							<td><a
+								href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}"
+								class="company-link"> ${companyDTO.company.companyName} </a></td>
 
-					<c:choose>
-						<c:when test="${companyDTO.eventProgress == '開催'}">
-							<td class="held">${companyDTO.eventProgress}</td>
-						</c:when>
-						<c:otherwise>
-							<td>${companyDTO.eventProgress}</td>
-						</c:otherwise>
-					</c:choose>
+							<td><a
+								href="./graduate?companyId=${companyDTO.company.companyId}&command=editInfo">
+									情報編集 </a></td>
 
-					<td><c:choose>
-							<c:when test="${companyDTO.requestCount > 0}">
-								<a
-									href="appointment_request?command=RequestList&companyId=${companyDTO.company.companyId}">
-									申請者一覧 </a>
-								<p>${companyDTO.requestCount}人</p>
-							</c:when>
-							<c:otherwise>
-								<p style="padding: 1.25rem 0;">${companyDTO.requestCount}人</p>
-							</c:otherwise>
-						</c:choose></td>
+							<c:choose>
+								<c:when test="${companyDTO.eventProgress == '開催'}">
+									<td class="held">${companyDTO.eventProgress}</td>
+								</c:when>
+								<c:otherwise>
+									<td>${companyDTO.eventProgress}</td>
+								</c:otherwise>
+							</c:choose>
 
-					<td><a
-						href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}">
-							開催情報登録 </a></td>
-				</tr>
-			</c:forEach>
+							<td><c:choose>
+									<c:when test="${companyDTO.requestCount > 0}">
+										<a
+											href="appointment_request?command=RequestList&companyId=${companyDTO.company.companyId}">
+											申請者一覧 </a>
+										<p>${companyDTO.requestCount}人</p>
+									</c:when>
+									<c:otherwise>
+										<p style="padding: 1.25rem 0;">
+											${companyDTO.requestCount}人</p>
+									</c:otherwise>
+								</c:choose></td>
+
+							<td><a
+								href="event?command=RegistEventForm&companyId=${companyDTO.company.companyId}">
+									開催情報登録 </a></td>
+						</tr>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
+
 		</table>
 
 		<div id="pagination-company" class="pagination"></div>
