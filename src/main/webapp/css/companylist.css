@@ -471,7 +471,7 @@
 
 /* フレームの大きさを変える */
 .company-register-flame {
-	width: 450px;
+	width: 80%;
 	height: 200px;
 /*	background-color: #a9e2bd;*/
 	border: 2px solid #009a36;
@@ -631,7 +631,7 @@
 
 /* 入力欄の大きさ */
 .schedulearrange-row textarea {
-	padding: 5px 0px;
+	padding: 10px 10px;
 	border: 1px solid #009A37;
 	border-radius: 4px;
 }
@@ -750,4 +750,32 @@
 .detail-table td {
 	padding: 0 10px;
 	text-align: left;
+}
+
+/*参加フォーム*/
+.answer-row{
+	display: flex;
+	flex-direction: row;
+	gap:10px;
+	margin-left: 10px;
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
+.answer-flame{
+	border: 1px solid  #009A37;
+	width: 600px;
+	border-radius: 5px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.answer-display{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.answer-btn-width{
+	width: 100%;
 }

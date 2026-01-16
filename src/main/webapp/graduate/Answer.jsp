@@ -6,8 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/header.css">
-<link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/companylist.css">
 <title>イベント回答フォーム</title>
 
 <script>
@@ -51,96 +51,87 @@
 		String answerId = request.getParameter("answerId");
 		%>
 
-		<h2>参加可否・希望日時フォーム</h2>
+		<div class="page-title">参加可否・希望日時フォーム</div>
 
-		<p style="color: red;">${error}</p>
+		<p style="color: red;" class="center-msg">${error}</p>
+		<div class="answer-display">
 
-		<form action="answer" method="post">
+			<form action="answer" method="post">
 
-			<input type="hidden" name="answerId" value="<%=answerId%>">
-			<input type="hidden" name="command" value="AnswerConfirm">
+				<input type="hidden" name="answerId" value="<%=answerId%>">
+				<input type="hidden" name="command" value="AnswerConfirm">
 
-			<!-- 参加可否 -->
-			<label>参加可否</label><br>
-
-			<input type="radio"
-				name="eventAvailability"
-				value="true"
-				<c:if test="${inputAnswer == null || inputAnswer.eventAvailability}">
+				<!-- 参加可否 -->
+				<label>参加可否</label><br>
+				<div class="answer-row">
+					<input type="radio" name="eventAvailability" value="true"
+						<c:if test="${inputAnswer == null || inputAnswer.eventAvailability}">
 					checked
 				</c:if>
-				onchange="toggleTimeFields()">
-			出席する<br>
-
-			<input type="radio"
-				name="eventAvailability"
-				value="false"
-				<c:if test="${inputAnswer != null && !inputAnswer.eventAvailability}">
+						onchange="toggleTimeFields()"> 出席する <input type="radio"
+						name="eventAvailability" value="false"
+						<c:if test="${inputAnswer != null && !inputAnswer.eventAvailability}">
 					checked
 				</c:if>
-				onchange="toggleTimeFields()">
-			出席しない<br><br>
-
-			<div id="time-area">
-
-				<!-- 第一希望 -->
-				<h3>第一希望</h3>
-				<label>開始</label><br>
-				<input type="datetime-local"
-					name="firstChoiceStart"
-					value="${inputAnswer != null && inputAnswer.firstChoiceStartTime != null
-						? inputAnswer.firstChoiceStartTime.toString().substring(0,16)
-						: ''}">
+						onchange="toggleTimeFields()"> 出席しない
+				</div>
 				<br>
 
-				<label>終了</label><br>
-				<input type="datetime-local"
-					name="firstChoiceEnd"
-					value="${inputAnswer != null && inputAnswer.firstChoiceEndTime != null
+				<div id="time-area">
+
+					<label>日程入力</label>
+
+					<div class="answer-flame">
+						<!-- 第一希望 -->
+						<div class="answer-row">
+							<div>第一希望</div>
+
+							<input type="datetime-local" name="firstChoiceStart"
+								value="${inputAnswer != null && inputAnswer.firstChoiceStartTime != null
+						? inputAnswer.firstChoiceStartTime.toString().substring(0,16)
+						: ''}">～
+							<input type="datetime-local" name="firstChoiceEnd"
+								value="${inputAnswer != null && inputAnswer.firstChoiceEndTime != null
 						? inputAnswer.firstChoiceEndTime.toString().substring(0,16)
 						: ''}">
-				<br><br>
 
-				<!-- 第二希望 -->
-				<h3>第二希望</h3>
-				<label>開始</label><br>
-				<input type="datetime-local"
-					name="secondChoiceStart"
-					value="${inputAnswer != null && inputAnswer.secondChoiceStartTime != null
+						</div>
+
+
+						<!-- 第二希望 -->
+						<div class="answer-row">
+							<div>第二希望</div>
+							<input type="datetime-local" name="secondChoiceStart"
+								value="${inputAnswer != null && inputAnswer.secondChoiceStartTime != null
 						? inputAnswer.secondChoiceStartTime.toString().substring(0,16)
-						: ''}">
-				<br>
-
-				<label>終了</label><br>
-				<input type="datetime-local"
-					name="secondChoiceEnd"
-					value="${inputAnswer != null && inputAnswer.secondChoiceEndTime != null
+						: ''}">～
+							<input type="datetime-local" name="secondChoiceEnd"
+								value="${inputAnswer != null && inputAnswer.secondChoiceEndTime != null
 						? inputAnswer.secondChoiceEndTime.toString().substring(0,16)
 						: ''}">
-				<br><br>
+						</div>
 
-				<!-- 第三希望 -->
-				<h3>第三希望</h3>
-				<label>開始</label><br>
-				<input type="datetime-local"
-					name="thirdChoiceStart"
-					value="${inputAnswer != null && inputAnswer.thirdChoiceStartTime != null
+						<!-- 第三希望 -->
+						<div class="answer-row">
+							<div>第三希望</div>
+							<input type="datetime-local" name="thirdChoiceStart"
+								value="${inputAnswer != null && inputAnswer.thirdChoiceStartTime != null
 						? inputAnswer.thirdChoiceStartTime.toString().substring(0,16)
-						: ''}">
-				<br>
-
-				<label>終了</label><br>
-				<input type="datetime-local"
-					name="thirdChoiceEnd"
-					value="${inputAnswer != null && inputAnswer.thirdChoiceEndTime != null
+						: ''}">～
+							<input type="datetime-local" name="thirdChoiceEnd"
+								value="${inputAnswer != null && inputAnswer.thirdChoiceEndTime != null
 						? inputAnswer.thirdChoiceEndTime.toString().substring(0,16)
 						: ''}">
-				<br><br>
+						</div>
+					</div>
 
-			</div>
+				</div>
+				<div class="bottom-btn-right answer-btn-width">
+					<input type="submit" class="submit-btn" value="確認">
+				</div>
 
-			<input type="submit" value="確認">
-		</form>
+			</form>
+		</div>
 	</main>
 
 	<footer>

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,9 +57,23 @@
 			</div>
 
 			<%-- 戻るボタンと確認ボタン --%>
-			<div class="bottom-btn-split">
+			<c:choose>
+
+				<c:when test="${not empty companyId}">
+					<c:set var="backUrl"
+						value="graduate?companyId=${companyId}&command=editInfo" />
+					<c:set var="backLabel" value="情報編集に戻る" />
+				</c:when>
+				<c:otherwise>
+					<c:set var="backUrl" value="mypage?command=AppointmentMenu" />
+					<c:set var="backLabel" value="メニューに戻る" />
+				</c:otherwise>
+			</c:choose>
+
+
+			<div class="bottom-btn-smallsplit">
 				<div>
-					<button type="button" onclick="location.href='mypage?command=AppointmentMenu'">メニューに戻る</button>
+					<button type="button" onclick="location.href='${backUrl}'">${backLabel}</button>
 				</div>
 
 				<div class="btn-gap">
@@ -104,7 +119,7 @@
 
 /* フレームの大きさを変える */
 .company-register-flame {
-	width: 700px;
+	width: 80%;
 	height: 250px; <!--
 	background-color: #a9e2bd; -->
 	border: 1px solid #009a36;
