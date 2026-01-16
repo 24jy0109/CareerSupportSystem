@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.AnswerDBAccess;
+import dao.GraduateDBAccess;
 import exception.ValidationException;
 import model.Answer;
 import model.Email;
@@ -130,8 +131,10 @@ public class AnswerAction extends BaseAction {
 		    body = MailBuilder.buildNoAnswerNotification(graduate, staff);
 
 		    // メール送信
-		    sendMail(graduate.getGraduateEmail(), "【イベント参加についてのご連絡】", body);
+		    sendMail(graduate.getGraduateEmail(), "【イベント開催見送りのご連絡】", body);
 
+		    new GraduateDBAccess().removeStaff(graduate);
+		    
 		    // Answer削除
 		    answerDBA.deleteAnswer(answer.getAnswerId());
 		    break;
