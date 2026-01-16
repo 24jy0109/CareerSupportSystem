@@ -113,8 +113,11 @@
 					required><%=mailBody%></textarea>
 			</div>
 
-			<div class="bottom-btn-right schedulearrange-button">
-				<input type="submit" value="送信確認" class="schedulearrange-button">
+			<div class="bottom-btn-split schedulearrange-button">
+				<div>
+					<button type="button" onclick="location.href='event?command=RegistEventForm&companyId=<%=grad.getCompany().getCompanyId()%>'" >開催情報登録に戻る</button>
+				</div>
+				<input type="submit" value="確認へ" class="schedulearrange-button">
 			</div>
 		</form>
 
