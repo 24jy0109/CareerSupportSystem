@@ -111,7 +111,7 @@
 							</td>
 							<c:choose>
 								<c:when test="${dto.event.eventProgress == 'CANCELED'}">
-									<td class="event-cancel">${dto.event.eventProgress.label}</td>
+									<td>${dto.event.eventProgress.label}</td>
 								</c:when>
 								<c:otherwise>
 									<td>${dto.event.eventProgress.label}</td>

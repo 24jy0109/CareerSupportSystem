@@ -34,7 +34,7 @@
 			<p>メールを送信しました。</p>
 			<p>変更したい場合はメニュー画面内の就職先登録より変更してください。</p>
 		</div>
-		<div class="bottom-btn-right">
+		<div class="bottom-btn-left">
 			<button type="button"
 				onclick="location.href='graduate?command=AppointMenu'">メニュー画面に戻る</button>
 		</div>

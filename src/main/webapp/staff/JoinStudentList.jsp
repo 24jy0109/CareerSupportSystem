@@ -64,8 +64,8 @@
 				</c:otherwise>
 			</c:choose>
 			
-			<div class="bottom-btn-right">
-				<button type="button" onclick="location.href='event?command=EventDetail&eventId=${joinStudents[0].event.eventId}'">開催詳細</button>
+			<div class="bottom-btn-left">
+				<button type="button" onclick="location.href='event?command=EventDetail&eventId=${joinStudents[0].event.eventId}'">戻る</button>
 			</div>
 		</main>
 	</div>

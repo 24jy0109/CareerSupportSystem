@@ -130,23 +130,27 @@
 			</c:choose>
 		</div>
 
+		<!--		eventProgressがあったら、開催終了・開催中止ボタンは出さない-->
 		<div class="bottom-btn-split">
 			<div>
 				<button type="button"
-					onclick="location.href='event?command=EventList'">開催一覧/履歴に戻る</button>
+					onclick="location.href='event?command=EventList'">戻る</button>
 			</div>
+			<c:choose>
+				<c:when test="${event.event.eventProgress=='ONGOING'}">
+					<div class="btn-gap">
+						<button type="button"
+							onclick="if (confirm('開催終了。\nこの操作は取り消せませんが、よろしいですか？')) { location.href='event?command=EventEnd&eventId=${event.event.eventId}'; }">
+							開催終了</button>
 
-			<div class="btn-gap">
-				<button type="button"
-					onclick="if (confirm('開催終了。\nこの操作は取り消せませんが、よろしいですか？')) { location.href='event?command=EventEnd&eventId=${event.event.eventId}'; }">
-					開催終了</button>
 
+						<button type="button"
+							onclick="if (confirm('中止します。\nこの操作は取り消せません。\n\nまた、参加予定の在校生・卒業生へ中止通知メールが送信されますが、よろしいですか？')) { location.href='event?command=EventCancel&eventId=${event.event.eventId}'; }"
+							class="white-btn">開催中止</button>
 
-				<button type="button"
-					onclick="if (confirm('中止します。\nこの操作は取り消せません。\n\nまた、参加予定の在校生・卒業生へ中止通知メールが送信されますが、よろしいですか？')) { location.href='event?command=EventCancel&eventId=${event.event.eventId}'; }"
-					class="white-btn">開催中止</button>
-
-			</div>
+					</div>
+				</c:when>
+			</c:choose>
 		</div>
 	</main>
 

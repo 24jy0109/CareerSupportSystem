@@ -115,7 +115,7 @@
 
 			<div class="bottom-btn-split schedulearrange-button">
 				<div>
-					<button type="button" onclick="location.href='event?command=RegistEventForm&companyId=<%=grad.getCompany().getCompanyId()%>'" >開催情報登録に戻る</button>
+					<button type="button" onclick="location.href='event?command=RegistEventForm&companyId=<%=grad.getCompany().getCompanyId()%>'" >戻る</button>
 				</div>
 				<input type="submit" value="確認へ" class="schedulearrange-button">
 			</div>
