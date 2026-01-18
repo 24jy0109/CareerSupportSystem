@@ -27,12 +27,12 @@
 	</header>
 	<main>
 		<div class="complete-screen">
-			<p class="complete-msg">登録完了しました！</p>
+			<p class="complete-msg">登録完了しました</p>
 			<p>
 				<img src="./img/complete_regist_job.png">
 			</p>
 			<p>メールを送信しました。</p>
-			<p>変更したい場合はメニュー画面内の就職先登録より変更してください。</p>
+			<p>変更したい場合はメニュー画面内の連絡先登録より変更してください。</p>
 		</div>
 		<div class="bottom-btn-left">
 			<button type="button"

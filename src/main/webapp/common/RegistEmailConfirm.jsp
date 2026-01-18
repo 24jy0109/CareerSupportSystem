@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +27,9 @@
 		</div>
 	</header>
 	<main>
+
 		<form action="graduate" method="post">
+			<c:set var="isStudent" value="${sessionScope.role == 'student'}" />
 			<input type="hidden" name="updateMode" value="${updateMode}">
 
 			<div class="split-screen">
@@ -58,22 +61,21 @@
 					<div class="flame">
 						<table class="registscreen-table">
 							<tr>
-							  <td><div>氏名</div></td>
-							  <td>
-							    <c:choose>
-							      <!-- 在校生 -->
-							      <c:when test="${isStudent}">
+								<td><div>氏名</div></td>
+								<td><c:choose>
+
+										<c:when test="${isStudent}">
 							        ${name}
 							        <input type="hidden" name="graduateName" value="${name}">
-							      </c:when>
-							
-							      <!-- 職員 -->
-							      <c:otherwise>
+										</c:when>
+
+
+										<c:otherwise>
 							        ${graduateName}
-							        <input type="hidden" name="graduateName" value="${graduateName}">
-							      </c:otherwise>
-							    </c:choose>
-							  </td>
+							        <input type="hidden" name="graduateName"
+												value="${graduateName}">
+										</c:otherwise>
+									</c:choose></td>
 							</tr>
 
 

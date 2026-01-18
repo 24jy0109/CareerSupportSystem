@@ -215,21 +215,37 @@
 
 
 			<!-- 戻るボタン -->
+			<!--まず生徒かスタッフかで分ける-->
+			<!--生徒はメニューに戻るのみ,スタッフは下記４パターンあり-->
+			<!--fromComfirm == null && updateMode == true 情報編集に戻る -->
+			<!--fromComfirm == true && updateMode == true 情報編集に戻る-->
+			<!--fromComfirm == true && updateMode == "" メニューに戻る-->
+			<!--fromComfirm == null && updateMode == null メニューに戻る-->
 			<c:choose>
-				<c:when test="${not empty graduateStudentNumber}">
-					<c:set var="backUrl"
-						value="graduate?companyId=${companyId}&command=editInfo" />
-					<c:set var="backLabel" value="情報編集に戻る" />
-				</c:when>
-				<c:otherwise>
+				<c:when test="${isStudent}">
 					<c:set var="backUrl" value="mypage?command=AppointmentMenu" />
 					<c:set var="backLabel" value="メニューに戻る" />
+				</c:when>
+
+				<c:otherwise>
+					<c:choose>
+						<c:when test="${updateMode == 'true'}">
+							<c:set var="backUrl"
+								value="graduate?companyId=${companyId}&command=editInfo" />
+							<c:set var="backLabel" value="情報編集に戻る" />
+						</c:when>
+						<c:otherwise>
+							<c:set var="backUrl" value="mypage?command=AppointmentMenu" />
+							<c:set var="backLabel" value="メニューに戻る" />
+						</c:otherwise>
+
+					</c:choose>
 				</c:otherwise>
 			</c:choose>
 
 			<div class="bottom-btn-split">
 				<div>
-					<button type="button" onclick="location.href='${backUrl}'" >${backLabel}</button>
+					<button type="button" onclick="location.href='${backUrl}'">${backLabel}</button>
 				</div>
 
 				<div class="btn-gap">
