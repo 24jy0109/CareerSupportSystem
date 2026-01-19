@@ -57,7 +57,7 @@
 								<td>
 									<div>企業</div>
 								</td>
-								<td><select name="companyId" class="company-input">
+								<td><select name="companyId" class="company-input" required>
 										<c:choose>
 											<%-- 新規登録の時だけ「企業選択」を出す --%>
 											<c:when test="${empty companyId}">
@@ -88,7 +88,7 @@
 								</td>
 								<td>
 									<!--職種選択--> <select name="jobType" id="jobType"
-									class="job-input">
+									class="job-input" required>
 										<c:choose>
 											<%-- 新規登録の時だけ「職種を選択」を出す --%>
 											<c:when test="${empty jobType}">
@@ -132,11 +132,11 @@
 										<c:when test="${isStudent}">
 										        ${name}
 										        <input type="hidden" name="graduateName"
-												value="${graduateName}">
+												value="${graduateName}" required>
 										</c:when>
 										<c:otherwise>
 											<input type="text" name="graduateName"
-												value="${graduateName}" class="name-input">
+												value="${graduateName}" class="name-input" required>
 										</c:otherwise>
 									</c:choose></td>
 							</tr>
@@ -150,7 +150,7 @@
 
 										<c:when test="${isStudent}">
 											<span class="department-fixed">${courseName}</span>
-											<input type="hidden" name="courseCode" value="${courseCode}">
+											<input type="hidden" name="courseCode" value="${courseCode}" required>
 										</c:when>
 
 										<c:otherwise>
@@ -158,7 +158,7 @@
 											<input type="text" id="courseSearch" placeholder="学科名で検索"
 												style="margin-bottom: 6px;">
 											<select name="courseCode" class="department-input"
-												id="courseSelect">
+												id="courseSelect" required>
 												<c:if test="${empty courseCode}">
 													<option value="">学科選択</option>
 												</c:if>
@@ -179,14 +179,14 @@
 										<c:when test="${isStudent}">
 								        ${studentNumber}
 								        <input type="hidden" name="graduateStudentNumber"
-												value="${studentNumber}">
+												value="${studentNumber}" required>
 										</c:when>
 										<c:otherwise>
 											<input type="text" name="graduateStudentNumber"
 												value="${graduateStudentNumber}"
 												pattern="^[0-9]{2}[a-z]{2}[0-9]{4}$"
 												title="例: 24jy0101 の形式で入力してください"
-												class="student-number-input">
+												class="student-number-input" required>
 										</c:otherwise>
 									</c:choose></td>
 							</tr>
@@ -197,7 +197,7 @@
 								</td>
 								<td><input type="email" name="graduateEmail"
 									value="${graduateEmail}" pattern="^(?!.*@jec\.ac\.jp$).+"
-									title="jec.ac.jpのメールアドレスは使用できません" class="email-input">
+									title="jec.ac.jpのメールアドレスは使用できません" class="email-input" required>
 
 									<div class="input-note">学校のメールアドレス(@jec.ac.jp)は登録できません</div></td>
 							</tr>
@@ -206,7 +206,7 @@
 									<div>その他</div>
 								</td>
 								<td><input type="text" name="otherInfo"
-									value="${otherInfo}" class="other-info-input"></td>
+									value="${otherInfo}" class="other-info-input" placeholder="50文字以内で入力してください"></td>
 							</tr>
 						</table>
 					</div>
