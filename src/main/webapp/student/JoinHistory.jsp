@@ -34,9 +34,12 @@
 			<div class="eventlist-title">参加一覧</div>
 		</div>
 
+		<c:set var="hasCurrent" value="false" />
+
 		<table>
 			<c:forEach var="dto" items="${events}">
 				<c:if test="${dto.event.eventProgress == 'ONGOING'}">
+					<c:set var="hasCurrent" value="true" />
 					<tr class="join-current-row">
 						<td>${dto.event.company.companyName}</td>
 						<td><a
@@ -51,6 +54,10 @@
 			</c:forEach>
 		</table>
 
+		<c:if test="${!hasCurrent}">
+			<p class="errormsg">現在参加予定のイベントはありません。</p>
+		</c:if>
+
 		<div id="pagination-current" class="pagination"></div>
 
 		<!-- ================= 参加履歴 ================= -->
@@ -58,10 +65,14 @@
 			<div class="eventlist-title">参加履歴</div>
 		</div>
 
+		<c:set var="hasHistory" value="false" />
+
 		<table>
 			<c:forEach var="dto" items="${events}">
 				<c:if
-					test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
+					test="${dto.event.eventProgress == 'FINISHED'
+						|| dto.event.eventProgress == 'CANCELED'}">
+					<c:set var="hasHistory" value="true" />
 					<tr class="join-history-row">
 						<td>${dto.event.company.companyName}</td>
 						<td><a
@@ -76,6 +87,10 @@
 				</c:if>
 			</c:forEach>
 		</table>
+
+		<c:if test="${!hasHistory}">
+			<p class="errormsg">参加履歴はありません。</p>
+		</c:if>
 
 		<div id="pagination-history" class="pagination"></div>
 	</main>
@@ -135,7 +150,6 @@
 	const currentPager = setupPagination(".join-current-row", "pagination-current", 5);
 	const historyPager = setupPagination(".join-history-row", "pagination-history", 5);
 
-	// ★ 初期表示時は「参加一覧」をアクティブにする
 	if (currentPager) {
 		activePager = currentPager;
 	}
@@ -146,14 +160,11 @@
 		if (tag === "INPUT" || tag === "TEXTAREA") return;
 		if (!activePager) return;
 
-		if (e.key === "ArrowRight") {
-			activePager.next();
-		}
-		if (e.key === "ArrowLeft") {
-			activePager.prev();
-		}
+		if (e.key === "ArrowRight") activePager.next();
+		if (e.key === "ArrowLeft") activePager.prev();
 	});
 	</script>
+
 	<jsp:include page="/common/flashMessage.jsp" />
 </body>
 </html>

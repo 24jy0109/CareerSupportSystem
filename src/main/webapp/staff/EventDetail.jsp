@@ -123,7 +123,7 @@
 					<div class="detail-row">
 						<div class="field-name">その他</div>
 						<div class="detail-data">
-							<td>${g.otherInfo}</td>
+							<td>${event.event.eventOtherInfo}</td>
 						</div>
 					</div>
 				</c:otherwise>
