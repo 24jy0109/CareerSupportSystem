@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/pagination.css">
-<title>企業リスト</title>
+<title>企業一覧</title>
 </head>
 <body>
 	<header>

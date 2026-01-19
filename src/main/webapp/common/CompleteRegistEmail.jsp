@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>就職先登録完了画面（在校生/職員）</title>
+<title>連絡先登録完了画面（在校生/職員）</title>
 </head>
 <body>
 	<header>
