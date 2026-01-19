@@ -27,6 +27,33 @@
 		</div>
 
 		<div class="header-user">ようこそ${name}さん</div>
+
+
+		<script type="text/javascript">
+			function confirmJoin(eventId) {
+				if (confirm(
+						"このイベントに参加登録します。\n" +
+						"システム上から登録後の取り消しはできません。\n" +
+						"変更が必要な場合は、担当職員までご連絡ください。\n" +
+						"よろしいですか？"
+				)) {
+					location.href = "event?command=EventJoin&eventId=" + eventId;
+				}
+				return false;
+			}
+		
+			function confirmNotJoin(eventId) {
+				if (confirm(
+						"このイベントに不参加で登録します。\n" +
+						"システム上から登録後の取り消しはできません。\n" +
+						"変更が必要な場合は、担当職員までご連絡ください。\n" +
+						"よろしいですか？"
+				)) {
+					location.href = "event?command=EventNotJoin&eventId=" + eventId;
+				}
+				return false;
+			}
+		</script>
 	</header>
 	<main>
 
@@ -173,14 +200,16 @@
 
 											<div class="btn-gap">
 
+												<!-- 参加ボタン -->
 												<button type="button"
-													onclick="location.href='event?command=EventJoin&eventId=${event.event.eventId}'">
+													onclick="return confirmJoin(${event.event.eventId});">
 													参加</button>
 
+												<!-- 不参加ボタン：studentRequested == true のときのみ -->
 												<c:if test="${event.studentRequested}">
-													<button type="button"
-														onclick="location.href='event?command=EventNotJoin&eventId=${event.event.eventId}'"
-														class="white-btn">不参加</button>
+													<button type="button" class="white-btn"
+														onclick="return confirmNotJoin(${event.event.eventId});">
+														不参加</button>
 												</c:if>
 
 											</div>
