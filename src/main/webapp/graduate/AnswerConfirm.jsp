@@ -27,7 +27,7 @@
 
 	<main>
 
-		<h2>参加可否・希望日時（確認）</h2>
+		<div class="page-title">参加可否・希望日時確認</div>
 
 		<c:set var="a" value="${answer}" />
 
