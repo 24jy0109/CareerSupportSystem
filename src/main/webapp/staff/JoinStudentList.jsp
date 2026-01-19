@@ -41,7 +41,7 @@
 			<c:choose>
 				<%-- joinStudents が空 or null --%>
 				<c:when test="${empty joinStudents}">
-					<p class="errormsg">参加予定の学生はいません。</p>
+					<div class="errormsg">参加予定の学生はいません。</div>
 				</c:when>
 
 				<%-- データあり --%>

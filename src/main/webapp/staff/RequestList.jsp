@@ -56,7 +56,7 @@
 
 									<c:if test="${empty company.events}">
 										<tr class="noline">
-											<p class="errormsg">対象イベントがありません。</p>
+											<div class="errormsg">対象イベントがありません。</div>
 										</tr>
 									</c:if>
 
@@ -78,7 +78,7 @@
 
 					</div>
 					<c:if test="${empty requests}">
-						<p class="errormsg">リクエストした学生はいません。</p>
+						<div class="errormsg">リクエストした学生はいません。</div>
 					</c:if>
 					<c:if test="${not empty requests}">
 

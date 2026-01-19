@@ -126,7 +126,21 @@
 
 							<%-- 参加済み --%>
 							<c:when test="${event.joinAvailability == true}">
-								<div class="eventdetail-msg">参加予定</div>
+
+								<c:choose>
+									<c:when test="${event.event.eventProgress == 'FINISHED'}">
+										<div class="eventdetail-msg">参加済</div>
+									</c:when>
+
+									<c:when test="${event.event.eventProgress == 'CANCELED'}">
+										<div class="eventdetail-msg">中止</div>
+									</c:when>
+
+									<c:otherwise>
+										<div class="eventdetail-msg">参加予定</div>
+									</c:otherwise>
+								</c:choose>
+
 								<div class="bottom-btn-left">
 									<div>
 										<button type="button" onclick="history.back()">戻る</button>

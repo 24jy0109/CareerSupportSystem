@@ -68,10 +68,10 @@
 									</c:forEach>
 								</table>
 							</c:if>
+							<c:if test="${empty companyDTO.company.events}">
+								<div class="red-msg">開催予定のイベントはありません</div>
+							</c:if>
 						</div>
-						<c:if test="${empty companyDTO.company.events}">
-							<div class="red-msg">開催予定のイベントはありません</div>
-						</c:if>
 					</div>
 				</div>
 
