@@ -96,21 +96,31 @@
 					<div class="two-item-set">
 						<div class="registevent-row">
 							<div class="field-name">場所</div>
-							<input type="text" name="eventPlace" class="registevent-input"
-								value="${event.eventPlace}" required />
+							<input type="text"
+								name="eventPlace"
+								class="registevent-input"
+								value="${event.eventPlace}"
+								placeholder="30文字以内で入力してください"
+								maxlength="30"
+								required />
 						</div>
 
 						<div class="registevent-row">
 							<div class="field-name">定員</div>
 							<input type="number" name="eventCapacity"
-								class="registevent-input" min="1" value="${event.eventCapacity}"
+								class="registevent-input" min="1"
+								value="${event.eventCapacity}"
 								required />
 						</div>
 					</div>
 
 					<div class="registevent-row">
 						<div class="field-name">その他</div>
-						<textarea name="eventOtherInfo" class="registevent-input" rows="3">${event.eventOtherInfo}</textarea>
+						<textarea name="eventOtherInfo"
+							class="registevent-input"
+							rows="3"
+							placeholder="256文字以内で入力してください"
+							maxlength="256">${event.eventOtherInfo}</textarea>
 					</div>
 
 					<!-- event.staff が null の場合は、卒業生の担当者をデフォルトに -->
@@ -131,8 +141,8 @@
 							<c:forEach var="st" items="${dto.staffs}">
 								<option value="${st.staffId}"
 									<c:if test="${st.staffId == defaultStaffId}">
-                    selected
-                </c:if>>
+										selected
+									</c:if>>
 									${st.staffName}</option>
 							</c:forEach>
 						</select>
@@ -151,43 +161,47 @@
 
 						<c:forEach var="g" items="${dto.graduates}">
 							<tr class="registevent-r">
-								<td><input type="checkbox" name="graduateStudents"
-									value="${g.graduateStudentNumber}"
-									<c:if test="${not empty inputEvent && event.joinGraduates != null}">
-							           <c:forEach var="jg" items="${event.joinGraduates}">
-							               <c:if test="${jg.graduateStudentNumber == g.graduateStudentNumber}">
-							                   checked
-							               </c:if>
-						</c:forEach>
-						</c:if>
-						<c:if
-							test="${empty inputEvent && g.graduateStudentNumber == selectedStudentNumber}">
-							           checked
-							       </c:if>
-						/>
-						</td>
+								<td>
+									<input type="checkbox" name="graduateStudents"
+										value="${g.graduateStudentNumber}"
+										<c:if test="${not empty inputEvent && event.joinGraduates != null}">
+											<c:forEach var="jg" items="${event.joinGraduates}">
+												<c:if test="${jg.graduateStudentNumber == g.graduateStudentNumber}">
+													checked
+												</c:if>
+											</c:forEach>
+										</c:if>
+										<c:if test="${empty inputEvent && g.graduateStudentNumber == selectedStudentNumber}">
+											checked
+										</c:if>
+									/>
+								</td>
 
-						<td><c:set var="enterYear"
-								value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
-							${enterYear + g.course.courseTerm}年卒</td>
+								<td>
+									<c:set var="enterYear"
+										value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
+									${enterYear + g.course.courseTerm}年卒
+								</td>
 
-						<td>${g.graduateName}</td>
-						<td>${g.course.courseName}</td>
-						<td>${g.graduateJobCategory}</td>
-						<td>${empty g.staff ? '未割当' : g.staff.staffName}</td>
+								<td>${g.graduateName}</td>
+								<td>${g.course.courseName}</td>
+								<td>${g.graduateJobCategory}</td>
+								<td>${empty g.staff ? '未割当' : g.staff.staffName}</td>
 
-						<td>
-							<button type="button"
-								onclick="location.href='event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}'">
-								開催相談</button>
-						</td>
-						</tr>
+								<td>
+									<button type="button"
+										onclick="location.href='event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}'">
+										開催相談
+									</button>
+								</td>
+							</tr>
 						</c:forEach>
 					</table>
 
 					<div class="bottom-btn-split">
 						<button type="button" onclick="location.href='${backUrl}'">
-							${backLabel}</button>
+							${backLabel}
+						</button>
 						<input type="submit" class="event-btn" value="確認">
 					</div>
 
