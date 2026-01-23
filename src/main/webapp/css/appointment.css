@@ -6,11 +6,24 @@
     font-size: 25px;
 }
 
-.login-button {
-    display: flex;
-    justify-content: center;
-    text-decoration: none;
+
+.login-desplay{
+	display: flex;
+	flex-direction: row;
+	gap: 50px;
+	align-items: center;
+	margin-bottom: 20px;
 }
+
+.login-center{
+	display: flex;
+	justify-content: center;
+}
+
+.login-row{
+	text-align:left;
+}
+
 
 /* ----アポイントメントメニュー画面 */
 /* タイトル */
