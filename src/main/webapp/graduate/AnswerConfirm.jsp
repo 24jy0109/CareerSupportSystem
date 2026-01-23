@@ -31,7 +31,8 @@
 
 		<c:set var="a" value="${answer}" />
 
-		<form action="answer" method="post">
+		<form action="answer" method="post"
+			onsubmit="return showLoadingAndDisableSubmit(this);">
 
 			<!-- command だけで戻る／確定を切替 -->
 			<input type="hidden" name="command" value="RegistAnswer"> <input
@@ -65,20 +66,20 @@
 
 					<tr>
 						<th>第一希望</th>
-						<td>${a.firstChoiceStartTime} ～ ${a.firstChoiceEndTime}</td>
+						<td>${a.firstChoiceStartTime}～ ${a.firstChoiceEndTime}</td>
 					</tr>
 
 					<c:if test="${a.secondChoiceStartTime != null}">
 						<tr>
 							<th>第二希望</th>
-							<td>${a.secondChoiceStartTime} ～ ${a.secondChoiceEndTime}</td>
+							<td>${a.secondChoiceStartTime}～ ${a.secondChoiceEndTime}</td>
 						</tr>
 					</c:if>
 
 					<c:if test="${a.thirdChoiceStartTime != null}">
 						<tr>
 							<th>第三希望</th>
-							<td>${a.thirdChoiceStartTime} ～ ${a.thirdChoiceEndTime}</td>
+							<td>${a.thirdChoiceStartTime}～ ${a.thirdChoiceEndTime}</td>
 						</tr>
 					</c:if>
 
@@ -106,6 +107,6 @@
 			<small>&copy; 2024 Example Inc.</small>
 		</p>
 	</footer>
-
+	<jsp:include page="/common/loading.jsp" />
 </body>
 </html>

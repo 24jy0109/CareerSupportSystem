@@ -11,10 +11,22 @@
 <title>日程回答確認画面（職員）</title>
 
 <script type="text/javascript">
-	function confirmReject(answerId) {
-		if (confirm("この回答を見送ります。\n卒業生へ開催見送りメールが送信され、回答は削除されますがよろしいですか？")) {
-			location.href = "answer?command=noAnswer&answerId=" + answerId;
+	function confirmReject(answerId, button) {
+		if (!confirm("この回答を見送ります。\n卒業生へ開催見送りメールが送信され、回答は削除されますがよろしいですか？")) {
+			return false;
 		}
+
+		// 二重押下防止
+		if (button) button.disabled = true;
+
+		// ローディング表示
+		showLoadingOnly();
+
+		// 少し待ってから遷移（描画保証）
+		setTimeout(() => {
+			location.href = "answer?command=noAnswer&answerId=" + answerId;
+		}, 50);
+
 		return false;
 	}
 
@@ -25,7 +37,7 @@
 		}
 		return false;
 	}
-
+	
 	function injectChoice(form, answerId) {
 		const radios = document.querySelectorAll(
 			'input[type="radio"][name="choice_' + answerId + '"]'
@@ -53,6 +65,7 @@
 		return true;
 	}
 </script>
+
 </head>
 
 <body>
@@ -142,7 +155,7 @@
 										<input type="hidden" name="answerId" value="${a.answerId}">
 										<input type="submit" value="企画" class="decision-button">
 										<button type="button" class="cancel-button"
-											onclick="return confirmReject(${a.answerId});">見送</button>
+											onclick="return confirmReject(${a.answerId}, this);">見送</button>
 									</c:when>
 									<c:otherwise>
 										<button type="button" class="cancel-button"
@@ -252,5 +265,6 @@ document.addEventListener("keydown", function(e) {
 </script>
 
 	<jsp:include page="/common/flashMessage.jsp" />
+	<jsp:include page="/common/loading.jsp" />
 </body>
 </html>

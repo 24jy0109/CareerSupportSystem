@@ -35,7 +35,9 @@
 
 		<c:set var="mail" value="${email}" />
 
-		<form id="emailForm" action="event" method="post">
+
+		<form id="emailForm" action="event" method="post"
+			onsubmit="return showLoadingAndDisableSubmit(this);">
 			<!-- デフォルト command -->
 			<input type="hidden" id="commandField" name="command"
 				value="SendScheduleArrangeEmail">
@@ -48,9 +50,6 @@
 				value="${mail.company.companyId}"> <input type="hidden"
 				name="mailTitle" value="${mail.email.subject}"> <input
 				type="hidden" name="mailBody" value="${mail.inputBody}">
-
-
-
 
 			<div class="schedulearrange-row">
 				<div class="field-name">担当者</div>
@@ -70,8 +69,10 @@
 
 			<div class="schedulearrange-row">
 				<div class="field-name">本文</div>
-<!--				ここは改行なく一行にしないとうまく表示されない！-->
-				<pre class="confirm-mail-body"><c:out value="${mail.email.body}" /></pre>
+				<!--				ここは改行なく一行にしないとうまく表示されない！-->
+				<pre class="confirm-mail-body">
+					<c:out value="${mail.email.body}" />
+				</pre>
 			</div>
 			</div>
 
@@ -83,9 +84,7 @@
 				<button type="submit">送信</button>
 			</div>
 		</form>
-
-
 	</main>
-
+	<jsp:include page="/common/loading.jsp" />
 </body>
 </html>

@@ -34,7 +34,9 @@
 		<c:set var="dto" value="${event}" />
 		<c:set var="event" value="${dto.event}" />
 
-		<form id="eventForm" action="event" method="post">
+		<form id="eventForm" action="event" method="post"
+			onsubmit="return showLoadingAndDisableSubmit(this);">
+
 
 			<!-- hidden 再送信用 -->
 			<c:if test="${not empty event.eventId and event.eventId != 0}">
@@ -132,6 +134,6 @@
 		</form>
 
 	</main>
-
+	<jsp:include page="/common/loading.jsp" />
 </body>
 </html>
