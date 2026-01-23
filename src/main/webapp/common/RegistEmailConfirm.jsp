@@ -28,7 +28,8 @@
 	</header>
 	<main>
 
-		<form action="graduate" method="post">
+		<form action="graduate" method="post"
+			onsubmit="return showLoadingAndDisableSubmit(this);">
 			<c:set var="isStudent" value="${sessionScope.role == 'student'}" />
 			<input type="hidden" name="updateMode" value="${updateMode}">
 
@@ -133,6 +134,6 @@
 			<small>&copy; 2024 Example Inc.</small>
 		</p>
 	</footer>
-
+	<jsp:include page="/common/loading.jsp" />
 </body>
 </html>
