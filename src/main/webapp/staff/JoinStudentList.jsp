@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>参加者一覧（職員）</title>
+<title>参加者一覧</title>
 
 </head>
 <body>

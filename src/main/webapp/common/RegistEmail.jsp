@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>連絡先情報入力画面（在校生/職員）<</title>
+<title>連絡先情報入力画面</title>
 
 
 </head>

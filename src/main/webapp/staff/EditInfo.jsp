@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/companylist.css">
-<title>情報編集画面（職員）</title>
+<title>情報編集画面</title>
 </head>
 <body>
 	<header>

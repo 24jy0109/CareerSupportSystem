@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/appointment.css">
 <link rel="stylesheet" href="./css/layout.css">
-<title>卒業生アポイントメント画面（職員）</title>
+<title>卒業生アポイントメント画面</title>
 </head>
 <body>
 	<header >

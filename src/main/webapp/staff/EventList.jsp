@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/pagination.css">
-<title>開催一覧/履歴（職員）</title>
+<title>開催一覧/履歴</title>
 </head>
 
 <body>

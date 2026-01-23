@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>開催情報登録 確認</title>
+<title>開催情報登録確認</title>
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/companylist.css">
