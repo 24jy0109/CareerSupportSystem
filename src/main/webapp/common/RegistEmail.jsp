@@ -41,8 +41,8 @@
 			<c:set var="isStudent" value="${sessionScope.role == 'student'}" />
 			<input type="hidden" name="fromConfirm" value="${fromConfirm}">
 			<input type="hidden" name="updateMode" value="${updateMode}">
-
-			<input type="hidden" name="command" value="RegistEmailNext">
+			<input type="hidden" name="check" value="${check}"> <input
+				type="hidden" name="command" value="RegistEmailNext">
 			<div class="split-screen">
 				<div class="left-screen">
 					<span class="leftscreen-title">企業選択</span>
@@ -150,7 +150,8 @@
 
 										<c:when test="${isStudent}">
 											<span class="department-fixed">${courseName}</span>
-											<input type="hidden" name="courseCode" value="${courseCode}" required>
+											<input type="hidden" name="courseCode" value="${courseCode}"
+												required>
 										</c:when>
 
 										<c:otherwise>
@@ -206,7 +207,8 @@
 									<div>その他</div>
 								</td>
 								<td><input type="text" name="otherInfo"
-									value="${otherInfo}" class="other-info-input" placeholder="50文字以内で入力してください"></td>
+									value="${otherInfo}" class="other-info-input" maxlength="50"
+									placeholder="50文字以内で入力してください"></td>
 							</tr>
 						</table>
 					</div>

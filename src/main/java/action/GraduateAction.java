@@ -103,13 +103,13 @@ public class GraduateAction {
 			body += "連絡先登録ありがとうございます。\n";
 			body += "下記の内容で連絡先情報が登録されましたのでご確認ください。\n\n";
 
-			body += "――――――――――――――\n";
+			body += "｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ\n";
 			body += "企業名　　：" + companyName + "\n";
 			body += "職種　　　：" + jobType + "\n";
 			body += "氏名　　　：" + name + "\n";
 			body += "学籍番号　：" + graduateStudentNumber + "\n";
-			body += "その他　　：" + otherInfo + "\n";
-			body += "――――――――――――――\n\n";
+			body += "その他　　：" + (otherInfo == null || otherInfo.isEmpty() ? "なし" : otherInfo) + "\n";
+			body += "｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ\n\n";
 
 			body += "内容を変更する場合は、再度システムより登録情報の変更をお願いいたします。\n\n";
 
@@ -174,14 +174,14 @@ public class GraduateAction {
 			body += "連絡先情報の更新が完了しました。\n";
 			body += "下記の内容が現在の登録情報となりますのでご確認ください。\n\n";
 
-			body += "――――――――――――――\n";
+			body += "｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ\n";
 			body += "企業名　　：" + companyName + "\n";
 			body += "職種　　　：" + jobType + "\n";
 			body += "学科　　　：" + courseName + "\n";
 			body += "氏名　　　：" + name + "\n";
 			body += "学籍番号　：" + graduateStudentNumber + "\n";
 			body += "その他　　：" + (otherInfo == null || otherInfo.isEmpty() ? "なし" : otherInfo) + "\n";
-			body += "――――――――――――――\n\n";
+			body += "｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ+｡｡.｡･.｡*ﾟ\n\n";
 
 			body += "内容を修正する場合は、再度システムより情報の更新をお願いいたします。\n\n";
 

@@ -109,22 +109,18 @@ public class GraduateController extends BaseController {
 				graduateStudentNumber = request.getParameter("graduateStudentNumber");
 				String fromConfirm = request.getParameter("fromConfirm");
 				String updateMode = request.getParameter("updateMode");
+				String wcheck = null;
+				System.out.println("げっと確認（check）:" + request.getParameter("check"));
+				if (request.getParameter("check") != "" || request.getParameter("check") != null) {
+					wcheck = "false";
+					System.out.println("wcheck➡➡" + wcheck);
+				}
 				//				if (fromConfirm == null || fromConfirm.isEmpty()) {
 				//					fromConfirm = "false";
 				//				}
 				request.setAttribute("updateMode", updateMode);
 				System.out.println("fromConfirm➡" + fromConfirm);
 				System.out.println("updateMode➡" + updateMode);
-
-				// JSPに渡す変数
-				//				companyId = "";
-				//				courseCode = "";
-				//				graduateName = "";
-				//				graduateEmail = "";
-				//				jobType = "";
-				//				otherInfo = "";
-				//				companyName = "";
-				//				courseName = "";
 
 				if (!"true".equals(updateMode)) {
 					companyId = request.getParameter("companyId");
@@ -171,7 +167,7 @@ public class GraduateController extends BaseController {
 					graduateStudentNumber = request.getParameter("graduateStudentNumber");
 					jobType = request.getParameter("jobType");
 					otherInfo = request.getParameter("otherInfo");
-					
+
 					// 会社名・学科名を再取得
 					try {
 						List<Graduate> gList = graduateAction.execute(new String[] { "findCompanyName", companyId });
@@ -228,8 +224,8 @@ public class GraduateController extends BaseController {
 					companyName = gList.get(0).getCompany().getCompanyName();
 				} catch (Exception e) {
 					e.printStackTrace();
-//					handleException(e, request, response, "staff/AppointMenu.jsp");
-//					return;
+					//					handleException(e, request, response, "staff/AppointMenu.jsp");
+					//					return;
 				}
 
 				try {
@@ -357,7 +353,7 @@ public class GraduateController extends BaseController {
 
 				//学籍番号が既にあるかチェック！
 				updateMode = request.getParameter("updateMode");
-				if (updateMode == null) {
+				if (updateMode == null || updateMode == "") {
 					updateMode = "false";
 				}
 				System.out.println("updateMode➡" + updateMode);
@@ -375,7 +371,43 @@ public class GraduateController extends BaseController {
 					if (exists != null && !exists.isEmpty()) {
 						request.setAttribute("error",
 								"この学籍番号はすでに登録されています");
+						String check = "true";
+						System.out.println("check➡" + check);
+						request.setAttribute("check", check);
+
+						try {
+							companies = companyAction.execute(new String[] { "CompanyList", "", "" });
+						} catch (Exception e) {
+							handleException(e, request, response, "staff/AppointMenu.jsp");
+							return;
+						}
+						try {
+							courses = new CourseDBAccess().getAllCourses();
+						} catch (Exception e) {
+							handleException(e, request, response, "staff/AppointMenu.jsp");
+							return;
+						}
+
+						// JSPへ渡す値
+
+						request.setAttribute("companies", companies);
+						request.setAttribute("courses", courses);
+
+						request.setAttribute("companyId", companyId); // 登録処理用
+						request.setAttribute("companyName", companyName); // 表示用
+
+						request.setAttribute("jobType", jobType);
+						request.setAttribute("graduateName", graduateName);
+
+						request.setAttribute("courseCode", courseCode); // 登録処理用
+						request.setAttribute("courseName", courseName); // 表示用
+
+						request.setAttribute("graduateStudentNumber", graduateStudentNumber);
+						request.setAttribute("graduateEmail", graduateEmail);
+						request.setAttribute("otherInfo", otherInfo);
+
 						nextPage = "/common/RegistEmail.jsp";
+						break;
 					} else {
 						nextPage = "/common/RegistEmailConfirm.jsp";
 					}
@@ -403,6 +435,9 @@ public class GraduateController extends BaseController {
 				request.setAttribute("otherInfo", otherInfo);
 
 				fromConfirm = request.getParameter("fromConfirm");
+
+				System.out.println("companyId➡" + companyId);
+				System.out.println("courseCode➡" + courseCode);
 				System.out.println("fromConfirm➡" + fromConfirm);
 				System.out.println("updateMode➡" + updateMode);
 				System.out.println(graduateName);
@@ -608,19 +643,19 @@ public class GraduateController extends BaseController {
 						graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
 						courseName = graduate.get(0).getCourse().getCourseName();
 					} catch (Exception e) {
-//						handleException(e, request, response, "student/AppointMenu.jsp");
+						//						handleException(e, request, response, "student/AppointMenu.jsp");
 						courseName = ""; // 念のため初期化
 						e.printStackTrace();
-//						return;
+						//						return;
 					}
 
 				} else {
 					// 未登録
 					nextPage = "common/RegistEmail.jsp";
-					
-//					courseCode = 
-					System.out.println("確認№"+studentNumber);
-					courseCode = studentNumber.substring(2,4);
+
+					//					courseCode = 
+					System.out.println("確認№" + studentNumber);
+					courseCode = studentNumber.substring(2, 4);
 					// 学科名
 					try {
 						graduate = graduateAction.execute(
@@ -630,10 +665,9 @@ public class GraduateController extends BaseController {
 						return;
 					}
 					courseName = graduate.get(0).getCourse().getCourseName();
-					System.out.println("couseCode:"+courseCode);
-					System.out.println("courseName:"+courseName);
-					
-					
+					System.out.println("couseCode:" + courseCode);
+					System.out.println("courseName:" + courseName);
+
 					// Back の場合、入力値が送られてくる
 					backCompanyId = request.getParameter("companyId");
 					backCourseCode = request.getParameter("courseCode");
@@ -649,10 +683,10 @@ public class GraduateController extends BaseController {
 							graduate = graduateAction.execute(new String[] { "findCompanyName", companyId });
 							companyName = graduate.get(0).getCompany().getCompanyName();
 						} catch (Exception e) {
-//							handleException(e, request, response, "student/AppointMenu.jsp");
+							//							handleException(e, request, response, "student/AppointMenu.jsp");
 							courseName = ""; // 念のため初期化
 							e.printStackTrace();
-//							return;
+							//							return;
 						}
 					} else {
 						// 初回表示
@@ -660,23 +694,23 @@ public class GraduateController extends BaseController {
 						companyName = "";
 					}
 
-//					// 学科コードと学科を設定
-//					if (backCourseCode != null && !backCourseCode.isEmpty()) {
-//						courseCode = backCourseCode; // 登録用ID
-//						try {
-//							graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
-//							courseName = graduate.get(0).getCourse().getCourseName();
-//						} catch (Exception e) {
-////							handleException(e, request, response, "student/AppointMenu.jsp");
-//							courseName = ""; // 念のため初期化
-//							e.printStackTrace();
-////							return;
-//						}
-//					} else {
-//						// 初回表示
-//						courseCode = "";
-//						courseName = "";
-//					}
+					//					// 学科コードと学科を設定
+					//					if (backCourseCode != null && !backCourseCode.isEmpty()) {
+					//						courseCode = backCourseCode; // 登録用ID
+					//						try {
+					//							graduate = graduateAction.execute(new String[] { "findCourseName", courseCode });
+					//							courseName = graduate.get(0).getCourse().getCourseName();
+					//						} catch (Exception e) {
+					////							handleException(e, request, response, "student/AppointMenu.jsp");
+					//							courseName = ""; // 念のため初期化
+					//							e.printStackTrace();
+					////							return;
+					//						}
+					//					} else {
+					//						// 初回表示
+					//						courseCode = "";
+					//						courseName = "";
+					//					}
 				}
 
 				// 企業一覧読み込み
@@ -733,7 +767,7 @@ public class GraduateController extends BaseController {
 				courseCode = request.getParameter("courseCode");
 
 				graduateStudentNumber = request.getParameter("graduateStudentNumber");
-				System.out.println("graduateStudentNumber:"+graduateStudentNumber);
+				System.out.println("graduateStudentNumber:" + graduateStudentNumber);
 				graduateEmail = request.getParameter("graduateEmail");
 				otherInfo = request.getParameter("otherInfo");
 
@@ -787,7 +821,7 @@ public class GraduateController extends BaseController {
 				request.setAttribute("companyName", companyName); // 表示用
 
 				request.setAttribute("jobType", jobType);
-//				request.setAttribute("graduateName", graduateName);
+				//				request.setAttribute("graduateName", graduateName);
 
 				request.setAttribute("courseCode", courseCode); // 登録処理用
 				request.setAttribute("courseName", courseName); // 表示用
