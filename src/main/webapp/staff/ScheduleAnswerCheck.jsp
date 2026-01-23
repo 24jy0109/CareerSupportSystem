@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/pagination.css">
-<title>日程回答確認画面（職員）</title>
+<title>日程回答確認画面</title>
 
 <script type="text/javascript">
 	function confirmReject(answerId, button) {

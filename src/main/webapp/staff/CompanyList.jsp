@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="./css/companylist.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/pagination.css">
-<title>企業一覧申請状況付き（職員）</title>
+<title>企業一覧申請状況付き</title>
 
 </head>
 

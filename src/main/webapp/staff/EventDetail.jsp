@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="./css/header.css">
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/companylist.css">
-<title>開催詳細(職員)</title>
+<title>開催詳細</title>
 
 </head>
 <body>
