@@ -66,20 +66,34 @@
 
 					<tr>
 						<th>第一希望</th>
-						<td>${a.firstChoiceStartTime}～ ${a.firstChoiceEndTime}</td>
+						<td>
+							${a.firstChoiceStartTime.year}/${a.firstChoiceStartTime.monthValue}/${a.firstChoiceStartTime.dayOfMonth}
+							${a.firstChoiceStartTime.hour < 10 ? '0' : ''}${a.firstChoiceStartTime.hour}:
+							${a.firstChoiceStartTime.minute < 10 ? '0' : ''}${a.firstChoiceStartTime.minute}～
+							${a.firstChoiceEndTime.hour < 10 ? '0' : ''}${a.firstChoiceEndTime.hour}:
+							${a.firstChoiceEndTime.minute < 10 ? '0' : ''}${a.firstChoiceEndTime.minute}</td>
 					</tr>
 
 					<c:if test="${a.secondChoiceStartTime != null}">
 						<tr>
 							<th>第二希望</th>
-							<td>${a.secondChoiceStartTime}～ ${a.secondChoiceEndTime}</td>
+							<td>
+								${a.secondChoiceStartTime.year}/${a.secondChoiceStartTime.monthValue}/${a.secondChoiceStartTime.dayOfMonth}
+								${a.secondChoiceStartTime.hour < 10 ? '0' : ''}${a.secondChoiceStartTime.hour}:
+								${a.secondChoiceStartTime.minute < 10 ? '0' : ''}${a.secondChoiceStartTime.minute}～
+								${a.secondChoiceEndTime.hour < 10 ? '0' : ''}${a.secondChoiceEndTime.hour}:
+								${a.secondChoiceEndTime.minute < 10 ? '0' : ''}${a.secondChoiceEndTime.minute}</td>
 						</tr>
 					</c:if>
 
 					<c:if test="${a.thirdChoiceStartTime != null}">
 						<tr>
 							<th>第三希望</th>
-							<td>${a.thirdChoiceStartTime}～ ${a.thirdChoiceEndTime}</td>
+							<td>${a.thirdChoiceStartTime.year}/${a.thirdChoiceStartTime.monthValue}/${a.thirdChoiceStartTime.dayOfMonth}
+								${a.thirdChoiceStartTime.hour < 10 ? '0' : ''}${a.thirdChoiceStartTime.hour}:
+								${a.thirdChoiceStartTime.minute < 10 ? '0' : ''}${a.thirdChoiceStartTime.minute}～
+								${a.thirdChoiceEndTime.hour < 10 ? '0' : ''}${a.thirdChoiceEndTime.hour}:
+								${a.thirdChoiceEndTime.minute < 10 ? '0' : ''}${a.thirdChoiceEndTime.minute}</td>
 						</tr>
 					</c:if>
 

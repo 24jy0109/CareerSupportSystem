@@ -55,7 +55,7 @@
 
 		<p style="color: red;" class="center-msg">${error}</p>
 		<div class="answer-display">
-
+			<h2>${answers[0].graduate.graduateName}</h2>
 			<form action="answer" method="post">
 
 				<input type="hidden" name="answerId" value="<%=answerId%>">
