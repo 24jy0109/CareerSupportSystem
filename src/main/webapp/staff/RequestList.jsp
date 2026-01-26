@@ -28,6 +28,7 @@
 	</header>
 	<main>
 		<div class="wrapper">
+			<div class="page-title">申請者一覧</div>
 			<main class="content">
 				<div class="request-top">
 					<c:choose>
@@ -53,24 +54,31 @@
 							<div class="event-frex">
 								<div class="field-name">開催情報</div>
 								<table class="detail-table">
+									<c:choose>
+										<c:when test="${empty company.events}">
+											<tr class="noline">
+												<div class="errormsg">対象イベントがありません。</div>
+											</tr>
+										</c:when>
+										<c:otherwise>
+											<tr class="noline">
+											<a href='event?command=EventList&companyName=${company.companyName}'>開催一覧へ</a>
+												<!--												<div onclick="location.href='event?command=EventList'">対象イベントあり</div>-->
+											</tr>
+										</c:otherwise>
+									</c:choose>
 
-									<c:if test="${empty company.events}">
-										<tr class="noline">
-											<div class="errormsg">対象イベントがありません。</div>
-										</tr>
-									</c:if>
+									<!--									<c:forEach var="ev" items="${company.events}">-->
+									<!--										<tr class="noline">-->
 
-									<c:forEach var="ev" items="${company.events}">
-										<tr class="noline">
-
-											<td>${ev.eventStartTime.year}/${ev.eventStartTime.monthValue}/${ev.eventStartTime.dayOfMonth}</td>
-											<td>${ev.eventStartTime.hour < 10 ? '0' : ''}${ev.eventStartTime.hour}:${ev.eventStartTime.minute < 10 ? '0' : ''}${ev.eventStartTime.minute}</td>
-											<td>～</td>
-											<td>${ev.eventEndTime.year}/${ev.eventEndTime.monthValue}/${ev.eventEndTime.dayOfMonth}</td>
-											<td>${ev.eventEndTime.hour < 10 ? '0' : ''}${ev.eventEndTime.hour}:${ev.eventEndTime.minute < 10 ? '0' : ''}${ev.eventEndTime.minute}</td>
-											<td>${ev.eventPlace}</td>
-										</tr>
-									</c:forEach>
+									<!--											<td>${ev.eventStartTime.year}/${ev.eventStartTime.monthValue}/${ev.eventStartTime.dayOfMonth}</td>-->
+									<!--											<td>${ev.eventStartTime.hour < 10 ? '0' : ''}${ev.eventStartTime.hour}:${ev.eventStartTime.minute < 10 ? '0' : ''}${ev.eventStartTime.minute}</td>-->
+									<!--											<td>～</td>-->
+									<!--											<td>${ev.eventEndTime.year}/${ev.eventEndTime.monthValue}/${ev.eventEndTime.dayOfMonth}</td>-->
+									<!--											<td>${ev.eventEndTime.hour < 10 ? '0' : ''}${ev.eventEndTime.hour}:${ev.eventEndTime.minute < 10 ? '0' : ''}${ev.eventEndTime.minute}</td>-->
+									<!--											<td>${ev.eventPlace}</td>-->
+									<!--										</tr>-->
+									<!--									</c:forEach>-->
 								</table>
 							</div>
 						</div>
