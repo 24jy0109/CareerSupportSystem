@@ -45,9 +45,6 @@
 				<div class="eventlist-title">開催一覧</div>
 			</div>
 
-			<c:if test="${empty requestScope.events}">
-				<div class="errormsg">イベントは存在しません。</div>
-			</c:if>
 
 			<!-- ================= 開催一覧（開催中） ================= -->
 			<table class="eventlist-table">
@@ -59,8 +56,10 @@
 					<th>参加人数</th>
 				</tr>
 
+				<c:set var="hasCurrent" value="false" />
 				<c:forEach var="dto" items="${requestScope.events}">
 					<c:if test="${dto.event.eventProgress == 'ONGOING'}">
+						<c:set var="hasCurrent" value="true" />
 						<tr class="eventlist-tr current-row">
 							<td>
 								${dto.event.eventStartTime.year}/${dto.event.eventStartTime.monthValue}/${dto.event.eventStartTime.dayOfMonth}
@@ -85,6 +84,11 @@
 				</c:forEach>
 			</table>
 
+			<c:if test="${!hasCurrent}">
+				<div class="errormsg">開催中のイベントはありません。</div>
+			</c:if>
+
+
 			<div id="pagination-current" class="pagination"></div>
 
 			<!-- ================= 開催履歴 ================= -->
@@ -101,9 +105,13 @@
 					<th>参加人数</th>
 				</tr>
 
+				<c:set var="hasHistory" value="false" />
+
+
 				<c:forEach var="dto" items="${requestScope.events}">
 					<c:if
 						test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
+						<c:set var="hasHistory" value="true" />
 						<tr class="eventlist-tr history-row">
 							<td>
 								${dto.event.eventStartTime.year}/${dto.event.eventStartTime.monthValue}/${dto.event.eventStartTime.dayOfMonth}
@@ -127,6 +135,10 @@
 					</c:if>
 				</c:forEach>
 			</table>
+
+			<c:if test="${!hasHistory}">
+				<div class="errormsg">開催履歴はありません。</div>
+			</c:if>
 
 			<div id="pagination-history" class="pagination"></div>
 		</main>
