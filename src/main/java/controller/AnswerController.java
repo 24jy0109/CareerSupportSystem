@@ -64,7 +64,8 @@ public class AnswerController extends BaseController {
 			try {
 				answers = answerAction.execute(data);
 			} catch (Exception e) {
-				e.printStackTrace();
+				handleException(e, request, response, "graduate/CompleteRegistAnswer.jsp");
+				return;
 			}
 
 			if (answers.getFirst().getEventAvailability() == null) {

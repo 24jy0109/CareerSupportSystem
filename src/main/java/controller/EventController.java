@@ -267,7 +267,7 @@ public class EventController extends BaseController {
 				nextPage = "staff/EventList.jsp";
 				try {
 					String companyName = request.getParameter("companyName");
-					companyName = (companyName == null) ? "" : companyName;
+					companyName = companyName == null ? "" : companyName.replaceAll("[\\s　]+", "");
 					events = eventAction.execute(new String[] { command, "", companyName });
 				} catch (Exception e) {
 					handleException(e, request, response, "staff/AppointMenu.jsp");

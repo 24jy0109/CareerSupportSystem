@@ -36,7 +36,11 @@ public class AnswerAction extends BaseAction {
 		switch (action) {
 		case "AnsweredCheck":
 			// data[1] answerId
-			answers.add(answerDBA.searchAnswerById(Integer.parseInt(data[1])));
+			answer = answerDBA.searchAnswerById(Integer.parseInt(data[1]));
+			if (answer == null) {
+				throw new Exception("該当する回答データが存在しません。");
+			}
+			answers.add(answer);
 			break;
 		case "AnswerConfirm":
 			// data[1] answerId

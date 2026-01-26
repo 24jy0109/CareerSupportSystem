@@ -122,32 +122,38 @@ public class CompanyDBAccess extends DBAccess {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
-		sql.append(" c.company_id, ");
-		sql.append(" c.company_name, ");
+		sql.append("  c.company_id, ");
+		sql.append("  c.company_name, ");
 
-		sql.append(" CASE ");
-		sql.append("   WHEN MAX(CASE WHEN e.event_progress = 2 THEN 1 ELSE 0 END) = 1 ");
-		sql.append("     THEN '開催' ");
-		sql.append("   WHEN MAX(CASE WHEN g.staff_id IS NOT NULL THEN 1 ELSE 0 END) = 1 ");
-		sql.append("     THEN '企画中' ");
-		sql.append("   ELSE '' ");
-		sql.append(" END AS eventProgress, ");
+		sql.append("  CASE ");
+		sql.append("    WHEN MAX(CASE WHEN e.event_progress = 2 THEN 1 ELSE 0 END) = 1 ");
+		sql.append("      THEN '開催' ");
+		sql.append("    WHEN MAX(CASE WHEN g.staff_id IS NOT NULL THEN 1 ELSE 0 END) = 1 ");
+		sql.append("      THEN '企画中' ");
+		sql.append("    ELSE '' ");
+		sql.append("  END AS eventProgress, ");
 
-		sql.append(" COUNT(DISTINCT r.student_number) AS requestCount, ");
+		sql.append("  COUNT(DISTINCT r.student_number) AS requestCount, ");
 
-		sql.append(" CASE ");
-		sql.append("   WHEN MAX(CASE WHEN e.event_progress = 2 THEN 1 ELSE 0 END) = 1 THEN 0 ");
-		sql.append("   WHEN MAX(CASE WHEN g.staff_id IS NOT NULL THEN 1 ELSE 0 END) = 1 THEN 1 ");
-		sql.append("   ELSE 2 ");
-		sql.append(" END AS sortOrder ");
+		sql.append("  CASE ");
+		sql.append("    WHEN MAX(CASE WHEN e.event_progress = 2 THEN 1 ELSE 0 END) = 1 THEN 0 ");
+		sql.append("    WHEN MAX(CASE WHEN g.staff_id IS NOT NULL THEN 1 ELSE 0 END) = 1 THEN 1 ");
+		sql.append("    ELSE 2 ");
+		sql.append("  END AS sortOrder ");
 
 		sql.append("FROM company c ");
 		sql.append("LEFT JOIN event e ON c.company_id = e.company_id ");
 		sql.append("LEFT JOIN graduate g ON c.company_id = g.company_id ");
 		sql.append("LEFT JOIN request r ON c.company_id = r.company_id ");
+
 		sql.append("WHERE c.company_name LIKE ? ");
+
 		sql.append("GROUP BY c.company_id, c.company_name ");
-		sql.append("ORDER BY sortOrder ASC, c.company_name ASC ");
+
+		sql.append("ORDER BY ");
+		sql.append("  sortOrder ASC, "); // 開催 → 企画中 → なし
+		sql.append("  requestCount DESC, "); // 申請者数が多い順
+		sql.append("  c.company_name ASC "); // 企業名順
 
 		try (
 				Connection con = createConnection();
@@ -157,6 +163,7 @@ public class CompanyDBAccess extends DBAccess {
 
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
+
 					Company company = new Company();
 					company.setCompanyId(rs.getInt("company_id"));
 					company.setCompanyName(rs.getString("company_name"));
