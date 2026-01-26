@@ -342,29 +342,35 @@
 }
 
 /* 列幅の指定 */
-/* 名前 */
+/* 項番 */
 .request-h:nth-child(1),
 .request-table td:nth-child(1) {
+	width: 5%;
+}
+/* 名前 */
+.request-h:nth-child(2),
+.request-table td:nth-child(2) {
 	width: 20%;
 }
 
 /* 学科 */
-.request-h:nth-child(2),
-.request-table td:nth-child(2) {
-	width: 30%;
+.request-h:nth-child(3),
+.request-table td:nth-child(3) {
+	width: 25%;
 }
 
 /* 学籍番号 */
-.request-h:nth-child(3),
-.request-table td:nth-child(3) {
-	width: 20%;
-}
-
-/* 時間 */
 .request-h:nth-child(4),
 .request-table td:nth-child(4) {
 	width: 30%;
 }
+
+/* 時間 */
+.request-h:nth-child(5),
+.request-table td:nth-child(5) {
+	width: 20%;
+}
+
 
 /* ----開催一覧/履歴（職員）----- */
 .eventlist {
@@ -376,6 +382,7 @@
 	font-size: 20px;
 	border-left: 2px solid #009A37;
 	padding-left: 10px;
+	margin-top: 20px;
 }
 
 .event-cancel {
@@ -795,4 +802,10 @@
 
 .answer-btn-width{
 	width: 100%;
+}
+
+/*ーーーー申請者一覧ーーーー*/
+.sort-area{
+	display: flex;
+	justify-content: flex-end;
 }

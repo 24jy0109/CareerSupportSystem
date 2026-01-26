@@ -52,22 +52,20 @@
 					<div class="event">
 						<div class="event-info">
 							<div class="event-frex">
-								<div class="field-name">開催情報</div>
+								<div class="field-name">開催有無</div>
 								<table class="detail-table">
 									<c:choose>
 										<c:when test="${empty company.events}">
 											<tr class="noline">
-												<div class="errormsg">対象イベントがありません。</div>
+												<div class="errormsg">なし</div>
 											</tr>
 										</c:when>
 										<c:otherwise>
 											<tr class="noline">
-											<a href='event?command=EventList&companyName=${company.companyName}'>開催一覧へ</a>
-												<!--												<div onclick="location.href='event?command=EventList'">対象イベントあり</div>-->
+												<div>あり</div>
 											</tr>
 										</c:otherwise>
 									</c:choose>
-
 									<!--									<c:forEach var="ev" items="${company.events}">-->
 									<!--										<tr class="noline">-->
 
@@ -90,32 +88,53 @@
 					</c:if>
 					<c:if test="${not empty requests}">
 
+						<div class="sort-area">
+							<label class="field-name">並び替え：</label> <select id="sortSelect"
+								onchange="sortRequests()">
+								<option value="course_date_asc">学科ごと（日時古い順）</option>
+								<option value="course_date_desc">学科ごと（日時新しい順）</option>
+								<option value="date_asc">日時（古い順）</option>
+								<option value="date_desc">日時（新しい順）</option>
+							</select>
+						</div>
+
 						<table class="request-table">
-							<tr class="request-info">
-								<th class="request-h">氏名</th>
-								<th class="request-h">学科</th>
-								<th class="request-h">学籍番号</th>
-								<th class="request-h">リクエスト日時</th>
-							</tr>
-
-							<c:forEach var="req" items="${requests}">
+							<thead>
 								<tr class="request-info">
-									<td>${req.student.studentName}</td>
-									<td>${req.student.course.courseName}</td>
-									<td>${req.student.studentNumber}</td>
-									<td>${req.requestTime.year}/${req.requestTime.monthValue}/${req.requestTime.dayOfMonth}
-										${req.requestTime.hour < 10 ? '0' : ''}${req.requestTime.hour}:${req.requestTime.minute < 10 ? '0' : ''}${req.requestTime.minute}
-									</td>
+									<th class="request-h"></th>
+									<th class="request-h">氏名</th>
+									<th class="request-h">学科</th>
+									<th class="request-h">学籍番号</th>
+									<th class="request-h">リクエスト日時</th>
 								</tr>
-							</c:forEach>
-
+							</thead>
+							<tbody>
+								<c:forEach var="req" items="${requests}">
+									<tr class="request-info">
+										<td class="row-no"></td>
+										<td>${req.student.studentName}</td>
+										<td>${req.student.course.courseName}</td>
+										<td>${req.student.studentNumber}</td>
+										<td>${req.requestTime.year}/${req.requestTime.monthValue}/${req.requestTime.dayOfMonth}
+											${req.requestTime.hour < 10 ? '0' : ''}${req.requestTime.hour}:${req.requestTime.minute < 10 ? '0' : ''}${req.requestTime.minute}
+										</td>
+									</tr>
+								</c:forEach>
+							</tbody>
 						</table>
 					</c:if>
 
-					<div class="bottom-btn-left">
+					<div class="bottom-btn-split">
 						<!-- 戻るボタン　左側 -->
 						<button type="button"
 							onclick="location.href='company?command=CompanyList'">企業一覧に戻る</button>
+
+						<c:if test="${not empty company.events}">
+
+							<button type="button"
+								onclick="location.href='event?command=EventList&companyName=${company.companyName}'">
+								開催一覧へ</button>
+						</c:if>
 					</div>
 			</main>
 		</div>
@@ -126,4 +145,72 @@
 			</p>
 		</footer>
 </body>
+
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+	  	renumberRows();
+	});
+	
+	function sortRequests() {
+		const table = document.querySelector(".request-table");
+		if (!table) return;
+		
+		const tbody = table.querySelector("tbody");
+		const rows = Array.from(tbody.querySelectorAll("tr"));
+	
+		const mode = document.getElementById("sortSelect").value;
+	
+		rows.sort((a, b) => {
+			const courseA = a.children[2].innerText.trim();
+			const courseB = b.children[2].innerText.trim();
+	
+			const dateA = parseDate(a.children[4].innerText);
+			const dateB = parseDate(b.children[4].innerText);
+	
+			switch (mode) {
+			case "course_date_asc":
+				if (courseA !== courseB) {
+					return courseA.localeCompare(courseB);
+				}
+				return dateA - dateB;
+	
+			case "course_date_desc":
+				if (courseA !== courseB) {
+					return courseA.localeCompare(courseB);
+				}
+				return dateB - dateA;
+	
+			case "date_asc":
+				return dateA - dateB;
+	
+			case "date_desc":
+				return dateB - dateA;
+			}
+		});
+	
+		rows.forEach(row => tbody.appendChild(row));
+		//並び替え後に番号振り直し
+		renumberRows();
+	}
+	
+	function parseDate(text) {
+		// "2026/1/23 09:05" → Date
+		const normalized = text
+			.replace(/\//g, "-")
+			.replace(" ", "T");
+		return new Date(normalized);
+	}
+
+	function renumberRows() {
+		  const rows = document.querySelectorAll(".request-table tbody tr");
+
+		  rows.forEach((row, index) => {
+		    const noCell = row.querySelector(".row-no");
+		    if (noCell) {
+		      noCell.textContent = index + 1;
+		    }
+		  });
+		}
+
+</script>
 </html>
