@@ -57,4 +57,9 @@ function showLoadingAndDisableSubmit(form) {
 
 	return true; // 送信は必ず通す
 }
+
+function showLoadingOnly() {
+	const overlay = document.getElementById("loading-overlay");
+	if (overlay) overlay.style.display = "flex";
+}
 </script>
