@@ -86,10 +86,9 @@ public class EventDBAccess extends DBAccess {
 				e.printStackTrace();
 				throw new Exception(
 						"データベースの処理中にエラーが発生し、イベントの登録に失敗しました。<br>"
-						+ "お手数ですが、管理者までお問い合わせください。",
+								+ "お手数ですが、管理者までお問い合わせください。",
 						e);
 			}
-			
 
 		}
 	}
@@ -162,65 +161,87 @@ public class EventDBAccess extends DBAccess {
 				e.printStackTrace();
 				throw new Exception(
 						"データベースの処理中にエラーが発生し、イベントの更新に失敗しました。<br>"
-						+ "お手数ですが、管理者までお問い合わせください。",
+								+ "お手数ですが、管理者までお問い合わせください。",
 						e);
 			}
 		}
 	}
 
-	public List<EventDTO> getAllEvents(String studentNumber) throws Exception {
+	public List<EventDTO> getAllEvents(String studentNumber, String companyName) throws Exception {
+
 		List<EventDTO> list = new ArrayList<>();
+
+		// null は空文字扱い
+		if (companyName == null) {
+			companyName = "";
+		}
+
 		boolean hasStudentNumber = studentNumber != null && !studentNumber.isEmpty();
 
-		String sql = "SELECT "
-				+ " e.event_id, "
-				+ " e.event_progress, "
-				+ " e.event_capacity, "
-				+ " e.event_start_time, "
-				+ " e.event_end_time, "
-				+ " c.company_id, "
-				+ " c.company_name, "
-				+ " COUNT(js.student_number) AS join_count ";
+		StringBuilder sql = new StringBuilder();
+
+		sql.append("SELECT ");
+		sql.append(" e.event_id, ");
+		sql.append(" e.event_progress, ");
+		sql.append(" e.event_capacity, ");
+		sql.append(" e.event_start_time, ");
+		sql.append(" e.event_end_time, ");
+		sql.append(" c.company_id, ");
+		sql.append(" c.company_name, ");
+		sql.append(" COUNT(js.student_number) AS join_count ");
 
 		if (hasStudentNumber) {
-			sql += ", js2.join_availability ";
+			sql.append(", js2.join_availability ");
 		}
 
-		sql += "FROM event e "
-				+ "JOIN company c ON e.company_id = c.company_id "
-				+ "LEFT JOIN join_student js ON e.event_id = js.event_id AND js.join_availability = 1 ";
+		sql.append("FROM event e ");
+		sql.append("JOIN company c ON e.company_id = c.company_id ");
+		sql.append("LEFT JOIN join_student js ");
+		sql.append(" ON e.event_id = js.event_id ");
+		sql.append(" AND js.join_availability = 1 ");
 
 		if (hasStudentNumber) {
-			sql += "LEFT JOIN join_student js2 ON e.event_id = js2.event_id AND js2.student_number = ? ";
+			sql.append("LEFT JOIN join_student js2 ");
+			sql.append(" ON e.event_id = js2.event_id ");
+			sql.append(" AND js2.student_number = ? ");
 		}
 
+		sql.append("WHERE ");
+
 		if (hasStudentNumber) {
-			sql += "WHERE e.event_progress IN (1, 2) ";
+			sql.append(" e.event_progress IN (1, 2) ");
 		} else {
-			sql += "WHERE e.event_progress <> 0 ";
+			sql.append(" e.event_progress <> 0 ");
 		}
 
-		sql += "GROUP BY "
-				+ " e.event_id, "
-				+ " e.event_progress, "
-				+ " e.event_capacity, "
-				+ " e.event_start_time, "
-				+ " e.event_end_time, "
-				+ " c.company_id, "
-				+ " c.company_name ";
+		// companyName は常に部分一致検索（空文字なら全件）
+		sql.append(" AND c.company_name LIKE ? ");
+
+		sql.append("GROUP BY ");
+		sql.append(" e.event_id, ");
+		sql.append(" e.event_progress, ");
+		sql.append(" e.event_capacity, ");
+		sql.append(" e.event_start_time, ");
+		sql.append(" e.event_end_time, ");
+		sql.append(" c.company_id, ");
+		sql.append(" c.company_name ");
 
 		if (hasStudentNumber) {
-			sql += ", js2.join_availability ";
+			sql.append(", js2.join_availability ");
 		}
 
-		sql += "ORDER BY e.event_start_time ASC";
+		sql.append("ORDER BY e.event_start_time ASC ");
 
 		try (Connection con = createConnection();
-				PreparedStatement ps = con.prepareStatement(sql)) {
+				PreparedStatement ps = con.prepareStatement(sql.toString())) {
+
+			int paramIndex = 1;
 
 			if (hasStudentNumber) {
-				ps.setString(1, studentNumber);
+				ps.setString(paramIndex++, studentNumber);
 			}
+
+			ps.setString(paramIndex, "%" + companyName + "%");
 
 			try (ResultSet rs = ps.executeQuery()) {
 
@@ -251,7 +272,10 @@ public class EventDBAccess extends DBAccess {
 					dto.setJoinStudentCount(rs.getInt("join_count"));
 
 					if (hasStudentNumber) {
-						dto.setJoinAvailability((Boolean) rs.getObject("join_availability"));
+						dto.setJoinAvailability(
+								rs.getObject("join_availability") != null
+										? rs.getBoolean("join_availability")
+										: null);
 					}
 
 					list.add(dto);
@@ -264,7 +288,7 @@ public class EventDBAccess extends DBAccess {
 			e.printStackTrace();
 			throw new Exception(
 					"データベースの処理中にエラーが発生し、イベント一覧の取得に失敗しました。<br>"
-					+ "お手数ですが、管理者までお問い合わせください。",
+							+ "お手数ですが、管理者までお問い合わせください。",
 					e);
 		}
 	}
@@ -376,7 +400,7 @@ public class EventDBAccess extends DBAccess {
 				e.printStackTrace();
 				throw new Exception(
 						"データベースの処理中にエラーが発生し、イベント情報の取得に失敗しました。<br>"
-						+ "お手数ですが、管理者までお問い合わせください。",
+								+ "お手数ですが、管理者までお問い合わせください。",
 						e);
 			}
 
@@ -396,7 +420,7 @@ public class EventDBAccess extends DBAccess {
 			e.printStackTrace();
 			throw new Exception(
 					"データベースの処理中にエラーが発生し、イベントの終了処理に失敗しました。<br>"
-					+ "お手数ですが、管理者までお問い合わせください。",
+							+ "お手数ですが、管理者までお問い合わせください。",
 					e);
 		}
 	}
@@ -510,7 +534,7 @@ public class EventDBAccess extends DBAccess {
 			e.printStackTrace();
 			throw new Exception(
 					"データベースの処理中にエラーが発生し、イベントの終了処理に失敗しました。<br>"
-					+ "お手数ですが、管理者までお問い合わせください。",
+							+ "お手数ですが、管理者までお問い合わせください。",
 					e);
 		}
 	}
@@ -585,7 +609,7 @@ public class EventDBAccess extends DBAccess {
 				e.printStackTrace();
 				throw new Exception(
 						"データベースの処理中にエラーが発生し、イベント参加登録に失敗しました。<br>"
-						+ "お手数ですが、管理者までお問い合わせください。",
+								+ "お手数ですが、管理者までお問い合わせください。",
 						e);
 			}
 		}
@@ -608,11 +632,11 @@ public class EventDBAccess extends DBAccess {
 			e.printStackTrace();
 			throw new Exception(
 					"データベースの処理中にエラーが発生し、イベント不参加登録に失敗しました。<br>"
-					+ "お手数ですが、管理者までお問い合わせください。",
+							+ "お手数ですが、管理者までお問い合わせください。",
 					e);
 		}
 	}
-	
+
 	public List<EventDTO> joinHistoryList(String studentNumber) throws Exception {
 
 		List<EventDTO> list = new ArrayList<>();
@@ -668,11 +692,11 @@ public class EventDBAccess extends DBAccess {
 			e.printStackTrace();
 			throw new Exception(
 					"データベースの処理中にエラーが発生し、イベント参加履歴の取得に失敗しました。<br>"
-					+ "お手数ですが、管理者までお問い合わせください。",
+							+ "お手数ですが、管理者までお問い合わせください。",
 					e);
 		}
 	}
-	
+
 	public Boolean isStudentJoinedEvent(int eventId, String studentNumber) throws Exception {
 
 		String sql = "SELECT join_availability " +
@@ -708,7 +732,7 @@ public class EventDBAccess extends DBAccess {
 			e.printStackTrace();
 			throw new Exception(
 					"データベースの処理中にエラーが発生し、イベント参加状況の取得に失敗しました。<br>"
-					+ "お手数ですが、管理者までお問い合わせください。",
+							+ "お手数ですが、管理者までお問い合わせください。",
 					e);
 		}
 	}

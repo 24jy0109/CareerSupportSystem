@@ -70,10 +70,10 @@ public class EventAction extends BaseAction {
 			// data[1] が存在する場合
 			if (data.length > 1 && data[1] != null && !data[1].isEmpty()) {
 				// data[1] を使った処理
-				list = eventDBA.getAllEvents(data[1]);
+				list = eventDBA.getAllEvents(data[1], data[2]);
 			} else {
 				// data[1] が無い場合
-				list = eventDBA.getAllEvents("");
+				list = eventDBA.getAllEvents("", data[2]);
 			}
 
 			break;

@@ -32,6 +32,14 @@
 
 	<div class="wrapper">
 		<main class="content">
+			<form action="event" method="GET">
+				<input type="hidden" name="command" value="EventList">
+				<div class="search">
+					<input type="text" name="companyName" placeholder="企業名で検索"
+						value="${param.companyName}" class="search-box">
+					<button type="submit" class="search-button">検索</button>
+				</div>
+			</form>
 
 			<div class="eventlist">
 				<div class="eventlist-title">開催一覧</div>
@@ -60,11 +68,9 @@
 								:${dto.event.eventStartTime.minute < 10 ? '0' : ''}${dto.event.eventStartTime.minute}
 							</td>
 							<td>${dto.event.company.companyName}</td>
-							<td>
-								<a href="event?command=EventDetail&eventId=${dto.event.eventId}">
-									開催詳細
-								</a>
-							</td>
+							<td><a
+								href="event?command=EventDetail&eventId=${dto.event.eventId}">
+									開催詳細 </a></td>
 							<c:choose>
 								<c:when test="${dto.event.eventProgress.label == '開催'}">
 									<td class="held">${dto.event.eventProgress.label}</td>
@@ -96,7 +102,8 @@
 				</tr>
 
 				<c:forEach var="dto" items="${requestScope.events}">
-					<c:if test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
+					<c:if
+						test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
 						<tr class="eventlist-tr history-row">
 							<td>
 								${dto.event.eventStartTime.year}/${dto.event.eventStartTime.monthValue}/${dto.event.eventStartTime.dayOfMonth}
@@ -104,11 +111,9 @@
 								:${dto.event.eventStartTime.minute < 10 ? '0' : ''}${dto.event.eventStartTime.minute}
 							</td>
 							<td>${dto.event.company.companyName}</td>
-							<td>
-								<a href="event?command=EventDetail&eventId=${dto.event.eventId}">
-									開催詳細
-								</a>
-							</td>
+							<td><a
+								href="event?command=EventDetail&eventId=${dto.event.eventId}">
+									開催詳細 </a></td>
 							<c:choose>
 								<c:when test="${dto.event.eventProgress == 'CANCELED'}">
 									<td>${dto.event.eventProgress.label}</td>

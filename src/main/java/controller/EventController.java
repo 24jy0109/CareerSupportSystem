@@ -266,7 +266,9 @@ public class EventController extends BaseController {
 			case "EventList":
 				nextPage = "staff/EventList.jsp";
 				try {
-					events = eventAction.execute(new String[] { command, "" });
+					String companyName = request.getParameter("companyName");
+					companyName = (companyName == null) ? "" : companyName;
+					events = eventAction.execute(new String[] { command, "", companyName });
 				} catch (Exception e) {
 					handleException(e, request, response, "staff/AppointMenu.jsp");
 					return;
@@ -335,8 +337,9 @@ public class EventController extends BaseController {
 			case "EventList":
 				nextPage = "student/EventList.jsp";
 				try {
-					events = eventAction.execute(new String[] { command, studentNumber });
+					events = eventAction.execute(new String[] { command, studentNumber, "" });
 				} catch (Exception e) {
+					e.printStackTrace();
 					handleException(e, request, response, "student/AppointMenu.jsp");
 					return;
 				}
