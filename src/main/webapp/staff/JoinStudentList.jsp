@@ -31,6 +31,7 @@
 
 	<div class="wrapper">
 		<main class="content">
+			<div class="page-title-nobottom">参加者一覧</div>
 			<div class="top-info">
 				<div class="company">
 					<div class="field-name">企業名</div>
@@ -63,13 +64,14 @@
 					</table>
 				</c:otherwise>
 			</c:choose>
-			
+
 			<div class="bottom-btn-left">
-				<button type="button" onclick="location.href='event?command=EventDetail&eventId=${joinStudents[0].event.eventId}'">戻る</button>
+				<button type="button"
+					onclick="location.href='event?command=EventDetail&eventId=${joinStudents[0].event.eventId}'">戻る</button>
 			</div>
 		</main>
 	</div>
-	
+
 	<footer>
 		<p>
 			<small>&copy; 2024 Example Inc.</small>

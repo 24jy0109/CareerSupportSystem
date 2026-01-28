@@ -70,9 +70,7 @@
 			<div class="schedulearrange-row">
 				<div class="field-name">本文</div>
 				<!--				ここは改行なく一行にしないとうまく表示されない！-->
-				<pre class="confirm-mail-body">
-					<c:out value="${mail.email.body}" />
-				</pre>
+				<pre class="confirm-mail-body"><c:out value="${mail.email.body}" /></pre>
 			</div>
 			</div>
 
