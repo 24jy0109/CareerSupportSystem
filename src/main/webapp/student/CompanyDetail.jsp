@@ -28,6 +28,7 @@
 		</div>
 	</header>
 	<main>
+		<div class="page-title">企業詳細</div>
 		<div class="request-top">
 			<c:if test="${not empty companies}">
 				<!-- List<CompanyDTO> の1件目だけを取得 -->

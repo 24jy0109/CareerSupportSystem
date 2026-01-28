@@ -32,6 +32,7 @@
 
 
 	<main>
+	<div class="page-title">連絡先情報入力</div>
 		<c:if test="${not empty error}">
 			<div style="color: red; font-weight: bold; margin-bottom: 10px;">
 				${error}</div>

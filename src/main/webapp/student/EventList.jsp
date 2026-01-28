@@ -29,6 +29,7 @@
 	</header>
 
 	<main>
+		<div class="page-title">開催一覧</div>
 		<div class="page-msg">開催詳細から参加登録をしてください。</div>
 
 		<c:choose>
