@@ -74,10 +74,10 @@
 								<td>
 									<button type="button" class="edit-btn"
 										onclick="location.href='graduate?command=RegistEmail&graduateStudentNumber=${graduate.graduateStudentNumber}&updateMode=true'">編集</button>
-
-									<button type="button" class="delete-btn"
-										onclick="location.href='graduate?command=deleteGraduate&graduateStudentNumber=${graduate.graduateStudentNumber}&companyId=${companyDTO.company.companyId}'
-											; return confirm('本当に削除しますか？');">削除</button>
+								</td>
+								<!--									<button type="button" class="delete-btn"-->
+								<!--										onclick="location.href='graduate?command=deleteGraduate&graduateStudentNumber=${graduate.graduateStudentNumber}&companyId=${companyDTO.company.companyId}'-->
+								<!--											; return confirm('本当に削除しますか？');">削除</button>-->
 							</tr>
 						</c:forEach>
 					</table>
