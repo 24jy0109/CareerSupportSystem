@@ -52,5 +52,10 @@
 			<button type="submit" class="login-button">TestStaffLogin</button>
 		</form>
 	</main>
+	<footer>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
+	</footer>
 </body>
 </html>

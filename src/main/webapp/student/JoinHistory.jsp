@@ -95,6 +95,11 @@
 		<div id="pagination-history" class="pagination"></div>
 	</main>
 
+	<footer>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
+	</footer>
 	<script>
 	let activePager = null;
 

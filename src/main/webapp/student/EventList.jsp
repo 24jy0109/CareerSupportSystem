@@ -81,7 +81,12 @@
 		<!-- ページネーション -->
 		<div id="pagination" class="pagination"></div>
 	</main>
-
+	
+	<footer>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
+	</footer>
 	<script>
 	const rowsPerPage = 10;
 	const rows = document.querySelectorAll(".event-row");
