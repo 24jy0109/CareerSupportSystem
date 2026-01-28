@@ -32,6 +32,9 @@
 	<main>
 
         <h2 class="page-title">卒業生アポイントメント</h2>
+        <c:if test="${not empty error}">
+			<p class="red-msg complete-screen">${error}</p>
+		</c:if>
         <div>
         <div class="apo-menu">
 

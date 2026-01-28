@@ -408,6 +408,23 @@ public class EventDBAccess extends DBAccess {
 	}
 
 	public void eventEnd(int eventId) throws Exception {
+
+		// ① 事前チェック
+		int progress = getEventProgress(eventId);
+
+		if (progress == 3) {
+			throw new Exception(
+					"このイベントはすでに終了しています。<br>"
+							+ "同じイベントを再度終了することはできません。");
+		}
+
+		if (progress == 4) {
+			throw new Exception(
+					"このイベントはすでに中止されています。<br>"
+							+ "中止されたイベントを終了することはできません。");
+		}
+
+		// ② 終了処理
 		String sql = "UPDATE event SET event_progress = 3 WHERE event_id = ?";
 
 		try (Connection con = createConnection();
@@ -434,7 +451,22 @@ public class EventDBAccess extends DBAccess {
 
 		try {
 
-			// ① イベントをキャンセル状態に更新
+			// ===== ① 事前チェック =====
+			int progress = getEventProgress(eventId);
+
+			if (progress == 4) {
+				throw new Exception(
+						"このイベントはすでにキャンセルされています。<br>"
+								+ "同じイベントを再度キャンセルすることはできません。");
+			}
+
+			if (progress == 3) {
+				throw new Exception(
+						"このイベントはすでに終了しています。<br>"
+								+ "終了したイベントをキャンセルすることはできません。");
+			}
+
+			// ===== ② イベントをキャンセル状態に更新 =====
 			String updateSql = "UPDATE event SET event_progress = 4 WHERE event_id = ?";
 
 			try (Connection con = createConnection();
@@ -444,7 +476,7 @@ public class EventDBAccess extends DBAccess {
 				ps.executeUpdate();
 			}
 
-			// ② イベント基本情報 + 企業 + 担当職員を取得
+			// ===== ③ イベント基本情報 + 企業 + 担当職員を取得 =====
 			String eventSql = "SELECT e.event_start_time, e.event_end_time, " +
 					"       c.company_name, " +
 					"       s.staff_name, s.staff_email " +
@@ -461,8 +493,10 @@ public class EventDBAccess extends DBAccess {
 				try (ResultSet rs = ps.executeQuery()) {
 					if (rs.next()) {
 						event = new Event();
-						event.setEventStartTime(rs.getTimestamp("event_start_time").toLocalDateTime());
-						event.setEventEndTime(rs.getTimestamp("event_end_time").toLocalDateTime());
+						event.setEventStartTime(
+								rs.getTimestamp("event_start_time").toLocalDateTime());
+						event.setEventEndTime(
+								rs.getTimestamp("event_end_time").toLocalDateTime());
 
 						Company company = new Company();
 						company.setCompanyName(rs.getString("company_name"));
@@ -475,9 +509,8 @@ public class EventDBAccess extends DBAccess {
 				}
 			}
 
-			// ③ 参加卒業生を取得
-			String graduateSql = "SELECT g.graduate_name, g.graduate_email, " +
-					"       g.graduate_job_category " +
+			// ===== ④ 参加卒業生を取得 =====
+			String graduateSql = "SELECT g.graduate_name, g.graduate_email, g.graduate_job_category " +
 					"FROM join_graduate jg " +
 					"JOIN graduate g ON jg.graduate_student_number = g.graduate_student_number " +
 					"WHERE jg.event_id = ?";
@@ -498,7 +531,7 @@ public class EventDBAccess extends DBAccess {
 				}
 			}
 
-			// ④ 参加在校生を取得
+			// ===== ⑤ 参加在校生を取得 =====
 			String joinStudentSql = "SELECT s.student_number, s.student_name, s.student_email " +
 					"FROM join_student js " +
 					"JOIN student s ON js.student_number = s.student_number " +
@@ -521,10 +554,10 @@ public class EventDBAccess extends DBAccess {
 				}
 			}
 
-			// ⑤ EventDTO にまとめて返却
+			// ===== ⑥ DTO にまとめて返却 =====
 			EventDTO dto = new EventDTO();
 			dto.setEvent(event);
-			dto.setStaffs(List.of(staff)); // 単一だが DTO 定義に合わせる
+			dto.setStaffs(List.of(staff));
 			dto.setGraduates(graduates);
 			dto.setStudents(students);
 
@@ -533,7 +566,7 @@ public class EventDBAccess extends DBAccess {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(
-					"データベースの処理中にエラーが発生し、イベントの終了処理に失敗しました。<br>"
+					"データベースの処理中にエラーが発生し、イベントのキャンセル処理に失敗しました。<br>"
 							+ "お手数ですが、管理者までお問い合わせください。",
 					e);
 		}
@@ -732,6 +765,30 @@ public class EventDBAccess extends DBAccess {
 			e.printStackTrace();
 			throw new Exception(
 					"データベースの処理中にエラーが発生し、イベント参加状況の取得に失敗しました。<br>"
+							+ "お手数ですが、管理者までお問い合わせください。",
+					e);
+		}
+	}
+
+	private int getEventProgress(int eventId) throws Exception {
+		String sql = "SELECT event_progress FROM event WHERE event_id = ?";
+
+		try (Connection con = createConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, eventId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				if (!rs.next()) {
+					throw new Exception("指定されたイベントが存在しません。");
+				}
+				return rs.getInt("event_progress");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(
+					"イベント状態の確認中にエラーが発生しました。<br>"
 							+ "お手数ですが、管理者までお問い合わせください。",
 					e);
 		}

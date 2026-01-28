@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <!DOCTYPE html>
 <html>
@@ -108,9 +109,17 @@
 				<c:set var="hasHistory" value="false" />
 
 
-				<c:forEach var="dto" items="${requestScope.events}">
+				<c:set var="hasHistory" value="false" />
+
+				<c:forEach var="i" begin="0"
+					end="${fn:length(requestScope.events) - 1}">
+					<c:set var="dto"
+						value="${requestScope.events[fn:length(requestScope.events) - 1 - i]}" />
+
 					<c:if
-						test="${dto.event.eventProgress == 'FINISHED' || dto.event.eventProgress == 'CANCELED'}">
+						test="${dto.event.eventProgress == 'FINISHED'
+               || dto.event.eventProgress == 'CANCELED'}">
+
 						<c:set var="hasHistory" value="true" />
 						<tr class="eventlist-tr history-row">
 							<td>
@@ -122,18 +131,12 @@
 							<td><a
 								href="event?command=EventDetail&eventId=${dto.event.eventId}">
 									開催詳細 </a></td>
-							<c:choose>
-								<c:when test="${dto.event.eventProgress == 'CANCELED'}">
-									<td>${dto.event.eventProgress.label}</td>
-								</c:when>
-								<c:otherwise>
-									<td>${dto.event.eventProgress.label}</td>
-								</c:otherwise>
-							</c:choose>
+							<td>${dto.event.eventProgress.label}</td>
 							<td>${dto.joinStudentCount}</td>
 						</tr>
 					</c:if>
 				</c:forEach>
+
 			</table>
 
 			<c:if test="${!hasHistory}">

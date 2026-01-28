@@ -10,8 +10,18 @@
 <link rel="stylesheet" href="./css/layout.css">
 <title>連絡先情報入力画面</title>
 
-
+<style>
+	.warning-stock {
+		color: #555; /* 強すぎないグレー */
+		font-size: 0.9em; /* 少し小さめ */
+		margin-top: 5px; /* 上とのスペース */
+		margin-left: 10px; /* 左少しスペース */
+		padding-left: 10px; /* 入力欄との微調整 */
+		font-style: italic; /* 柔らかい印象 */
+	}
+</style>
 </head>
+
 <body>
 	<header>
 		<div class="head-part">
@@ -51,7 +61,13 @@
 							<tr>
 								<td>企業検索</td>
 								<td><input type="text" id="companySearch"
-									placeholder="企業名で検索"></td>
+									placeholder="企業名で検索">
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="warning-stock">
+									検索結果は企業選択ボックスを開いてご確認ください。
+								</td>
 							</tr>
 							<tr>
 								<td>
