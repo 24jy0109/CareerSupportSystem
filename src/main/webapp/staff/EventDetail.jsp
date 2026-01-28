@@ -33,7 +33,7 @@
 	</header>
 
 	<main>
-
+		<div class="page-title-nobottom">開催詳細</div>
 		<div class="detail">
 			<c:choose>
 				<c:when test="${empty event}">

@@ -56,7 +56,7 @@
 		</script>
 	</header>
 	<main>
-
+		<div class="page-title">開催詳細</div>
 		<div class="detail">
 			<c:choose>
 				<c:when test="${empty event}">

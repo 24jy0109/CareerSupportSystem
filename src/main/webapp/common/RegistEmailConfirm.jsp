@@ -27,7 +27,7 @@
 		</div>
 	</header>
 	<main>
-
+		<div class="page-title">連絡先情報確認</div>
 		<form action="graduate" method="post"
 			onsubmit="return showLoadingAndDisableSubmit(this);">
 			<c:set var="isStudent" value="${sessionScope.role == 'student'}" />

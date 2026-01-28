@@ -82,6 +82,13 @@ td a {
 	margin-bottom: 50px;
 }
 
+.page-title-nobottom{
+	text-align: center;
+	color: #009A37;
+	font-size: 25px;
+	font-weight: normal;
+}
+
 /* 上の形式時に企業名、情報を横並びにする*/
 .company,
 .event {

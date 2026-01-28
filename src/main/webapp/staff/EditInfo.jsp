@@ -30,7 +30,8 @@
 
 	<main>
 		<div class="wrapper">
-			<main class="content">
+			<div class="page-title-nobottom">情報編集</div>
+			<div class="content">
 				<div class="request-top">
 					<div class="company">
 						<div class="field-name">企業名</div>
@@ -91,8 +92,7 @@
 					<button type="button"
 						onclick="location.href='company?command=CompanyList'">企業一覧に戻る</button>
 				</div>
-
-			</main>
+			</div>
 		</div>
 	</main>
 

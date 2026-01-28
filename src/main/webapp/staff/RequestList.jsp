@@ -29,7 +29,7 @@
 	<main>
 		<div class="wrapper">
 			<div class="page-title">申請者一覧</div>
-			<main class="content">
+			<div class="content">
 				<div class="request-top">
 					<c:choose>
 						<c:when test="${empty requests}">
@@ -136,14 +136,16 @@
 								開催一覧へ</button>
 						</c:if>
 					</div>
-			</main>
+				</div>
+			</div>
 		</div>
+	</main>
 
-		<footer>
-			<p>
-				<small>&copy; 2024 Example Inc.</small>
-			</p>
-		</footer>
+	<footer>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
+	</footer>
 </body>
 
 <script>
