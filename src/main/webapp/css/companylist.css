@@ -653,6 +653,15 @@
 	padding: 10px 20px;
 }
 
+.schedulearrange-button-mail{
+	font-size: 15px;
+		color: white;
+		background-color: #009A37;
+		border: none;
+		padding: 10px 20px;
+}
+
+
 /* 入力欄の大きさ */
 .schedulearrange-row textarea {
 	padding: 10px 10px;
