@@ -137,6 +137,8 @@ public class CompanyController extends BaseController {
 				System.out.println("companyId:" + companyId);
 				companyId = request.getParameter("companyId");
 				companyName = request.getParameter("companyName");
+				mode = request.getParameter("mode");
+				request.setAttribute("mode", mode);
 
 				CompanyDBAccess db = new CompanyDBAccess();
 

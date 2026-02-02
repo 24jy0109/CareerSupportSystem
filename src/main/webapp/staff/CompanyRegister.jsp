@@ -33,6 +33,7 @@
 			<input type="hidden" name="companyId" value="${companyId}"> <input
 				type="hidden" name="command" value="CompanyRegisterNext">
 
+			<input type="hidden" name="mode" value="${mode}">
 			<div class="center-screen">
 				<h2 class="center-title">
 				    <c:choose>

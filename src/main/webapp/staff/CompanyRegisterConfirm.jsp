@@ -38,6 +38,7 @@
 	<main>
 		<form action="company" method="POST">
 			<input type="hidden" name="companyId" value="${companyId}">
+			<input type="hidden" name="mode" value="${mode}">
 			<div class="center-screen">
 				<span class="center-title">企業登録</span>
 				<div class="company-register-flame">
