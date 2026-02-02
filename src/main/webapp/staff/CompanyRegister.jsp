@@ -34,7 +34,19 @@
 				type="hidden" name="command" value="CompanyRegisterNext">
 
 			<div class="center-screen">
-				<span class="center-title">企業登録</span>
+				<h2 class="center-title">
+				    <c:choose>
+				        <c:when test="${mode == 'edit'}">
+				            企業編集
+				        </c:when>
+				        <c:otherwise>
+				            企業登録
+				        </c:otherwise>
+				    </c:choose>
+				</h2>
+
+
+<!--				<span class="center-title">企業登録</span>-->
 				<c:if test="${not empty error}">
 					<p style="color: red" class="center-msg">${error}</p>
 				</c:if>

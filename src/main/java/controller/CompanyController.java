@@ -78,6 +78,10 @@ public class CompanyController extends BaseController {
 			case "CompanyRegister":
 				nextPage = "staff/CompanyRegister.jsp";
 				String companyId = request.getParameter("companyId");
+				String mode = request.getParameter("mode");
+
+				System.out.println("mode確認：" + mode);
+				request.setAttribute("mode", mode);
 
 				if (companyId != null) {
 					List<CompanyDTO> result = new ArrayList<>();
