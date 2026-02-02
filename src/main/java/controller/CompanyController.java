@@ -220,6 +220,7 @@ public class CompanyController extends BaseController {
 					if (exists) {
 						request.setAttribute("error", "この企業名はすでに登録されています。");
 						request.setAttribute("companyName", companyName);
+						request.setAttribute("companyId", companyId);
 						nextPage = "staff/CompanyRegister.jsp";
 						break;
 					}
