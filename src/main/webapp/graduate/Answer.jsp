@@ -55,14 +55,34 @@
 
 		<p style="color: red;" class="center-msg">${error}</p>
 		<div class="answer-display">
-			<h2>${answers[0].graduate.graduateName}</h2>
+
+			<h2>
+				<c:choose>
+					<c:when
+						test="${not empty answers and not empty answers[0].graduate}">
+						${answers[0].graduate.graduateName}
+					</c:when>
+					<c:when
+						test="${not empty inputAnswer and not empty inputAnswer.graduate}">
+						${inputAnswer.graduate.graduateName}
+					</c:when>
+					<c:otherwise>
+						ななし
+					</c:otherwise>
+				</c:choose>
+			</h2>
+
 			<form action="answer" method="post">
 
 				<input type="hidden" name="answerId" value="<%=answerId%>">
 				<input type="hidden" name="command" value="AnswerConfirm">
 
 				<!-- 参加可否 -->
-				<label>参加可否</label><br>
+
+				<div class="eventlist">
+					<label class="subtitle">参加可否</label>
+				</div>
+				
 				<div class="answer-row">
 
 					<input type="radio" id="attend" name="eventAvailability"
@@ -85,7 +105,9 @@
 
 				<div id="time-area">
 
-					<label>日程入力</label>
+					<div class="eventlist">
+						<label class="subtitle">日程入力</label>
+					</div>
 
 					<div class="answer-flame">
 						<!-- 第一希望 -->

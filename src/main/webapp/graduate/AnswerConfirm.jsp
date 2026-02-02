@@ -25,7 +25,7 @@
 		</div>
 	</header>
 
-	<main>
+	<main class="answer-width">
 
 		<div class="page-title">参加可否・希望日時確認</div>
 

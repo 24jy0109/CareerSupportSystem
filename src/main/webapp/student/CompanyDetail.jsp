@@ -28,7 +28,10 @@
 		</div>
 	</header>
 	<main>
-		<div class="page-title">企業詳細</div>
+		<div class="page-title-nobottom">企業詳細</div>
+		<div class="eventlist">
+			<div class="subtitle">企業情報</div>
+		</div>
 		<div class="request-top">
 			<c:if test="${not empty companies}">
 				<!-- List<CompanyDTO> の1件目だけを取得 -->
@@ -76,7 +79,9 @@
 					</div>
 				</div>
 
-
+				<div class="eventlist">
+					<div class="subtitle">卒業生情報</div>
+				</div>
 				<c:if test="${not empty companyDTO.company.graduates}">
 					<table>
 						<thead>
