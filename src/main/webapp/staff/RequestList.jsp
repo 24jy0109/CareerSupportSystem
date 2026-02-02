@@ -26,11 +26,11 @@
 			<div class="header-user">ようこそ${name}さん</div>
 		</div>
 	</header>
-	<main>
+	<main class="request-width">
 
 
 		<div class="wrapper">
-<!--			<div class="page-title-nobottom">申請者一覧</div>-->
+			<div class="page-title-nobottom">申請者一覧</div>
 			<div class="content">
 				<div class="request-top">
 					<div class="eventlist">
@@ -89,7 +89,7 @@
 
 					</div>
 					<div class="eventlist">
-						<div class="requestlist-title">申請者一覧</div>
+						<div class="requestlist-title2">申請者一覧</div>
 					</div>
 					<c:if test="${empty requests}">
 						<div class="errormsg">リクエストした学生はいません。</div>

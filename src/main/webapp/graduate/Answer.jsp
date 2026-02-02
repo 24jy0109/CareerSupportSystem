@@ -62,7 +62,11 @@
 				<input type="hidden" name="command" value="AnswerConfirm">
 
 				<!-- 参加可否 -->
-				<label>参加可否</label><br>
+
+				<div class="eventlist">
+					<label class="subtitle">参加可否</label>
+				</div>
+				
 				<div class="answer-row">
 
 					<input type="radio" id="attend" name="eventAvailability"
@@ -85,7 +89,9 @@
 
 				<div id="time-area">
 
-					<label>日程入力</label>
+					<div class="eventlist">
+						<label class="subtitle">日程入力</label>
+					</div>
 
 					<div class="answer-flame">
 						<!-- 第一希望 -->

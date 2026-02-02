@@ -89,6 +89,18 @@ td a {
 	font-weight: normal;
 }
 
+.page-title-smallbottum{
+	text-align: center;
+	color: #009A37;
+	font-size: 25px;
+	font-weight: normal;
+	margin-bottom: 20px;
+}
+
+.answer-width{
+	width: 50%;
+}
+
 /* 上の形式時に企業名、情報を横並びにする*/
 .company,
 .event {
