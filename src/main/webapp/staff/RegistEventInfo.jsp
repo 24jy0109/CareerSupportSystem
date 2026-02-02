@@ -31,7 +31,7 @@
 	</header>
 
 	<main>
-		<div class="page-title-nobottom">開催情報登録</div>
+		<div class="page-title-smallbottum">開催情報登録</div>
 
 		<c:forEach var="dto" items="${events}">
 
@@ -45,6 +45,9 @@
 					<p class="red-msg">${error}</p>
 				</c:if>
 
+				<div class="eventlist">
+					<div class="subtitle">開催情報</div>
+				</div>
 				<!-- 企業名は必ず dto から -->
 				<div class="registevent-row">
 					<div class="field-name">企業名</div>
@@ -139,6 +142,10 @@
 									${st.staffName}</option>
 							</c:forEach>
 						</select>
+					</div>
+
+					<div class="eventlist">
+						<div class="subtitle">卒業生情報</div>
 					</div>
 
 					<table class="registevent-table">

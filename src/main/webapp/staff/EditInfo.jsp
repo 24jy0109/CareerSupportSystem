@@ -31,6 +31,9 @@
 	<main>
 		<div class="wrapper">
 			<div class="page-title-nobottom">情報編集</div>
+			<div class="eventlist">
+				<div class="subtitle2">企業情報</div>
+			</div>
 			<div class="content">
 				<div class="request-top">
 					<div class="company">
@@ -42,10 +45,15 @@
 						</div>
 
 						<div>
+						
 							<a
-								href="company?command=CompanyRegister&companyId=${companyDTO.company.companyId}">企業名編集</a>
+								href="company?command=CompanyRegister&companyId=${companyDTO.company.companyId}&mode=edit">企業名編集</a>
 						</div>
 					</div>
+					<div class="eventlist">
+						<div class="subtitle2">卒業生情報</div>
+					</div>
+
 					<table>
 						<tr>
 							<th>卒業年次</th>
