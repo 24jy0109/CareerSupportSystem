@@ -64,7 +64,7 @@
 			defaultStaff = staffs.get(0);
 		}
 		%>
-
+		<div class="page-title-nobottom">日程調整メール作成</div>
 		<form action="event" method="post">
 			<input type="hidden" name="command"
 				value="ScheduleArrangeEmailConfirm">
@@ -115,7 +115,8 @@
 
 			<div class="bottom-btn-split">
 				<div>
-					<button type="button" onclick="location.href='event?command=RegistEventForm&companyId=<%=grad.getCompany().getCompanyId()%>'" >戻る</button>
+					<button type="button"
+						onclick="location.href='event?command=RegistEventForm&companyId=<%=grad.getCompany().getCompanyId()%>'">戻る</button>
 				</div>
 				<input type="submit" value="確認" class="schedulearrange-button-mail">
 			</div>
