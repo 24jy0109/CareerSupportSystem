@@ -18,7 +18,7 @@ public class AppointmentRequestAction {
 		RequestDBAccess requestDBA = new RequestDBAccess();
 		switch(action) {
 		case "RequestList":
-			list = requestDBA.requestStudentList(Integer.parseInt(data[2]));
+			list = requestDBA.requestStudentList(data[1], Integer.parseInt(data[2]));
 			break;
 		case "ApplyRequest":
 			requestDBA.insertRequest(Integer.parseInt(data[2]), data[1]);
