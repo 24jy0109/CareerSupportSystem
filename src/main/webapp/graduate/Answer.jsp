@@ -55,7 +55,23 @@
 
 		<p style="color: red;" class="center-msg">${error}</p>
 		<div class="answer-display">
-			<h2>${answers[0].graduate.graduateName}</h2>
+
+			<h2>
+				<c:choose>
+					<c:when
+						test="${not empty answers and not empty answers[0].graduate}">
+						${answers[0].graduate.graduateName}
+					</c:when>
+					<c:when
+						test="${not empty inputAnswer and not empty inputAnswer.graduate}">
+						${inputAnswer.graduate.graduateName}
+					</c:when>
+					<c:otherwise>
+						ななし
+					</c:otherwise>
+				</c:choose>
+			</h2>
+
 			<form action="answer" method="post">
 
 				<input type="hidden" name="answerId" value="<%=answerId%>">

@@ -76,6 +76,7 @@ public class AnswerAction extends BaseAction {
 			// data[6] secondChoiceEnd
 			// data[7] thirdChoiceStart
 			// data[8] thirdChoiceEnd
+			answer = answerDBA.searchAnswerById(Integer.parseInt(data[1]));
 
 			answer.setAnswerId(Integer.parseInt(data[1]));
 			answer.setEventAvailability(Boolean.parseBoolean(data[2]));
