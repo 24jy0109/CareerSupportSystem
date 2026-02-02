@@ -13,6 +13,34 @@
 <link rel="stylesheet" href="./css/layout.css">
 <title>開催詳細</title>
 
+<script type="text/javascript">
+	function confirmJoin(eventId) {
+		if (confirm(
+			"このイベントに参加登録します。\n" +
+			"システム上から登録後の取り消しはできません。\n" +
+			"変更が必要な場合は、担当職員までご連絡ください。\n" +
+			"よろしいですか？"
+		)) {
+			showLoadingOnly();
+			location.href = "event?command=EventJoin&eventId=" + eventId;
+		}
+		return false;
+	}
+
+	function confirmNotJoin(eventId) {
+		if (confirm(
+			"このイベントに不参加で登録します。\n" +
+			"システム上から登録後の取り消しはできません。\n" +
+			"変更が必要な場合は、担当職員までご連絡ください。\n" +
+			"よろしいですか？"
+		)) {
+			showLoadingOnly();
+			location.href = "event?command=EventNotJoin&eventId=" + eventId;
+		}
+		return false;
+	}
+</script>
+
 </head>
 <body>
 	<header class="head-part">
@@ -27,33 +55,6 @@
 		</div>
 
 		<div class="header-user">ようこそ${name}さん</div>
-
-
-		<script type="text/javascript">
-			function confirmJoin(eventId) {
-				if (confirm(
-						"このイベントに参加登録します。\n" +
-						"システム上から登録後の取り消しはできません。\n" +
-						"変更が必要な場合は、担当職員までご連絡ください。\n" +
-						"よろしいですか？"
-				)) {
-					location.href = "event?command=EventJoin&eventId=" + eventId;
-				}
-				return false;
-			}
-		
-			function confirmNotJoin(eventId) {
-				if (confirm(
-						"このイベントに不参加で登録します。\n" +
-						"システム上から登録後の取り消しはできません。\n" +
-						"変更が必要な場合は、担当職員までご連絡ください。\n" +
-						"よろしいですか？"
-				)) {
-					location.href = "event?command=EventNotJoin&eventId=" + eventId;
-				}
-				return false;
-			}
-		</script>
 	</header>
 	<main>
 		<div class="page-title">開催詳細</div>
@@ -242,5 +243,6 @@
 			<small>&copy; 2024 Example Inc.</small>
 		</p>
 	</footer>
+	<jsp:include page="/common/loading.jsp" />
 </body>
 </html>
