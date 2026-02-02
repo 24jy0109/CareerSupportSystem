@@ -27,10 +27,15 @@
 		</div>
 	</header>
 	<main>
+
+
 		<div class="wrapper">
-			<div class="page-title">申請者一覧</div>
+<!--			<div class="page-title-nobottom">申請者一覧</div>-->
 			<div class="content">
 				<div class="request-top">
+					<div class="eventlist">
+						<div class="requestlist-title">企業情報</div>
+					</div>
 					<c:choose>
 						<c:when test="${empty requests}">
 							<c:set var="company" value="${showCompany.company}" />
@@ -82,6 +87,9 @@
 						</div>
 
 
+					</div>
+					<div class="eventlist">
+						<div class="requestlist-title">申請者一覧</div>
 					</div>
 					<c:if test="${empty requests}">
 						<div class="errormsg">リクエストした学生はいません。</div>
