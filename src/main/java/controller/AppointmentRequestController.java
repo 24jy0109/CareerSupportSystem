@@ -65,29 +65,40 @@ public class AppointmentRequestController extends BaseController {
 			// 職員の遷移
 			switch (command) {
 			case "RequestList":
-				nextPage = "staff/RequestList.jsp";
-				String companyId = (String) request.getParameter("companyId");
-				try {
-					list = appointmentRequestAction.execute(new String[] { command, "", companyId });
-				} catch (Exception e) {
-					handleException(e, request, response, "staff/AppointMenu.jsp");
-					return;
-				}
-				
+			    nextPage = "staff/RequestList.jsp";
 
-				if (list == null || list.isEmpty()) {
-					try {
-						List<CompanyDTO> companies = new CompanyAction()
-								.execute(new String[] { "CompanyName", "", companyId });
-						request.setAttribute("showCompany", companies.getFirst());
-					} catch (Exception e) {
-						request.setAttribute("error", e.getMessage());
-						nextPage = "staff/AppointMenu.jsp";
-						return;
-					}
-				}
+			    String companyId = request.getParameter("companyId");
 
-				break;
+			    // 並び替え条件取得（未指定時は日時新しい順）
+			    String sort = request.getParameter("sort");
+			    if (sort == null || sort.isBlank()) {
+			        sort = "date_asc";
+			    }
+
+			    try {
+			        // sort は action / service 側に渡す前提
+			        list = appointmentRequestAction.execute(
+			            new String[] { command, sort, companyId }
+			        );
+			    } catch (Exception e) {
+			        handleException(e, request, response, "staff/AppointMenu.jsp");
+			        return;
+			    }
+
+			    request.setAttribute("sort", sort);
+
+			    if (list == null || list.isEmpty()) {
+			        try {
+			            List<CompanyDTO> companies = new CompanyAction()
+			                    .execute(new String[] { "CompanyName", "", companyId });
+			            request.setAttribute("showCompany", companies.getFirst());
+			        } catch (Exception e) {
+			            request.setAttribute("error", e.getMessage());
+			            nextPage = "staff/AppointMenu.jsp";
+			            return;
+			        }
+			    }
+			    break;
 			}
 		} else {
 			// 学生の遷移

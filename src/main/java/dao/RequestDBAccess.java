@@ -15,8 +15,31 @@ import model.Student;
 
 public class RequestDBAccess extends DBAccess {
 
-	public List<Request> requestStudentList(int companyId) throws Exception {
+	public List<Request> requestStudentList(String sort, int companyId) throws Exception {
 		List<Request> list = new ArrayList<>();
+
+		// ------------------------------
+		// ORDER BY 決定（安全）
+		// ------------------------------
+		String orderBy;
+		switch (sort) {
+		case "course_date_asc":
+			orderBy = "co.course_name ASC, r.request_time ASC";
+			break;
+
+		case "course_date_desc":
+			orderBy = "co.course_name ASC, r.request_time DESC";
+			break;
+
+		case "date_asc":
+			orderBy = "r.request_time ASC";
+			break;
+
+		case "date_desc":
+		default:
+			orderBy = "r.request_time DESC";
+			break;
+		}
 
 		String sqlReq = "SELECT r.request_time, "
 				+ "s.student_number, s.student_name, s.student_email, "
@@ -27,7 +50,7 @@ public class RequestDBAccess extends DBAccess {
 				+ "JOIN course co ON s.course_code = co.course_code "
 				+ "JOIN company c ON r.company_id = c.company_id "
 				+ "WHERE r.company_id = ? "
-				+ "ORDER BY r.request_time DESC";
+				+ "ORDER BY " + orderBy;
 
 		String sqlEvent = "SELECT event_id, event_start_time, event_end_time, event_place "
 				+ "FROM event "
@@ -49,12 +72,14 @@ public class RequestDBAccess extends DBAccess {
 						ev.setEventId(rsEv.getInt("event_id"));
 
 						Timestamp st = rsEv.getTimestamp("event_start_time");
-						if (st != null)
+						if (st != null) {
 							ev.setEventStartTime(st.toLocalDateTime());
+						}
 
 						Timestamp et = rsEv.getTimestamp("event_end_time");
-						if (et != null)
+						if (et != null) {
 							ev.setEventEndTime(et.toLocalDateTime());
+						}
 
 						ev.setEventPlace(rsEv.getString("event_place"));
 						eventList.add(ev);
@@ -72,11 +97,14 @@ public class RequestDBAccess extends DBAccess {
 					while (rs.next()) {
 
 						Course course = new Course();
+						course.setCourseCode(rs.getString("course_code"));
 						course.setCourseName(rs.getString("course_name"));
+						course.setCourseTerm(rs.getInt("course_term"));
 
 						Student student = new Student();
 						student.setStudentNumber(rs.getString("student_number"));
 						student.setStudentName(rs.getString("student_name"));
+						student.setStudentEmail(rs.getString("student_email"));
 						student.setCourse(course);
 
 						Company company = new Company();
