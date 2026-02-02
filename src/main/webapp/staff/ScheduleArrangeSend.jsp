@@ -117,7 +117,7 @@
 				<div>
 					<button type="button" onclick="location.href='event?command=RegistEventForm&companyId=<%=grad.getCompany().getCompanyId()%>'" >戻る</button>
 				</div>
-				<input type="submit" value="確認へ" class="schedulearrange-button-mail">
+				<input type="submit" value="確認" class="schedulearrange-button-mail">
 			</div>
 		</form>
 
