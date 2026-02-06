@@ -40,21 +40,21 @@
 
             <div class="menu-item" onclick="location.href='company?command=CompanyList'">
                 <img src="img/company.png" alt="企業一覧">
-                <span>企業一覧</span>
+                <span class="tooltip">企業一覧<span class="tooltip-text">開催有無・申請状況・卒業生の確認はこちらから</span></span>
             </div>
 
             <div class="menu-item" onclick="location.href='event?command=JoinHistory'">
                 <img src="img/history.png" alt="参加一覧/履歴">
-                <span>参加一覧/履歴</span>
+                <span  class="tooltip">参加一覧/履歴<span class="tooltip-text">参加一覧と履歴の確認はこちらから</span></span>
             </div>
 
             <div class="menu-item" onclick="location.href='event?command=EventList'">
                 <img src="img/event.png" alt="開催一覧">
-                <span>開催一覧</span>
+                <span  class="tooltip">開催一覧<span class="tooltip-text">開催一覧の確認はこちらから</span></span>
             </div>
 
 			<div class="menu-item" onclick="location.href='graduate?command=RegistEmail'">
-				<img src="img/user_add.png" alt="連絡先登録"> <span>連絡先登録</span>
+				<img src="img/user_add.png" alt="連絡先登録"> <span  class="tooltip">連絡先登録<span class="tooltip-text">連絡先の登録はこちらから</span></span>
 			</div>
 
         </div>

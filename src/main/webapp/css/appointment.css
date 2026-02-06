@@ -64,3 +64,34 @@
     font-size: 20px;
     color: #333;
 }
+
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+.tooltip-text {
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background:rgba(0, 0, 0, 0);
+  color: rgb(128, 128, 128);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 13px !important;
+  white-space: nowrap;
+  margin-bottom: 5px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  
+  
+}
+
+.tooltip:hover .tooltip-text {
+  opacity: 1;
+}
+
+

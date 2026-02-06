@@ -10,7 +10,7 @@
 <title>卒業生アポイントメント画面</title>
 </head>
 <body>
-	<header >
+	<header>
 		<div class="head-part">
 			<div id="h-left">
 				<img src="img/rogo.png" alt="アイコン">
@@ -35,27 +35,33 @@
 
 			<div class="menu-item"
 				onclick="location.href='company?command=CompanyList'">
-				<img src="img/company.png" alt="企業一覧(申請)"> <span>企業一覧（申請）</span>
+				<img src="img/company.png" alt="企業一覧(申請)"> <span
+					class="tooltip">企業一覧<span class="tooltip-text">情報編集・申請一覧・開催情報登録はこちらから</span></span>
+
 			</div>
 
 			<div class="menu-item"
 				onclick="location.href='event?command=EventList'">
-				<img src="img/history.png" alt="開催一覧/履歴"> <span>開催一覧/履歴</span>
+				<img src="img/history.png" alt="開催一覧/履歴"> <span class="tooltip">開催一覧/履歴<span
+					class="tooltip-text">開催一覧と履歴の確認はこちらから</span></span>
 			</div>
 
 			<div class="menu-item"
 				onclick="location.href='company?command=CompanyRegister'">
-				<img src="img/company_register.png" alt="企業登録"> <span>企業登録</span>
+				<img src="img/company_register.png" alt="企業登録"> <span class="tooltip">企業登録<span
+					class="tooltip-text">企業の登録はこちらから</span></span>
 			</div>
 
 			<div class="menu-item"
 				onclick="location.href='graduate?command=RegistEmail'">
-				<img src="img/user_add.png" alt="連絡先登録"> <span>連絡先登録</span>
+				<img src="img/user_add.png" alt="連絡先登録"> <span class="tooltip">連絡先登録<span
+					class="tooltip-text">連絡先の登録はこちらから</span></span>
 			</div>
 
 			<div class="menu-item"
 				onclick="location.href='answer?command=ScheduleAnswerCheck'">
-				<img src="img/schedule_check.png" alt="日程回答確認"> <span>日程回答確認</span>
+				<img src="img/schedule_check.png" alt="日程回答確認"> <span class="tooltip">日程回答確認<span
+					class="tooltip-text">日程回答の確認はこちらから</span></span>
 			</div>
 
 		</div>
@@ -68,5 +74,19 @@
 		</p>
 	</footer>
 	<jsp:include page="/common/flashMessage.jsp" />
+	<script>
+	const btn = document.getElementById("btn");
+	const tooltip = document.getElementById("tooltip");
+
+	btn.addEventListener("mouseenter", (e) => {
+	  tooltip.style.display = "block";
+	  tooltip.style.top = e.pageY + 10 + "px";
+	  tooltip.style.left = e.pageX + 10 + "px";
+	});
+
+	btn.addEventListener("mouseleave", () => {
+	  tooltip.style.display = "none";
+	});
+	</script>
 </body>
 </html>
