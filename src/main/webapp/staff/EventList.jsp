@@ -33,6 +33,7 @@
 
 	<div class="wrapper">
 		<main class="content">
+
 			<form action="event" method="GET">
 				<input type="hidden" name="command" value="EventList">
 				<div class="search">
@@ -46,8 +47,6 @@
 				<div class="eventlist-title">開催一覧</div>
 			</div>
 
-
-			<!-- ================= 開催一覧（開催中） ================= -->
 			<table class="eventlist-table">
 				<tr class="eventlist-tr">
 					<th>開催日時</th>
@@ -68,17 +67,8 @@
 								:${dto.event.eventStartTime.minute < 10 ? '0' : ''}${dto.event.eventStartTime.minute}
 							</td>
 							<td>${dto.event.company.companyName}</td>
-							<td><a
-								href="event?command=EventDetail&eventId=${dto.event.eventId}">
-									開催詳細 </a></td>
-							<c:choose>
-								<c:when test="${dto.event.eventProgress.label == '開催'}">
-									<td class="held">${dto.event.eventProgress.label}</td>
-								</c:when>
-								<c:otherwise>
-									<td>${dto.event.eventProgress.label}</td>
-								</c:otherwise>
-							</c:choose>
+							<td><a href="event?command=EventDetail&eventId=${dto.event.eventId}">開催詳細</a></td>
+							<td>${dto.event.eventProgress.label}</td>
 							<td>${dto.joinStudentCount}</td>
 						</tr>
 					</c:if>
@@ -89,10 +79,8 @@
 				<div class="errormsg">開催中のイベントはありません。</div>
 			</c:if>
 
-
 			<div id="pagination-current" class="pagination"></div>
 
-			<!-- ================= 開催履歴 ================= -->
 			<div class="eventlist">
 				<div class="eventlist-title">開催履歴</div>
 			</div>
@@ -108,18 +96,12 @@
 
 				<c:set var="hasHistory" value="false" />
 
-
-				<c:set var="hasHistory" value="false" />
-
 				<c:forEach var="i" begin="0"
 					end="${fn:length(requestScope.events) - 1}">
 					<c:set var="dto"
 						value="${requestScope.events[fn:length(requestScope.events) - 1 - i]}" />
-
-					<c:if
-						test="${dto.event.eventProgress == 'FINISHED'
-               || dto.event.eventProgress == 'CANCELED'}">
-
+					<c:if test="${dto.event.eventProgress == 'FINISHED'
+						|| dto.event.eventProgress == 'CANCELED'}">
 						<c:set var="hasHistory" value="true" />
 						<tr class="eventlist-tr history-row">
 							<td>
@@ -128,15 +110,12 @@
 								:${dto.event.eventStartTime.minute < 10 ? '0' : ''}${dto.event.eventStartTime.minute}
 							</td>
 							<td>${dto.event.company.companyName}</td>
-							<td><a
-								href="event?command=EventDetail&eventId=${dto.event.eventId}">
-									開催詳細 </a></td>
+							<td><a href="event?command=EventDetail&eventId=${dto.event.eventId}">開催詳細</a></td>
 							<td>${dto.event.eventProgress.label}</td>
 							<td>${dto.joinStudentCount}</td>
 						</tr>
 					</c:if>
 				</c:forEach>
-
 			</table>
 
 			<c:if test="${!hasHistory}">
@@ -148,9 +127,7 @@
 	</div>
 
 	<footer>
-		<p>
-			<small>&copy; 2024 Example Inc.</small>
-		</p>
+		<p><small>&copy; 2024 Example Inc.</small></p>
 	</footer>
 
 	<script>
@@ -165,12 +142,12 @@
 
 		const totalPages = Math.ceil(rows.length / rowsPerPage);
 		let currentPage = 1;
-		const buttons = [];
+		const maxButtons = 5;
 
 		function showPage(page) {
 			if (page < 1 || page > totalPages) return;
-
 			currentPage = page;
+
 			const start = (page - 1) * rowsPerPage;
 			const end = start + rowsPerPage;
 
@@ -178,53 +155,69 @@
 				row.style.display = (index >= start && index < end) ? "" : "none";
 			});
 
-			buttons.forEach(btn => btn.classList.remove("active"));
-			if (buttons[page - 1]) {
-				buttons[page - 1].classList.add("active");
+			renderButtons();
+		}
+
+		function renderButtons() {
+			pagination.innerHTML = "";
+
+			let startPage = Math.max(1, currentPage - 2);
+			let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+			if (endPage - startPage < maxButtons - 1) {
+				startPage = Math.max(1, endPage - maxButtons + 1);
+			}
+
+			if (startPage > 1) {
+				const first = document.createElement("button");
+				first.textContent = "«";
+				first.onclick = () => showPage(1);
+				pagination.appendChild(first);
+			}
+
+			for (let i = startPage; i <= endPage; i++) {
+				const btn = document.createElement("button");
+				btn.textContent = i;
+				if (i === currentPage) btn.classList.add("active");
+				btn.onclick = () => {
+					activePager = pager;
+					showPage(i);
+				};
+				pagination.appendChild(btn);
+			}
+
+			if (endPage < totalPages) {
+				const last = document.createElement("button");
+				last.textContent = "»";
+				last.onclick = () => showPage(totalPages);
+				pagination.appendChild(last);
 			}
 		}
-
-		for (let i = 1; i <= totalPages; i++) {
-			const btn = document.createElement("button");
-			btn.textContent = i;
-			btn.onclick = () => {
-				activePager = pager;
-				showPage(i);
-			};
-			buttons.push(btn);
-			pagination.appendChild(btn);
-		}
-
-		showPage(1);
 
 		const pager = {
 			next() { showPage(currentPage + 1); },
 			prev() { showPage(currentPage - 1); }
 		};
 
+		showPage(1);
 		return pager;
 	}
 
 	const currentPager = setupPagination(".current-row", "pagination-current", 5);
 	const historyPager = setupPagination(".history-row", "pagination-history", 5);
 
-	// 初期状態は「開催一覧」
 	activePager = currentPager;
 
 	document.addEventListener("keydown", function(e) {
-
 		const tag = document.activeElement.tagName;
 		if (tag === "INPUT" || tag === "TEXTAREA") return;
 		if (!activePager) return;
 
-		if (e.key === "ArrowRight") {
-			activePager.next();
-		}
-		if (e.key === "ArrowLeft") {
-			activePager.prev();
-		}
+		if (e.key === "ArrowRight") activePager.next();
+		if (e.key === "ArrowLeft") activePager.prev();
 	});
 	</script>
+
 	<jsp:include page="/common/flashMessage.jsp" />
 </body>
 </html>

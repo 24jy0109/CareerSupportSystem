@@ -326,12 +326,16 @@ public class AnswerDBAccess extends DBAccess {
 			throw new IllegalArgumentException("choice は 1〜3 を指定してください");
 		}
 
-		String sql = "SELECT a.answer_id, a.graduate_student_number, a.event_id, " +
+		String sql =
+				"SELECT a.answer_id, a.graduate_student_number, a.event_id, " +
 				timeSelect + ", " +
-				"c.company_id, c.company_name " +
+				"c.company_id, c.company_name, " +
+				"s.staff_id, s.staff_name, s.staff_email " +
 				"FROM answer a " +
 				"JOIN graduate g ON a.graduate_student_number = g.graduate_student_number " +
 				"JOIN company c ON g.company_id = c.company_id " +
+				"JOIN event e ON a.event_id = e.event_id " +
+				"LEFT JOIN staff s ON e.staff_id = s.staff_id " +
 				"WHERE a.answer_id = ?";
 
 		try (
@@ -347,7 +351,8 @@ public class AnswerDBAccess extends DBAccess {
 
 					// 卒業生
 					Graduate grad = new Graduate();
-					grad.setGraduateStudentNumber(rs.getString("graduate_student_number"));
+					grad.setGraduateStudentNumber(
+							rs.getString("graduate_student_number"));
 					answer.setGraduate(grad);
 
 					// 企業
@@ -359,6 +364,16 @@ public class AnswerDBAccess extends DBAccess {
 					// イベント
 					Event event = new Event();
 					event.setEventId(rs.getInt("event_id"));
+
+					// 開催担当者（NULL 許容）
+					if (rs.getInt("staff_id") != 0) {
+						Staff staff = new Staff();
+						staff.setStaffId(rs.getInt("staff_id"));
+						staff.setStaffName(rs.getString("staff_name"));
+						staff.setStaffEmail(rs.getString("staff_email"));
+						event.setStaff(staff);
+					}
+
 					answer.setEvent(event);
 
 					// 希望時間（choice に応じて）

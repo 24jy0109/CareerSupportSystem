@@ -105,8 +105,10 @@
 						<div class="registevent-row">
 							<div class="field-name">定員</div>
 							<input type="number" name="eventCapacity"
-								class="registevent-input" min="1"
-								value="${event.eventCapacity}" required />
+								class="registevent-input" min="1" value="1" required />
+<!--								<input-->
+<!--								type="number" name="eventCapacity" class="registevent-input"-->
+<!--								min="1" value="${event.eventCapacity}" required />-->
 						</div>
 					</div>
 
@@ -133,8 +135,7 @@
 							<c:forEach var="st" items="${dto.staffs}">
 								<option value="${st.staffId}"
 									<c:if test="${st.staffId == defaultStaffId}">selected</c:if>>
-									${st.staffName}
-								</option>
+									${st.staffName}</option>
 							</c:forEach>
 						</select>
 					</div>
@@ -157,49 +158,45 @@
 						<c:choose>
 							<c:when test="${empty dto.graduates}">
 								<tr class="registevent-r">
-									<td colspan="7" style="text-align:center;" class="red-msg">
-										卒業生はいません
-									</td>
+									<td colspan="7" style="text-align: center;" class="red-msg">
+										卒業生はいません</td>
 								</tr>
 							</c:when>
 
 							<c:otherwise>
 								<c:forEach var="g" items="${dto.graduates}">
 									<tr class="registevent-r">
-										<td>
-											<input type="checkbox" name="graduateStudents"
-												value="${g.graduateStudentNumber}"
-												<c:if test="${not empty inputEvent && event.joinGraduates != null}">
+										<td><input type="checkbox" name="graduateStudents"
+											value="${g.graduateStudentNumber}"
+											<c:if test="${not empty inputEvent && event.joinGraduates != null}">
 													<c:forEach var="jg" items="${event.joinGraduates}">
 														<c:if test="${jg.graduateStudentNumber == g.graduateStudentNumber}">
 															checked
 														</c:if>
-													</c:forEach>
-												</c:if>
-												<c:if test="${empty inputEvent && g.graduateStudentNumber == selectedStudentNumber}">
+								</c:forEach>
+								</c:if>
+								<c:if
+									test="${empty inputEvent && g.graduateStudentNumber == selectedStudentNumber}">
 													checked
 												</c:if>
 											/>
 										</td>
 
-										<td>
-											<c:set var="enterYear"
-												value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
-											${enterYear + g.course.courseTerm}年卒
-										</td>
+								<td><c:set var="enterYear"
+										value="${fn:substring(g.graduateStudentNumber, 0, 2)}" />
+									${enterYear + g.course.courseTerm}年卒</td>
 
-										<td>${g.graduateName}</td>
-										<td>${g.course.courseName}</td>
-										<td>${g.graduateJobCategory}</td>
-										<td>${empty g.staff ? '未割当' : g.staff.staffName}</td>
+								<td>${g.graduateName}</td>
+								<td>${g.course.courseName}</td>
+								<td>${g.graduateJobCategory}</td>
+								<td>${empty g.staff ? '未割当' : g.staff.staffName}</td>
 
-										<td>
-											<button type="button"
-												onclick="location.href='event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}'">
-												開催相談
-											</button>
-										</td>
-									</tr>
+								<td>
+									<button type="button"
+										onclick="location.href='event?command=ScheduleArrangeSendForm&graduateStudentNumber=${g.graduateStudentNumber}'">
+										開催相談</button>
+								</td>
+								</tr>
 								</c:forEach>
 							</c:otherwise>
 						</c:choose>
@@ -207,8 +204,7 @@
 
 					<div class="bottom-btn-split">
 						<button type="button" onclick="location.href='${backUrl}'">
-							${backLabel}
-						</button>
+							${backLabel}</button>
 						<input type="submit" class="event-btn" value="確認">
 					</div>
 
@@ -219,7 +215,9 @@
 	</main>
 
 	<footer>
-		<p><small>&copy; 2024 Example Inc.</small></p>
+		<p>
+			<small>&copy; 2024 Example Inc.</small>
+		</p>
 	</footer>
 
 	<jsp:include page="/common/flashMessage.jsp" />
