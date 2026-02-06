@@ -67,7 +67,7 @@
 						${inputAnswer.graduate.graduateName}
 					</c:when>
 					<c:otherwise>
-						ななし
+						No Name
 					</c:otherwise>
 				</c:choose>
 			</h2>
