@@ -632,7 +632,7 @@
 /* 項目名と内容を横並びにする */
 .schedulearrange-row {
 	display: grid;
-	grid-template-columns: 80px 1fr;/*0.5fr*/
+	grid-template-columns: 80px 1fr 0.5fr;
 	gap: 20px;
 	margin-bottom: 20px;
 }
@@ -661,23 +661,23 @@
 		padding: 10px 20px;
 }
 
-.mail-layout-center-conf{
-	max-width: 550px;
-	width: 100%;
-	margin: 0 auto;
-	text-align: left;
-}
+/*.mail-layout-center-conf{*/
+/*	max-width: 550px;*/
+/*	width: 100%;*/
+/*	margin: 0 auto;*/
+/*	text-align: left;*/
+/*}*/
 
-.mail-layout-center{
-	max-width: 650px;
-	width: 100%;
-	margin: 0 auto;
-	text-align: left;
-}
+/*.mail-layout-center{*/
+/*	max-width: 650px;*/
+/*	width: 100%;*/
+/*	margin: 0 auto;*/
+/*	text-align: left;*/
+/*}*/
 
-.mail-btn{
-	width: 60%;
-}
+/*.mail-btn{*/
+/*	width: 60%;*/
+/*}*/
 
 /* 入力欄の大きさ */
 .schedulearrange-row textarea {

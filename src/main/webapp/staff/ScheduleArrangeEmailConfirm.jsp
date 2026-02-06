@@ -38,7 +38,8 @@
 
 		<form id="emailForm" action="event" method="post"
 			onsubmit="return showLoadingAndDisableSubmit(this);">
-			<div class="mail-layout-center-conf">
+			<div>
+<!--			 class="mail-layout-center-conf"-->
 				<!-- デフォルト command -->
 				<input type="hidden" id="commandField" name="command"
 					value="SendScheduleArrangeEmail">
@@ -75,7 +76,8 @@
 				</div>
 			</div>
 			</div>
-			<div class="bottom-btn-split mail-btn">
+			<div class="bottom-btn-split ">
+<!--			mail-btn-->
 				<!-- 戻るボタンで command を切り替え -->
 				<button type="submit"
 					onclick="document.getElementById('commandField').value='ScheduleArrangeEmailBack'">

@@ -31,7 +31,8 @@
 	</header>
 
 	<main>
-		<div class="mail-layout-center">
+		<div>
+<!--		 class="mail-layout-center"-->
 			<%
 			List<EventDTO> events = (List<EventDTO>) request.getAttribute("events");
 			EventDTO dto = events.get(0);
@@ -115,7 +116,8 @@
 				</div>
 		</div>
 
-		<div class="bottom-btn-split mail-btn">
+		<div class="bottom-btn-split">
+<!--		 mail-btn-->
 			<div>
 				<button type="button"
 					onclick="location.href='event?command=RegistEventForm&companyId=<%=grad.getCompany().getCompanyId()%>'">戻る</button>
