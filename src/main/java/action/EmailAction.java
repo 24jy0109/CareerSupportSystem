@@ -48,7 +48,7 @@ public class EmailAction {
 			email = new Email();
 			email.setSubject(data[4]);
 			body = data[5];
-			body += "\n\n回答URL:" + "http://○○○○△△△△";
+			body += "\n\n回答URL:" + "（送信時にURLを生成します）";
 			body += "\n\n\n担当者名" + staff.getStaffName();
 			body += "\n担当者メールアドレス" + staff.getStaffEmail();
 			email.setBody(body);
